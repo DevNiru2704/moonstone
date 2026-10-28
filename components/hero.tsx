@@ -28,9 +28,12 @@ export function Hero() {
       const w = DOT.w + (FULL.w - DOT.w) * p;
       const h = DOT.h + (FULL.h - DOT.h) * p;
       const cx = DOT.x + DOT.w / 2 + (720 - (DOT.x + DOT.w / 2)) * p;
-      const cy = DOT.y + DOT.h / 2 + (512 - (DOT.y + DOT.h / 2)) * p;
+      // design coords are relative to a 1024-high stage centred in the viewport
+      const dy = (el.clientHeight - 1024 * k) / 2 / k;
+      const cy = DOT.y + DOT.h / 2 + (512 - (DOT.y + DOT.h / 2)) * p + dy;
       el.style.maskSize = el.style.webkitMaskSize = `${w * k}px ${h * k}px`;
-      el.style.maskPosition = el.style.webkitMaskPosition = `${(cx - w / 2) * k}px ${(cy - h / 2) * k}px`;
+      el.style.maskPosition =
+        el.style.webkitMaskPosition = `${(cx - w / 2) * k}px ${(cy - h / 2) * k}px`;
     };
     const type = (p: number) => {
       const n = Math.round(TEXT.length * p);
@@ -57,7 +60,8 @@ export function Hero() {
         type(Math.max(0, (progress - 0.7) / 0.3));
       },
     });
-    const onResize = () => apply(gsap.parseEase("power2.in")(Math.min(st.progress / 0.7, 1)));
+    const onResize = () =>
+      apply(gsap.parseEase("power2.in")(Math.min(st.progress / 0.7, 1)));
     addEventListener("resize", onResize);
     return () => {
       removeEventListener("resize", onResize);
@@ -66,21 +70,27 @@ export function Hero() {
   }, []);
 
   return (
-    <section
-      ref={section}
-      className="relative overflow-hidden bg-white"
-      style={{ height: u(1024) }}
-    >
-      <Image
-        src="/img/wordmark.svg"
-        alt="moonstone"
-        width={1201}
-        height={126}
-        priority
-        unoptimized
-        className="absolute max-w-none"
-        style={{ left: u(119.31), top: u(449.2), width: u(1201.375), height: u(125.531) }}
-      />
+    <section ref={section} className="relative h-svh overflow-hidden bg-white">
+      <div
+        className="absolute left-0 top-1/2 -translate-y-1/2"
+        style={{ width: u(1440), height: u(1024) }}
+      >
+        <Image
+          src="/img/wordmark.svg"
+          alt="moonstone"
+          width={1201}
+          height={126}
+          priority
+          unoptimized
+          className="absolute max-w-none"
+          style={{
+            left: u(119.31),
+            top: u(449.2),
+            width: u(1201.375),
+            height: u(125.531),
+          }}
+        />
+      </div>
 
       <div
         ref={photo}
@@ -92,20 +102,38 @@ export function Hero() {
           WebkitMaskRepeat: "no-repeat",
         }}
       >
-        <Image src="/img/hero.png" alt="" fill priority unoptimized sizes="100vw" className="object-cover" />
+        <Image
+          src="/img/hero.png"
+          alt=""
+          fill
+          priority
+          unoptimized
+          sizes="100vw"
+          className="object-cover"
+        />
       </div>
 
-      <p
-        className="absolute flex items-center whitespace-nowrap text-white"
-        style={{ left: u(421), top: u(452.5), height: u(119), fontSize: u(80) }}
+      <div
+        className="absolute left-0 top-1/2 -translate-y-1/2"
+        style={{ width: u(1440), height: u(1024) }}
       >
-        <span ref={label} />
-        <span
-          ref={cursor}
-          className="ml-[0.1em] block bg-white opacity-0"
-          style={{ width: u(2), height: u(119) }}
-        />
-      </p>
+        <p
+          className="absolute flex items-center whitespace-nowrap text-white"
+          style={{
+            left: u(421),
+            top: u(452.5),
+            height: u(119),
+            fontSize: u(80),
+          }}
+        >
+          <span ref={label} />
+          <span
+            ref={cursor}
+            className="ml-[0.1em] block bg-white opacity-0"
+            style={{ width: u(2), height: u(119) }}
+          />
+        </p>
+      </div>
     </section>
   );
 }
