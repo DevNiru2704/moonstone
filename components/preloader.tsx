@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { getLenis, u, unit } from "@/lib/lenis";
+import { getLenis, markReady, u, unit } from "@/lib/lenis";
 
 const STEP = 147; // Figma digit line-height
 const DIGITS = Array.from({ length: 101 }, (_, i) =>
@@ -22,6 +22,7 @@ export function Preloader() {
       root.current!.id = ""; // releases the html scroll lock
       root.current!.style.display = "none";
       getLenis()?.start();
+      markReady();
       return;
     }
 
@@ -30,6 +31,7 @@ export function Preloader() {
       onComplete: () => {
         setDone(true);
         getLenis()?.start();
+        markReady();
       },
     });
     tl.to(n, {
