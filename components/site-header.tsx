@@ -36,7 +36,7 @@ export function SiteHeader() {
 
       <a
         href="#contact"
-        className="fixed z-50 flex items-center justify-center bg-white/10 text-white mix-blend-difference"
+        className="fixed z-50 flex items-center justify-center bg-white/10 text-white mix-blend-difference backdrop-blur-md border border-white/30"
         style={{
           left: u(50),
           bottom: u(50),
