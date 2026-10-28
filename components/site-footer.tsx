@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { u } from "@/lib/lenis";
 
@@ -18,37 +18,52 @@ const LINKS: [string, number, number, boolean][] = [
   ["CONTACT", 1410, 365.3, true],
 ];
 
-const WINK_EVERY = 2400;
-const WINK_FOR = 450;
+const COLS = 14;
+const ROWS = 6;
 
 export function SiteFooter() {
   const [wink, setWink] = useState(false);
+  const grid = useRef<HTMLDivElement>(null);
+  const lit = useRef<Element | null>(null);
 
-  useEffect(() => {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let off: ReturnType<typeof setTimeout>;
-    const id = setInterval(() => {
-      setWink(true);
-      off = setTimeout(() => setWink(false), WINK_FOR);
-    }, WINK_EVERY);
-    return () => {
-      clearInterval(id);
-      clearTimeout(off);
-    };
-  }, []);
+  // One handler on the footer, so squares light up even under the links and mascot.
+  const light = (e: React.PointerEvent<HTMLElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const size = r.width / COLS;
+    const row = Math.floor((e.clientY - r.top) / size);
+    const col = Math.floor((e.clientX - r.left) / size);
+    const next =
+      row >= 0 && row < ROWS && col >= 0 && col < COLS
+        ? grid.current!.children[row * COLS + col]
+        : null;
+    if (next === lit.current) return;
+    lit.current?.removeAttribute("data-lit");
+    next?.setAttribute("data-lit", "");
+    lit.current = next;
+  };
+  const unlight = () => {
+    lit.current?.removeAttribute("data-lit");
+    lit.current = null;
+  };
 
   return (
     <footer
       id="contact"
       className="relative overflow-hidden bg-ink text-white"
       style={{ height: u(556) }}
+      onPointerMove={light}
+      onPointerLeave={unlight}
     >
-      {/* 14 x 6 squares; a hovered square lights up and fades out slowly */}
-      <div className="absolute inset-x-0 top-0 grid grid-cols-14" aria-hidden>
-        {Array.from({ length: 14 * 6 }, (_, i) => (
+      {/* 14 x 6 squares; the square under the pointer lights up and fades out slowly */}
+      <div
+        ref={grid}
+        className="absolute inset-x-0 top-0 grid grid-cols-14"
+        aria-hidden
+      >
+        {Array.from({ length: COLS * ROWS }, (_, i) => (
           <div
             key={i}
-            className="aspect-square border-[0.5px] border-grid bg-ink transition-colors duration-[1200ms] hover:bg-white/20 hover:duration-75"
+            className="aspect-square border-[0.5px] border-grid bg-ink transition-colors duration-[1200ms] data-[lit]:bg-white/20 data-[lit]:duration-75"
           />
         ))}
       </div>
@@ -74,7 +89,9 @@ export function SiteFooter() {
       </div>
 
       <div
-        className="pointer-events-none absolute"
+        className="absolute"
+        onPointerEnter={() => setWink(true)}
+        onPointerLeave={() => setWink(false)}
         style={{
           left: u(579.85),
           top: u(142.86),
