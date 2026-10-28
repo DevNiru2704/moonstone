@@ -1,26 +1,65 @@
 @import "tailwindcss";
 
+/* Brand palette: docs/design-system/proportion.png (46 / 27 / 16 / 11 %) */
+@theme {
+  --color-cream: #fff8f5;
+  --color-peach: #fae4d5;
+  --color-sage: #8ea58b;
+  --color-crimson: #b31e32;
+  --color-ink: #0a0a0a;
+  --color-grid: #2d2d2d;
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* Type scale: docs/design-system/typography.png (size / line-height) */
+  --text-h1: 48px;
+  --text-h1--line-height: 58px;
+  --text-h2: 40px;
+  --text-h2--line-height: 48px;
+  --text-h3: 32px;
+  --text-h3--line-height: 38px;
+  --text-h4: 28px;
+  --text-h4--line-height: 34px;
+  --text-h5: 24px;
+  --text-h5--line-height: 28px;
+  --text-s1: 18px;
+  --text-s1--line-height: 28px;
+  --text-b1: 16px;
+  --text-b1--line-height: 24px;
+  --text-b3: 14px;
+  --text-b3--line-height: 20px;
+  --text-c1: 12px;
+  --text-c1--line-height: 16px;
+  --text-c3: 10px;
+  --text-c3--line-height: 14px;
+}
+
+/* The Figma comp is 1440 wide; 1 design px = --u. Layout scales with the viewport. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --u: calc(100vw / 1440);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: #fff;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #fff;
+  color: #000;
+  font-family: var(--font-display);
+  overflow-x: clip;
+  line-height: normal; /* Figma text uses auto line-height */
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
