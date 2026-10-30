@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 // Lens maps for backdrop-filter: url(#lens-*). Red = x shift, green = y shift (128 = none);
 // content at the edges is pulled toward the centre, so the glass magnifies what is behind it.
 const map = (r: number[], g: number[]) => {
@@ -17,6 +19,12 @@ const FILTERS = [
   { id: "lens-dot", scale: 0.35, href: map([255, 170, 128, 86, 0], [255, 170, 128, 86, 0]) },
 ];
 
+const CHANNELS = [
+  ["r", 0.7, "1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"],
+  ["g", 1, "0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0"],
+  ["b", 1.35, "0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0"],
+] as const;
+
 export function GlassFilters() {
   return (
     <svg width="0" height="0" className="pointer-events-none absolute" aria-hidden>
@@ -32,7 +40,15 @@ export function GlassFilters() {
           colorInterpolationFilters="sRGB"
         >
           <feImage href={f.href} x="0" y="0" width="1" height="1" preserveAspectRatio="none" result="map" />
-          <feDisplacementMap in="SourceGraphic" in2="map" scale={f.scale} xChannelSelector="R" yChannelSelector="G" />
+          {/* each colour channel is bent by a slightly different amount: the rainbow fringe of real glass */}
+          {CHANNELS.map(([ch, k, matrix]) => (
+            <Fragment key={ch}>
+              <feDisplacementMap in="SourceGraphic" in2="map" scale={f.scale * k} xChannelSelector="R" yChannelSelector="G" result={`d${ch}`} />
+              <feColorMatrix in={`d${ch}`} type="matrix" values={matrix} result={ch} />
+            </Fragment>
+          ))}
+          <feBlend in="r" in2="g" mode="screen" result="rg" />
+          <feBlend in="rg" in2="b" mode="screen" />
         </filter>
       ))}
     </svg>
