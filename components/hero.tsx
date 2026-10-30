@@ -13,9 +13,9 @@ const FULL = { w: 3400, h: 3400 * (DOT.h / DOT.w) };
 const reveal = (el: HTMLElement) =>
   gsap
     .timeline()
-    .to(el, { width: "114%", duration: 0.45, ease: "power2.out" })
-    .to(el, { width: "96%", duration: 0.2, ease: "power1.inOut" })
-    .to(el, { width: "100%", duration: 0.2, ease: "power1.out" });
+    .to(el, { width: "112%", duration: 0.75, ease: "power2.out" })
+    .to(el, { width: "97%", duration: 0.4, ease: "sine.inOut" })
+    .to(el, { width: "100%", duration: 0.4, ease: "sine.out" });
 
 export function Hero() {
   const photo = useRef<HTMLDivElement>(null);
