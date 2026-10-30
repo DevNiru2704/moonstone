@@ -1,10 +1,16 @@
 import Link from "next/link";
+import { GlassFilters } from "@/components/glass-filters";
 import { u } from "@/lib/lenis";
+
+// Liquid-glass look: the backdrop is magnified by the lens filter, with a bright rim.
+const glass =
+  "fixed z-50 flex items-center justify-center text-white mix-blend-difference border border-white/50 shadow-[inset_0_1px_2px_rgba(255,255,255,.8),inset_0_-1px_2px_rgba(255,255,255,.35),0_2px_8px_rgba(0,0,0,.15)]";
 
 /* Fixed chrome from Figma "Frame 15" and "let's-work-together". */
 export function SiteHeader() {
   return (
     <>
+      <GlassFilters />
       <header
         className="fixed inset-x-0 top-0 z-50 flex items-start justify-between pointer-events-none mix-blend-difference"
         style={{ padding: u(30) }}
@@ -18,25 +24,35 @@ export function SiteHeader() {
             style={{ width: u(98.33), height: u(70) }}
           />
         </Link>
-        <button
-          type="button"
-          aria-label="Menu"
-          className="pointer-events-auto flex cursor-pointer flex-col items-center justify-center bg-white/10"
-          style={{ width: u(40), height: u(40), borderRadius: u(20), gap: u(2) }}
-        >
-          {[0, 1, 2].map((i) => (
-            <span
-              key={i}
-              className="block bg-[#d9d9d9]"
-              style={{ width: u(3), height: u(3), borderRadius: u(2) }}
-            />
-          ))}
-        </button>
       </header>
+
+      <button
+        type="button"
+        aria-label="Menu"
+        className={`${glass} cursor-pointer flex-col`}
+        style={{
+          top: u(30),
+          right: u(30),
+          width: u(40),
+          height: u(40),
+          borderRadius: u(20),
+          gap: u(2),
+          backdropFilter: "url(#lens-dot)",
+          WebkitBackdropFilter: "url(#lens-dot)",
+        }}
+      >
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            className="block bg-[#d9d9d9]"
+            style={{ width: u(3), height: u(3), borderRadius: u(2) }}
+          />
+        ))}
+      </button>
 
       <a
         href="#contact"
-        className="fixed z-50 flex items-center justify-center bg-white/10 text-white mix-blend-difference backdrop-blur-md border border-white/30"
+        className={glass}
         style={{
           left: u(50),
           bottom: u(50),
@@ -45,6 +61,8 @@ export function SiteHeader() {
           borderRadius: u(30),
           padding: u(20),
           fontSize: u(16),
+          backdropFilter: "url(#lens-pill)",
+          WebkitBackdropFilter: "url(#lens-pill)",
         }}
       >
         <span className="whitespace-nowrap">LET’S WORK TOGETHER</span>
