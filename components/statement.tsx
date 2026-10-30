@@ -70,7 +70,7 @@ export function Statement() {
           width: u(806.02),
           fontSize: u(60),
           backgroundImage: "linear-gradient(90deg, #000 var(--p), #fff var(--p))",
-          filter: "drop-shadow(0 0 0.5px rgba(0,0,0,.35))",
+          filter: "drop-shadow(1px 1px 0 rgba(0,0,0,.5)) drop-shadow(-1px -1px 0 rgba(0,0,0,.12))",
         }}
       >
         <p>We don’t follow a formula.</p>
