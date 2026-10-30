@@ -2,7 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { u } from "@/lib/lenis";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const STATS = [
   ["25+ Artists Collaborated With", 0],
@@ -14,9 +17,23 @@ const PERIOD = 1569; // Figma: second set starts at x=1569
 
 export function Statement() {
   const track = useRef<HTMLDivElement>(null);
+  const text = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      text.current!.style.setProperty("--p", "100%");
+      return;
+    }
+    // text starts white and is filled black left to right as it scrolls into view
+    const fill = gsap.fromTo(
+      text.current,
+      { "--p": "0%" },
+      {
+        "--p": "100%",
+        ease: "none",
+        scrollTrigger: { trigger: text.current, start: "top 85%", end: "bottom 50%", scrub: 0.6 },
+      },
+    );
     const tween = gsap.to(track.current, {
       x: () => -PERIOD * (innerWidth / 1440),
       duration: 24,
@@ -24,6 +41,8 @@ export function Statement() {
       repeat: -1,
     });
     return () => {
+      fill.scrollTrigger?.kill();
+      fill.kill();
       tween.kill();
     };
   }, []);
@@ -42,12 +61,15 @@ export function Statement() {
       </p>
 
       <div
-        className="absolute"
+        ref={text}
+        className="absolute bg-clip-text text-transparent"
         style={{
           left: u(603.98),
           top: u(97.97),
           width: u(806.02),
           fontSize: u(60),
+          backgroundImage: "linear-gradient(90deg, #000 var(--p), #fff var(--p))",
+          filter: "drop-shadow(0 0 0.5px rgba(0,0,0,.35))",
         }}
       >
         <p>We don’t follow a formula.</p>
