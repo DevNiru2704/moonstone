@@ -2,9 +2,9 @@ import Link from "next/link";
 import { GlassFilters } from "@/components/glass-filters";
 import { u } from "@/lib/lenis";
 
-// Liquid-glass look: the backdrop is magnified by the lens filter, no outline.
+// Liquid-glass look: the backdrop is magnified by the lens filter, rim only at two corners.
 const glass =
-  "fixed z-50 flex items-center justify-center text-white mix-blend-difference";
+  "glass-rim fixed z-50 flex items-center justify-center text-white mix-blend-difference";
 
 /* Fixed chrome from Figma "Frame 15" and "let's-work-together". */
 export function SiteHeader() {
