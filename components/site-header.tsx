@@ -37,8 +37,8 @@ export function SiteHeader() {
           height: u(40),
           borderRadius: u(20),
           gap: u(2),
-          backdropFilter: "url(#lens-dot)",
-          WebkitBackdropFilter: "url(#lens-dot)",
+          backdropFilter: "blur(3px) url(#lens-dot)",
+          WebkitBackdropFilter: "blur(3px) url(#lens-dot)",
         }}
       >
         {[0, 1, 2].map((i) => (
@@ -61,8 +61,8 @@ export function SiteHeader() {
           borderRadius: u(30),
           padding: u(20),
           fontSize: u(16),
-          backdropFilter: "url(#lens-pill)",
-          WebkitBackdropFilter: "url(#lens-pill)",
+          backdropFilter: "blur(3px) url(#lens-pill)",
+          WebkitBackdropFilter: "blur(3px) url(#lens-pill)",
         }}
       >
         <span className="whitespace-nowrap">LET’S WORK TOGETHER</span>
