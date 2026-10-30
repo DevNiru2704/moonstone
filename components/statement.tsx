@@ -24,14 +24,15 @@ export function Statement() {
       text.current!.style.setProperty("--p", "100%");
       return;
     }
-    // text starts white and is filled black left to right as it scrolls into view
+    // text starts white and is filled black left to right once it scrolls into view
     const fill = gsap.fromTo(
       text.current,
       { "--p": "0%" },
       {
         "--p": "100%",
-        ease: "none",
-        scrollTrigger: { trigger: text.current, start: "top 85%", end: "bottom 50%", scrub: 0.6 },
+        duration: 1.6,
+        ease: "power2.inOut",
+        scrollTrigger: { trigger: text.current, start: "top 70%", once: true },
       },
     );
     const tween = gsap.to(track.current, {
