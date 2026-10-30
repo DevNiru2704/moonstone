@@ -11,11 +11,13 @@ const FULL = { w: 3400, h: 3400 * (DOT.h / DOT.w) };
 
 export function Hero() {
   const photo = useRef<HTMLDivElement>(null);
-  const box = useRef<HTMLDivElement>(null);
+  const box1 = useRef<HTMLDivElement>(null);
+  const box2 = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = photo.current!;
-    const label = box.current!;
+    const first = box1.current!;
+    const label = box2.current!;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const state = { p: 0 };
 
@@ -33,7 +35,7 @@ export function Hero() {
     };
 
     apply();
-    gsap.set(label, { clipPath: "inset(0 100% 0 0)" });
+    gsap.set([first, label], { clipPath: "inset(0 100% 0 0)" });
     addEventListener("resize", apply);
 
     let tl: gsap.core.Timeline | undefined;
@@ -47,7 +49,9 @@ export function Hero() {
       tl = gsap
         .timeline({ delay: 0.4 })
         .to(state, { p: 1, duration: 1.4, ease: "power2.in", onUpdate: apply })
-        .to(label, { clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power3.inOut" }, "+=0.1");
+        .to(first, { clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power3.inOut" }, "+=0.1")
+        .to(first, { clipPath: "inset(0 0 0 100%)", duration: 0.25, ease: "power2.in" }, "+=1.6")
+        .to(label, { clipPath: "inset(0 0% 0 0)", duration: 0.5, ease: "power3.inOut" }, "+=0.25");
     });
 
     return () => {
@@ -87,13 +91,21 @@ export function Hero() {
       </div>
 
       <div className="absolute left-0 top-1/2 -translate-y-1/2" style={{ width: u(1440), height: u(1024) }}>
-        <div
-          ref={box}
-          className="absolute left-1/2 flex -translate-x-1/2 items-center whitespace-nowrap bg-white text-black"
-          style={{ top: u(452.5), height: u(119), padding: `0 ${u(20)}`, fontSize: u(80) }}
-        >
-          ideas in action
-        </div>
+        {(
+          [
+            [box1, "culture in motion"],
+            [box2, "ideas in action"],
+          ] as const
+        ).map(([ref, text]) => (
+          <div
+            key={text}
+            ref={ref}
+            className="absolute left-1/2 flex -translate-x-1/2 items-center whitespace-nowrap bg-white text-black"
+            style={{ top: u(452.5), height: u(119), padding: `0 ${u(20)}`, fontSize: u(80) }}
+          >
+            {text}
+          </div>
+        ))}
       </div>
     </section>
   );
