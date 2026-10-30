@@ -81,14 +81,14 @@ export function Preloader() {
       </div>
       <div
         className="absolute overflow-hidden font-sans text-white"
-        style={{ left: u(55), bottom: u(54.04), width: u(270), height: u(74) }}
+        style={{ left: u(55), bottom: u(38), width: u(270), height: u(110) }}
         aria-hidden
       >
         <div
           ref={reel}
           className="will-change-transform"
           style={{
-            marginTop: u(-38),
+            marginTop: u(-18), // window is taller than the glyphs so they are never cut
             fontSize: u(100),
             lineHeight: u(STEP),
             letterSpacing: u(-2),
