@@ -9,6 +9,14 @@ import { onReady, u, unit } from "@/lib/lenis";
 const DOT = { x: 962.99, y: 503.48, w: 43.2, h: 42.22 };
 const FULL = { w: 3400, h: 3400 * (DOT.h / DOT.w) };
 
+// Left-to-right reveal that overshoots to the right, springs back, then settles.
+const reveal = (el: HTMLElement) =>
+  gsap
+    .timeline()
+    .to(el, { width: "114%", duration: 0.45, ease: "power2.out" })
+    .to(el, { width: "96%", duration: 0.2, ease: "power1.inOut" })
+    .to(el, { width: "100%", duration: 0.2, ease: "power1.out" });
+
 export function Hero() {
   const photo = useRef<HTMLDivElement>(null);
   const box1 = useRef<HTMLDivElement>(null);
@@ -35,7 +43,7 @@ export function Hero() {
     };
 
     apply();
-    gsap.set([first, label], { clipPath: "inset(0 100% 0 0)" });
+    gsap.set([first, label], { width: 0 });
     addEventListener("resize", apply);
 
     let tl: gsap.core.Timeline | undefined;
@@ -43,15 +51,15 @@ export function Hero() {
       if (reduce) {
         state.p = 1;
         apply();
-        gsap.set(label, { clipPath: "inset(0 0% 0 0)" });
+        gsap.set(label, { width: "100%" });
         return;
       }
       tl = gsap
         .timeline({ delay: 0.4 })
         .to(state, { p: 1, duration: 1.4, ease: "power2.in", onUpdate: apply })
-        .to(first, { clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power3.inOut" }, "+=0.1")
+        .add(reveal(first), "+=0.1")
         .to(first, { clipPath: "inset(0 0 0 100%)", duration: 0.25, ease: "power2.in" }, "+=1.6")
-        .to(label, { clipPath: "inset(0 0% 0 0)", duration: 0.5, ease: "power3.inOut" }, "+=0.25");
+        .add(reveal(label), "+=0.25");
     });
 
     return () => {
@@ -99,11 +107,16 @@ export function Hero() {
         ).map(([ref, text]) => (
           <div
             key={text}
-            ref={ref}
-            className="absolute left-1/2 flex -translate-x-1/2 items-center whitespace-nowrap bg-white text-black"
+            className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap"
             style={{ top: u(452.5), height: u(119), padding: `0 ${u(20)}`, fontSize: u(80) }}
           >
-            {text}
+            <span className="invisible flex h-full items-center">{text}</span>
+            <div
+              ref={ref}
+              className="absolute left-0 top-0 flex h-full items-center overflow-hidden bg-white text-black"
+            >
+              <span style={{ marginLeft: u(20) }}>{text}</span>
+            </div>
           </div>
         ))}
       </div>
