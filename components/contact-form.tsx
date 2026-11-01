@@ -227,6 +227,7 @@ export function ContactForm() {
           <Link href="/privacy-policy" className="underline">
             Privacy Policy
           </Link>
+          <span className="text-crimson">*</span>
         </Check>
         <Check name="marketing" top={339}>
           I agree to receive marketing emails and newsletters from Scale360*
