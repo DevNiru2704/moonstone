@@ -16,6 +16,7 @@ const map = (r: number[], g: number[]) => {
 const FILTERS = [
   // scale is a fraction of the element's own size, so the lens looks the same at any viewport width
   { id: "lens-pill", scale: 0.12, href: map([255, 170, 128, 86, 0], [200, 156, 128, 100, 56]) },
+  { id: "lens-card", scale: 0.06, href: map([255, 170, 128, 86, 0], [255, 170, 128, 86, 0]) },
   { id: "lens-dot", scale: 0.35, href: map([255, 170, 128, 86, 0], [255, 170, 128, 86, 0]) },
 ];
 

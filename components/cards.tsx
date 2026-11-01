@@ -45,12 +45,14 @@ export function Cards() {
       {CARDS.map((c) => (
         <article
           key={c.title}
-          className="studio-card group relative shrink-0"
+          className="studio-card glass-rim group relative shrink-0"
           style={{
             width: u(426.71),
             height: u(789.23),
             borderRadius: u(25),
             background: "rgba(217,217,217,0.2)",
+            backdropFilter: "blur(2px) url(#lens-card)",
+            WebkitBackdropFilter: "blur(2px) url(#lens-card)",
           }}
         >
           {[c.photo, c.color].map((src, i) => (
