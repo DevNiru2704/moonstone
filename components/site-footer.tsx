@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import { SOCIAL } from "@/lib/links";
 import { u } from "@/lib/lenis";
 
 // [label, x, y, right-aligned?]; positions and labels from Figma "Footer" (1440x556) and the prototype.
@@ -17,12 +18,6 @@ const LINKS: [string, number, number, boolean][] = [
   ["SERVICES", 1410, 334.3, true],
   ["CONTACT", 1410, 365.3, true],
 ];
-
-const SOCIAL: Record<string, string> = {
-  Instagram: "https://www.instagram.com/moonstone.multimedia",
-  Youtube: "https://www.youtube.com/@MoonstoneMultimedia",
-  Linkedin: "https://www.linkedin.com/company/moonstone-multimedia/",
-};
 
 // [sigma, opaque until %, transparent from %] of the wordmark image height; sigma s sits s/25 * 208px below the group top
 const BLUR_LEVELS = [

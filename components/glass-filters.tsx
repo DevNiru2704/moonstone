@@ -1,5 +1,8 @@
 import { Fragment } from "react";
 
+// Liquid-glass look: the backdrop is bent by a lens filter, with a rim at the top-left and bottom-right corners.
+export const GLASS = "glass-rim fixed z-50 flex items-center justify-center text-white mix-blend-difference";
+
 // Lens filters for backdrop-filter: url(#lens-*). The map bitmap (R = x shift, G = y shift, 128 = none) splits the
 // glass in three: the middle shows the backdrop as it is, the top and bottom bands show it smaller and mirrored
 // (the sample point runs back past the band edge), the end caps pull a little inward. The colour channels are bent
@@ -9,6 +12,9 @@ const FILTERS = [
   // scale is a fraction of the element's width (Skia uses it for both axes), so the lens looks the same at any viewport width
   { id: "lens-pill", map: "lens-map-pill", scale: 0.283, passes: 3 }, // 1.08 * height / width
   { id: "lens-dot", map: "lens-map-pill", scale: 1.08, passes: 3 },
+  // menu: the same 40px-high pill map at the menu's other sizes (scale = 1.08 * height / width)
+  { id: "lens-bar", map: "lens-map-pill", scale: 0.216, passes: 3 },
+  { id: "lens-panel", map: "lens-map-pill", scale: 1.19, passes: 3 },
   // card bands: the photo hides most of the backdrop, so the lens only runs where sky shows. Top and bottom rims
   // use the same three-part idea as the pill (rim = smaller, mirrored sky from further in; rest untouched), the
   // side rims pull inward like the pill's end caps
