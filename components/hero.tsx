@@ -4,18 +4,11 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { onReady, u, unit } from "@/lib/lenis";
+import { bounceErase, bounceReveal as reveal } from "@/lib/reveal";
 
 // Figma: the photo is masked to a 43x42 pill sitting on the "o" dot of the wordmark.
 const DOT = { x: 962.99, y: 503.48, w: 43.2, h: 42.22 };
 const FULL = { w: 3400, h: 3400 * (DOT.h / DOT.w) };
-
-// Left-to-right reveal that overshoots to the right, springs back, then settles.
-const reveal = (el: HTMLElement) =>
-  gsap
-    .timeline()
-    .to(el, { width: "112%", duration: 0.6, ease: "power2.out" })
-    .to(el, { width: "97%", duration: 0.3, ease: "sine.inOut" })
-    .to(el, { width: "100%", duration: 0.3, ease: "sine.out" });
 
 export function Hero() {
   const photo = useRef<HTMLDivElement>(null);
@@ -58,7 +51,7 @@ export function Hero() {
         .timeline({ delay: 0.4 })
         .to(state, { p: 1, duration: 1.4, ease: "power2.in", onUpdate: apply })
         .add(reveal(first), "+=0.1")
-        .to(first, { clipPath: "inset(0 0 0 100%)", duration: 0.25, ease: "power2.in" }, "+=1.6")
+        .add(bounceErase(first), "+=1.6")
         .add(reveal(label), "+=0.25");
     });
 
