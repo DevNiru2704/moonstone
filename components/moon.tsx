@@ -20,7 +20,7 @@ const CARDS = 1800; // three cards swipe up one by one
 const MOVE = 900; // the scene moves down to the sunset photo (nothing on it yet)
 const UP = 500; // the glass ball comes up from behind the horizon
 const BALL = 1500; // the ball grows into the white dome
-const HOLD = 500; // scroll left to watch the CTA reveal, which plays by itself
+const HOLD = 400; // scroll left to watch the CTA reveal, which plays by itself
 const TOTAL = CARDS + MOVE + UP + BALL + HOLD;
 const DOME = 780; // final dome radius (design px): dark sky stays visible in the top corners
 
@@ -99,8 +99,8 @@ export function Moon() {
       onUpdate: (self) => {
         if (done) return;
         const px = self.progress * TOTAL;
-        tl.progress(self.progress);
-        if (px >= CARDS + MOVE + UP + BALL) finish();
+        tl.time(Math.min(px, tl.duration())); // the timeline is in scroll px
+        if (px >= tl.duration()) finish();
       },
       // finished and scrolled past: keep the end state, drop the pin and the scroll room it added,
       // and show the same picture in the normal flow
@@ -155,13 +155,14 @@ export function Moon() {
               "0 0 0 1.5px rgba(255,255,255,0.85), 0 0 50px 8px rgba(160,205,255,0.5), inset 0 0 50px rgba(255,255,255,0.3)",
           }}
         />
-        {/* the ground and mountain of the photo again, above the ball: the ball rises from behind the horizon */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/img/hills-1.jpg"
+        {/* black mountain + ground silhouette above the ball: the ball rises from behind the mountain */}
+        <Image
+          src="/img/hills-2.png"
           alt=""
-          className="absolute left-0 max-w-none object-cover"
-          style={{ top: u(1018.4), width: u(1539.849), height: u(1024), clipPath: `inset(${u(535)} 0 0 0)` }}
+          width={1024}
+          height={681}
+          className="absolute left-0 max-w-none"
+          style={{ top: u(1018.4), width: u(1539.849), height: u(1024) }}
         />
         {/* only the mountain and ground of the 1024x681 comp: white sky above y=500 is cut off */}
         <Image
