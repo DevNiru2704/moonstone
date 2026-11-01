@@ -63,7 +63,7 @@ export function SiteFooter() {
         {Array.from({ length: COLS * ROWS }, (_, i) => (
           <div
             key={i}
-            className="aspect-square border-[0.5px] border-grid bg-ink transition-colors duration-[1200ms] data-[lit]:bg-white/20 data-[lit]:duration-75"
+            className="aspect-square border-[0.5px] border-[#161616] bg-ink transition-colors duration-[1200ms] data-[lit]:bg-white/20 data-[lit]:duration-75"
           />
         ))}
       </div>
