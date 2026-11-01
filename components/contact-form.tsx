@@ -3,10 +3,12 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { CountryPicker, DEFAULT_COUNTRY, type Country } from "@/components/country-picker";
+import { validateEmail } from "@/lib/email-validation";
 import { u } from "@/lib/lenis";
+import { validatePhone } from "@/lib/phone-validation";
 
 type Status = "idle" | "sending" | "sent" | "error" | "unconfigured";
-type Errors = Partial<Record<"first" | "email" | "consent", string>>;
+type Errors = Partial<Record<"first" | "email" | "phone" | "consent", string>>;
 
 const line = "border-b border-white";
 const field =
@@ -27,6 +29,7 @@ function Field({
   required,
   error,
   autoComplete,
+  onCheck,
 }: {
   name: string;
   label: string;
@@ -41,6 +44,8 @@ function Field({
   required?: boolean;
   error?: string;
   autoComplete?: string;
+  /** called on blur with the value (to validate early) and on typing with null (to clear the message) */
+  onCheck?: (value: string | null) => void;
 }) {
   const Tag = area ? "textarea" : "input";
   return (
@@ -52,6 +57,9 @@ function Field({
         required={required}
         type={area ? undefined : type}
         autoComplete={autoComplete}
+        spellCheck={area ? true : false}
+        onBlur={onCheck && ((e) => onCheck(e.currentTarget.value))}
+        onInput={onCheck && (() => onCheck(null))}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `e-${name}` : undefined}
         className={`${field} ${line}`}
@@ -113,16 +121,27 @@ export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [country, setCountry] = useState<Country>(DEFAULT_COUNTRY);
 
+  // validate on blur, clear the message as soon as the person types again
+  const check = (key: "email" | "phone", test: (v: string) => string | null) => (v: string | null) =>
+    setErrors((e) => {
+      const { [key]: _old, ...rest } = e; // eslint-disable-line @typescript-eslint/no-unused-vars
+      const msg = v === null ? null : test(v);
+      return msg ? { ...rest, [key]: msg } : rest;
+    });
+
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const next: Errors = {};
     if (!String(fd.get("first_name")).trim()) next.first = "Please enter your first name.";
-    if (!/^\S+@\S+\.\S+$/.test(String(fd.get("email")).trim())) next.email = "Please enter a valid email address.";
+    const emailError = validateEmail(String(fd.get("email")));
+    if (emailError) next.email = emailError;
+    const phoneError = validatePhone(String(fd.get("phone") ?? ""), country);
+    if (phoneError) next.phone = phoneError;
     if (!fd.get("terms")) next.consent = "Please accept to continue.";
     setErrors(next);
     if (Object.keys(next).length) {
-      const order = { first: "first_name", email: "email", consent: "terms" } as const;
+      const order = { first: "first_name", phone: "phone", email: "email", consent: "terms" } as const;
       const firstBad = (Object.keys(order) as (keyof typeof order)[]).find((k) => next[k]);
       (form.current!.elements.namedItem(order[firstBad!]) as HTMLElement | null)?.focus();
       return;
@@ -179,12 +198,24 @@ export function ContactForm() {
         <Field name="last_name" label="Last Name" left={340} top={35} width={279} autoComplete="family-name" />
         <Field name="organization" label="Organization" left={35} top={98} width={584} autoComplete="organization" />
         {/* the dial code sits after the flag; the label and typed number start after it */}
-        <Field name="phone" label="Contact" type="tel" left={35} top={161} width={284} indent={`calc(${u(61)} + ${country.dial.length * 0.58}em)`} autoComplete="tel-national" />
+        <Field name="phone" label="Contact" type="tel" left={35} top={161} width={284} indent={`calc(${u(61)} + ${country.dial.length * 0.58}em)`} error={errors.phone} autoComplete="tel-national" onCheck={check("phone", (v) => validatePhone(v, country))} />
         <span aria-hidden className="pointer-events-none absolute text-white" style={{ left: u(88), top: u(161), fontSize: u(16), lineHeight: u(19) }}>
           {country.dial}
         </span>
-        <CountryPicker value={country} onChange={setCountry} />
-        <Field name="email" label="Email" star required type="email" left={340} top={161} width={279} error={errors.email} autoComplete="email" />
+        <CountryPicker
+          value={country}
+          onChange={(c) => {
+            setCountry(c);
+            // the rules belong to the country: re-check a number that was already typed
+            const typed = (form.current?.elements.namedItem("phone") as HTMLInputElement | null)?.value ?? "";
+            setErrors((e) => {
+              const { phone: _old, ...rest } = e; // eslint-disable-line @typescript-eslint/no-unused-vars
+              const msg = typed ? validatePhone(typed, c) : null;
+              return msg ? { ...rest, phone: msg } : rest;
+            });
+          }}
+        />
+        <Field name="email" label="Email" star required type="email" left={340} top={161} width={279} error={errors.email} autoComplete="email" onCheck={check("email", validateEmail)} />
         <Field name="message" label="Message" area left={35} top={224} width={584} height={68} />
 
         <Check name="terms" top={309} error={errors.consent}>

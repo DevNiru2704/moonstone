@@ -103,3 +103,13 @@ html.lenis body {
   background: rgba(255, 255, 255, 0.4);
   border-radius: 2px;
 }
+
+/* browser autofill (saved emails etc.) must not paint its own light background or dark text on the glass form */
+form input:-webkit-autofill,
+form input:-webkit-autofill:hover,
+form input:-webkit-autofill:focus,
+form textarea:-webkit-autofill {
+  -webkit-text-fill-color: #fff;
+  caret-color: #fff;
+  transition: background-color 600000s ease-in-out 0s;
+}
