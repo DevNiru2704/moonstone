@@ -10,6 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 type Card = {
   photo: string;
+  color: string;
   title: string;
   text: string;
   logo: "moonstoned" | "multimedia";
@@ -20,12 +21,14 @@ type Card = {
 const CARDS: Card[] = [
   {
     photo: "/img/card-moonstoned.png",
+    color: "/img/card-moonstoned-color.png",
     title: "Moonstone*d",
     text: "A creative agency building brands through strategy and design.",
     logo: "moonstoned",
   },
   {
     photo: "/img/card-multimedia.png",
+    color: "/img/card-multimedia-color.png",
     title: "Moonstone Multimedia",
     text: "An independent record label and production house shaping stories.",
     logo: "multimedia",
@@ -33,6 +36,7 @@ const CARDS: Card[] = [
   },
   {
     photo: "/img/card-artists.png",
+    color: "/img/card-artists-color.png",
     title: "Moonstone Artists",
     text: "Representing and supporting independent artists across India.",
     logo: "multimedia",
@@ -46,13 +50,14 @@ export function Cards() {
   useEffect(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const ctx = gsap.context(() => {
+      // slide up one card at a time
       gsap.from(".studio-card", {
-        y: 80,
+        yPercent: 40,
         opacity: 0,
-        duration: 0.9,
+        duration: 1,
         ease: "power3.out",
-        stagger: 0.12,
-        scrollTrigger: { trigger: root.current, start: "top 80%" },
+        stagger: 0.4,
+        scrollTrigger: { trigger: root.current, start: "top 90%" },
       });
     }, root);
     return () => ctx.revert();
@@ -63,7 +68,7 @@ export function Cards() {
       {CARDS.map((c) => (
         <article
           key={c.title}
-          className="studio-card relative shrink-0"
+          className="studio-card group relative shrink-0"
           style={{
             width: u(426.71),
             height: u(789.23),
@@ -71,19 +76,22 @@ export function Cards() {
             background: "rgba(217,217,217,0.2)",
           }}
         >
-          <Image
-            src={c.photo}
-            alt=""
-            width={753}
-            height={1266}
-            className="absolute"
-            style={{
-              left: u(26.31),
-              top: u(26.31),
-              width: u(374.09),
-              height: u(630.63),
-            }}
-          />
+          {[c.photo, c.color].map((src, i) => (
+            <Image
+              key={src}
+              src={src}
+              alt=""
+              width={753}
+              height={1266}
+              className={`absolute ${i ? "opacity-0 transition-opacity duration-500 group-hover:opacity-100" : ""}`}
+              style={{
+                left: u(26.31),
+                top: u(26.31),
+                width: u(374.09),
+                height: u(630.63),
+              }}
+            />
+          ))}
 
           {c.logo === "moonstoned" ? (
             // eslint-disable-next-line @next/next/no-img-element

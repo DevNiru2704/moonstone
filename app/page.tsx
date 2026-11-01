@@ -1,4 +1,3 @@
-import { Finale } from "@/components/finale";
 import { Hero } from "@/components/hero";
 import { Moon } from "@/components/moon";
 import { Preloader } from "@/components/preloader";
@@ -15,7 +14,6 @@ export default function Home() {
         <Hero />
         <Statement />
         <Moon />
-        <Finale />
       </main>
       <SiteFooter />
     </>
