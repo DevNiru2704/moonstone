@@ -18,6 +18,12 @@ const LINKS: [string, number, number, boolean][] = [
   ["CONTACT", 1410, 365.3, true],
 ];
 
+const SOCIAL: Record<string, string> = {
+  Instagram: "https://www.instagram.com/moonstone.multimedia",
+  Youtube: "https://www.youtube.com/@MoonstoneMultimedia",
+  Linkedin: "https://www.linkedin.com/company/moonstone-multimedia/",
+};
+
 const COLS = 14;
 const ROWS = 6;
 
@@ -133,7 +139,8 @@ export function SiteFooter() {
       {LINKS.map(([label, x, y, right]) => (
         <a
           key={label}
-          href="#"
+          href={SOCIAL[label] ?? "#"}
+          {...(SOCIAL[label] && { target: "_blank", rel: "noopener noreferrer" })}
           className="absolute whitespace-nowrap"
           style={
             {
