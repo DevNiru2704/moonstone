@@ -34,20 +34,18 @@ export function Moon() {
   useEffect(() => {
     const el = root.current!;
     const k = () => unit();
+    let released = false;
+    // end state; while still pinned the scene is moved down to the hill photo, once released it is the plain full section
     const final = () => {
-      gsap.set(stage.current, { y: () => -MOVE * k() });
+      gsap.set(stage.current, { y: () => (released ? 0 : -MOVE * k()) });
       gsap.set(moon.current, { width: () => 2 * DOME * k(), height: () => 2 * DOME * k(), backgroundColor: "rgb(255,255,255)", backdropFilter: "none" });
       gsap.set(hills.current, { opacity: 1 });
       gsap.set(box.current, { clipPath: "inset(0 0% 0 0)" });
       gsap.set(el.querySelectorAll(".studio-card"), { yPercent: 0, opacity: 1 });
     };
-    // after the sequence the section is just the final view: cut the 700px the scene moved up
-    const shrink = () => {
-      el.style.height = u(1761 - MOVE);
-    };
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      released = true;
       final();
-      shrink();
       return;
     }
     const cards = gsap.utils.toArray<HTMLElement>(".studio-card", el);
@@ -82,14 +80,17 @@ export function Moon() {
           final();
         }
       },
-      // finished and scrolled past: keep the end state, drop the pin and the scroll room it added
+      // finished and scrolled past: keep the end state, drop the pin and the scroll room it added,
+      // and show the same picture in the normal flow (section top 700px above the viewport)
       onLeave: () => {
         done = true;
-        final();
+        released = true;
         const y = window.scrollY;
+        const over = y - (st.start + TOTAL);
         st.kill(true);
-        shrink();
-        getLenis()?.scrollTo(y - TOTAL - MOVE * k(), { immediate: true, force: true });
+        final();
+        const top = el.getBoundingClientRect().top + window.scrollY;
+        getLenis()?.scrollTo(top + MOVE * k() + over, { immediate: true, force: true });
       },
     });
     const resize = () => {
