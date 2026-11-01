@@ -184,7 +184,7 @@ export function ContactForm() {
           {country.dial}
         </span>
         <CountryPicker value={country} onChange={setCountry} />
-        <Field name="email" label="Email" type="email" left={340} top={161} width={279} error={errors.email} autoComplete="email" />
+        <Field name="email" label="Email" star required type="email" left={340} top={161} width={279} error={errors.email} autoComplete="email" />
         <Field name="message" label="Message" area left={35} top={224} width={584} height={68} />
 
         <Check name="terms" top={309} error={errors.consent}>
