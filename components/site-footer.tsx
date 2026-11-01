@@ -102,7 +102,7 @@ export function SiteFooter() {
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={sigma}
-                src={`/img/footer-wordmark-b${sigma}.svg`}
+                src={`/img/footer-wordmark-b${sigma}.svg?v=3`}
                 alt=""
                 className="absolute inset-0 block size-full max-w-none"
                 style={mask ? { maskImage: mask, WebkitMaskImage: mask } : undefined}
