@@ -76,8 +76,8 @@ export function Cards() {
           style={{
             borderRadius: u(25),
             background: "rgba(217,217,217,0.2)",
-            backdropFilter: "blur(2px)",
-            WebkitBackdropFilter: "blur(2px)",
+            backdropFilter: "blur(4px)",
+            WebkitBackdropFilter: "blur(4px)",
           }}
         >
           {[c.photo, c.color].map((src, i) => (
