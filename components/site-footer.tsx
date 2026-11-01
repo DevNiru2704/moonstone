@@ -96,6 +96,19 @@ export function SiteFooter() {
         <div className="absolute" style={{ inset: "-31.69% -3.34%", opacity: 0.5 }}>
           {/* Figma: progressive layer blur, radius 0 at the top growing to 50 (sigma 25) 208px down. Built from
               five blur levels stacked sharpest-on-top; each fades out between its own depth and the next. */}
+          {/* lower half: an extra, much blurrier layer fades in over the stack so the letters turn soft and translucent */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/img/footer-wordmark-b40.svg?v=6"
+            alt=""
+            className="absolute inset-0 block size-full max-w-none"
+            style={{
+              zIndex: 1,
+              maskImage: "linear-gradient(to bottom, transparent 30%, #000 62%)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 30%, #000 62%)",
+              opacity: 0.9,
+            }}
+          />
           {BLUR_LEVELS.map(([sigma, from, to]) => {
             const mask = to && `linear-gradient(to bottom, #000 ${from}%, transparent ${to}%)`;
             return (
