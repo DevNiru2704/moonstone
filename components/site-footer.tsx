@@ -99,7 +99,7 @@ export function SiteFooter() {
           {/* lower half: an extra, much blurrier layer fades in over the stack so the letters turn soft and translucent */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/img/footer-wordmark-b40.svg?v=7"
+            src="/img/footer-wordmark-b40.svg?v=8"
             alt=""
             className="absolute inset-0 block size-full max-w-none"
             style={{
@@ -115,7 +115,7 @@ export function SiteFooter() {
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={sigma}
-                src={`/img/footer-wordmark-b${sigma}.svg?v=7`}
+                src={`/img/footer-wordmark-b${sigma}.svg?v=8`}
                 alt=""
                 className="absolute inset-0 block size-full max-w-none"
                 style={mask ? { maskImage: mask, WebkitMaskImage: mask } : undefined}

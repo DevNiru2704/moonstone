@@ -14,7 +14,8 @@
 <filter id="filter0_fn_0_4" x="3.87767e-07" y="0" width="1595.62" height="257.77" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-<feGaussianBlur stdDeviation="32" result="effect1_foregroundBlur_0_4"/>
+<feGaussianBlur stdDeviation="32" result="blurRaw"/>
+<feComponentTransfer in="blurRaw" result="effect1_foregroundBlur_0_4"><feFuncA type="gamma" amplitude="1" exponent="2.6" offset="0"/></feComponentTransfer>
 <feTurbulence type="fractalNoise" baseFrequency="2 2" stitchTiles="stitch" numOctaves="3" result="noise" seed="8061" />
 <feColorMatrix in="noise" type="luminanceToAlpha" result="alphaNoise" />
 <feComponentTransfer in="alphaNoise" result="coloredNoise1">
