@@ -30,10 +30,10 @@ export function AboutCaption() {
   }, []);
 
   return (
-    // the 541px container is centred; every phrase box starts at its left edge, as in Figma
-    <div className="absolute" style={{ left: u(449.5), top: u(472), width: u(541), height: u(80) }}>
+    // centred on the first screen, each phrase box centred on its own width
+    <div className="absolute inset-x-0 -translate-y-1/2" style={{ top: "50svh", height: u(80) }}>
       {PHRASES.map((text, i) => (
-        <div key={text} className="absolute left-0 top-0 inline-block" style={{ height: u(79.5) }}>
+        <div key={text} className="absolute left-1/2 top-0 inline-block -translate-x-1/2" style={{ height: u(79.5) }}>
           <span className="invisible block whitespace-nowrap" style={{ padding: `0 ${u(13.5)}`, fontSize: u(60) }}>
             {text}
           </span>
