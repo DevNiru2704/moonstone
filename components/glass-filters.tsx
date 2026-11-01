@@ -1,30 +1,28 @@
 import { Fragment } from "react";
 
-// Lens maps for backdrop-filter: url(#lens-*). Red = x shift, green = y shift (128 = none);
-// content at the edges is pulled toward the centre, so the glass magnifies what is behind it.
-const map = (r: number[], g: number[]) => {
-  const stops = (v: number[], c: (n: number) => string) =>
-    v.map((n, i) => `<stop offset='${[0, 0.3, 0.5, 0.7, 1][i]}' stop-color='${c(n)}'/>`).join("");
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100' preserveAspectRatio='none'>
-<defs><linearGradient id='x' x2='1' y2='0'>${stops(r, (n) => `rgb(${n},0,0)`)}</linearGradient>
-<linearGradient id='y' x2='0' y2='1'>${stops(g, (n) => `rgb(0,${n},0)`)}</linearGradient></defs>
-<rect width='100' height='100' fill='#000'/><rect width='100' height='100' fill='url(#x)'/>
-<rect width='100' height='100' fill='url(#y)' style='mix-blend-mode:screen'/></svg>`;
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
-};
-
+// Lens filters for backdrop-filter: url(#lens-*). The map bitmap (R = x shift, G = y shift, 128 = none) pulls the
+// edges toward the centre, so the glass magnifies what is behind it. The colour channels are bent by slightly
+// different amounts for the rainbow fringe of real glass: `passes` 3 = one displacement per channel (small
+// elements), 2 = red vs green+blue (big elements, 3 fewer full-size passes).
 const FILTERS = [
   // scale is a fraction of the element's own size, so the lens looks the same at any viewport width
-  { id: "lens-pill", scale: 0.12, href: map([255, 170, 128, 86, 0], [200, 156, 128, 100, 56]) },
-  { id: "lens-card", scale: 0.06, href: map([255, 170, 128, 86, 0], [255, 170, 128, 86, 0]) },
-  { id: "lens-dot", scale: 0.35, href: map([255, 170, 128, 86, 0], [255, 170, 128, 86, 0]) },
-];
-
-const CHANNELS = [
-  ["r", 0.7, "1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"],
-  ["g", 1, "0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0"],
-  ["b", 1.35, "0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0"],
+  { id: "lens-pill", map: "lens-map-pill", scale: 0.12, passes: 3 },
+  { id: "lens-card", map: "lens-map", scale: 0.06, passes: 2 },
+  { id: "lens-dot", map: "lens-map", scale: 0.35, passes: 3 },
 ] as const;
+
+// [result, scale factor, colour matrix keeping that channel (and alpha)]
+const CHANNELS = {
+  3: [
+    ["r", 0.7, "1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"],
+    ["g", 1, "0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0"],
+    ["b", 1.35, "0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0"],
+  ],
+  2: [
+    ["r", 0.7, "1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"],
+    ["gb", 1.2, "0 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"],
+  ],
+} as const;
 
 export function GlassFilters() {
   return (
@@ -40,16 +38,21 @@ export function GlassFilters() {
           primitiveUnits="objectBoundingBox"
           colorInterpolationFilters="sRGB"
         >
-          <feImage href={f.href} x="0" y="0" width="1" height="1" preserveAspectRatio="none" result="map" />
-          {/* each colour channel is bent by a slightly different amount: the rainbow fringe of real glass */}
-          {CHANNELS.map(([ch, k, matrix]) => (
+          <feImage href={`/img/${f.map}.png`} x="0" y="0" width="1" height="1" preserveAspectRatio="none" result="map" />
+          {CHANNELS[f.passes].map(([ch, k, matrix]) => (
             <Fragment key={ch}>
-              <feDisplacementMap in="SourceGraphic" in2="map" scale={f.scale * k} xChannelSelector="R" yChannelSelector="G" result={`d${ch}`} />
-              <feColorMatrix in={`d${ch}`} type="matrix" values={matrix} result={ch} />
+              <feDisplacementMap in="SourceGraphic" in2="map" scale={f.scale * k} xChannelSelector="R" yChannelSelector="G" />
+              <feColorMatrix type="matrix" values={matrix} result={ch} />
             </Fragment>
           ))}
-          <feBlend in="r" in2="g" mode="screen" result="rg" />
-          <feBlend in="rg" in2="b" mode="screen" />
+          {f.passes === 3 ? (
+            <>
+              <feBlend in="r" in2="g" mode="screen" result="rg" />
+              <feBlend in="rg" in2="b" mode="screen" />
+            </>
+          ) : (
+            <feBlend in="r" in2="gb" mode="screen" />
+          )}
         </filter>
       ))}
     </svg>
