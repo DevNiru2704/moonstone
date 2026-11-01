@@ -85,13 +85,16 @@ function Check({ name, top, error, children }: { name: string; top: number; erro
           className="relative mt-[3px] block shrink-0 bg-[#d9d9d9] peer-checked:after:absolute peer-checked:after:inset-[2px] peer-checked:after:bg-[#121212] peer-focus-visible:outline peer-focus-visible:outline-1 peer-focus-visible:outline-white"
           style={{ width: u(7), height: u(7), marginTop: u(2.5) }}
         />
-        <span className="text-white">{children}</span>
+        <span className="text-white">
+          {children}
+          {/* inline, so it follows the last line of the text instead of overlapping the next checkbox */}
+          {error && (
+            <span role="alert" className="text-crimson" style={{ marginLeft: u(10) }}>
+              {error}
+            </span>
+          )}
+        </span>
       </label>
-      {error && (
-        <p role="alert" className="text-crimson" style={{ marginLeft: u(12), marginTop: u(2), fontSize: u(10) }}>
-          {error}
-        </p>
-      )}
     </div>
   );
 }
