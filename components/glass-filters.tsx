@@ -7,8 +7,13 @@ import { Fragment } from "react";
 const FILTERS = [
   // scale is a fraction of the element's own size, so the lens looks the same at any viewport width
   { id: "lens-pill", map: "lens-map-pill", scale: 0.12, passes: 3 },
-  { id: "lens-card", map: "lens-map", scale: 0.06, passes: 2 },
   { id: "lens-dot", map: "lens-map", scale: 0.35, passes: 3 },
+  // card bands: the photo hides most of the backdrop, so the lens only runs on the thin bands where sky shows;
+  // each band pulls its content toward the card centre along one axis
+  { id: "edge-l", map: "lens-edge-l", scale: 1, passes: 2 },
+  { id: "edge-r", map: "lens-edge-r", scale: 1, passes: 2 },
+  { id: "edge-t", map: "lens-edge-t", scale: 1, passes: 2 },
+  { id: "edge-b", map: "lens-edge-b", scale: 0.3, passes: 2 },
 ] as const;
 
 // [result, scale factor, colour matrix keeping that channel (and alpha)]

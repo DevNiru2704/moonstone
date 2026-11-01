@@ -41,7 +41,7 @@ export function Moon() {
       gsap.set(moon.current, { width: () => 2 * DOME * k(), height: () => 2 * DOME * k(), backgroundColor: "rgb(255,255,255)", backdropFilter: "none" });
       gsap.set(hills.current, { opacity: 1 });
       gsap.set(box.current, { clipPath: "inset(0 0% 0 0)" });
-      gsap.set(el.querySelectorAll(".studio-card"), { yPercent: 0, opacity: 1 });
+      gsap.set(el.querySelectorAll(".studio-card"), { yPercent: 0 });
     };
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
       released = true;
@@ -53,7 +53,7 @@ export function Moon() {
 
     const tl = gsap.timeline({ paused: true });
     cards.forEach((c, i) =>
-      tl.fromTo(c, { yPercent: 45, opacity: 0 }, { yPercent: 0, opacity: 1, ease: "none", duration: CARDS / 3.4 }, (i * CARDS) / 3.4),
+      tl.fromTo(c, { yPercent: 110 }, { yPercent: 0, ease: "none", duration: CARDS / 3.4 }, (i * CARDS) / 3.4),
     );
     tl.fromTo(stage.current, { y: 0 }, { y: () => -MOVE * k(), ease: "none", duration: MOVE }, CARDS)
       .fromTo(

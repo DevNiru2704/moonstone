@@ -39,20 +39,44 @@ const CARDS: Card[] = [
   },
 ];
 
+// [filter, x, y, w, h, radius] of the bands around the photo where the sky shows through the card
+const BANDS = [
+  ["edge-t", 0, 0, 426.71, 26.31, `${u(25)} ${u(25)} 0 0`],
+  ["edge-l", 0, 26.31, 26.31, 630.63, "0"],
+  ["edge-r", 400.4, 26.31, 26.31, 630.63, "0"],
+  ["edge-b", 0, 656.94, 426.71, 132.29, `0 0 ${u(25)} ${u(25)}`],
+] as const;
+
 export function Cards() {
   return (
     <div className="flex justify-center" style={{ gap: u(25) }}>
       {CARDS.map((c) => (
+        // the wrapper only slides (no opacity), so the glass layers inside still see the sky behind the card
+        <div key={c.title} className="studio-card relative shrink-0" style={{ width: u(426.71), height: u(789.23) }}>
+        {/* under the article, so the lens bends the sky but not the card's own text */}
+        {BANDS.map(([id, x, y, w, h, r]) => (
+          <div
+            key={id}
+            aria-hidden
+            className="pointer-events-none absolute"
+            style={{
+              left: u(x),
+              top: u(y),
+              width: u(w),
+              height: u(h),
+              borderRadius: r,
+              backdropFilter: `url(#${id})`,
+              WebkitBackdropFilter: `url(#${id})`,
+            }}
+          />
+        ))}
         <article
-          key={c.title}
-          className="studio-card glass-rim group relative shrink-0"
+          className="glass-rim group absolute inset-0"
           style={{
-            width: u(426.71),
-            height: u(789.23),
             borderRadius: u(25),
             background: "rgba(217,217,217,0.2)",
-            backdropFilter: "blur(2px) url(#lens-card)",
-            WebkitBackdropFilter: "blur(2px) url(#lens-card)",
+            backdropFilter: "blur(2px)",
+            WebkitBackdropFilter: "blur(2px)",
           }}
         >
           {[c.photo, c.color].map((src, i) => (
@@ -128,6 +152,7 @@ export function Cards() {
             <span style={{ fontWeight: 300 }}>{c.text}</span>
           </p>
         </article>
+        </div>
       ))}
     </div>
   );
