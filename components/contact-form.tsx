@@ -176,8 +176,8 @@ export function ContactForm() {
         <Field name="last_name" label="Last Name" left={340} top={35} width={279} autoComplete="family-name" />
         <Field name="organization" label="Organization" left={35} top={98} width={584} autoComplete="organization" />
         {/* the dial code sits after the flag; the label and typed number start after it */}
-        <Field name="phone" label="Contact" type="tel" left={35} top={161} width={284} indent={`calc(${u(46)} + ${country.dial.length + 0.6}ch)`} autoComplete="tel-national" />
-        <span aria-hidden className="pointer-events-none absolute text-white" style={{ left: u(81), top: u(161), fontSize: u(16), lineHeight: u(19) }}>
+        <Field name="phone" label="Contact" type="tel" left={35} top={161} width={284} indent={`calc(${u(61)} + ${country.dial.length * 0.58}em)`} autoComplete="tel-national" />
+        <span aria-hidden className="pointer-events-none absolute text-white" style={{ left: u(88), top: u(161), fontSize: u(16), lineHeight: u(19) }}>
           {country.dial}
         </span>
         <CountryPicker value={country} onChange={setCountry} />

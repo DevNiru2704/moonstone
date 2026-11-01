@@ -60,13 +60,13 @@ export function CountryPicker({ value, onChange }: { value: Country; onChange: (
           setTimeout(() => search.current?.focus());
         }}
         className="flex cursor-pointer items-center"
-        style={{ height: u(28), gap: u(11), paddingTop: u(3), alignItems: "flex-start" }}
+        style={{ height: u(28), gap: u(8), paddingTop: u(3), alignItems: "flex-start" }}
       >
         <Flag code={value.code} w={27} h={16} />
         <span
           aria-hidden
           style={{
-            marginTop: u(7),
+            marginTop: u(5.5),
             borderLeft: `${u(4)} solid transparent`,
             borderRight: `${u(4)} solid transparent`,
             borderTop: `${u(5)} solid #fff`,
@@ -76,15 +76,14 @@ export function CountryPicker({ value, onChange }: { value: Country; onChange: (
 
       {open && (
         <div
-          className="absolute z-10 overflow-hidden text-white"
+          className="glass-rim absolute z-10 text-white"
           style={{
             top: u(34),
             left: 0,
             width: u(284),
-            borderRadius: u(15),
-            background: "rgba(18,18,18,0.94)",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
+            borderRadius: u(20),
+            background: "rgba(18,18,18,0.985)",
+            backdropFilter: "blur(14px)", // nested inside the glass card, Chrome does not blur the card contents behind it: so the fill stays mostly opaque
           }}
           onKeyDown={(e) => {
             if (e.key === "Escape") {
@@ -115,10 +114,10 @@ export function CountryPicker({ value, onChange }: { value: Country; onChange: (
             aria-expanded
             aria-controls="country-list"
             aria-activedescendant={shown[active] ? `country-${shown[active].code}` : undefined}
-            className="block w-full border-b border-white/30 bg-transparent text-white outline-none placeholder:text-white/60"
-            style={{ padding: `${u(10)} ${u(14)}`, fontSize: u(14) }}
+            className="mx-auto block bg-transparent text-white outline-none placeholder:text-white/60 border-b border-white"
+            style={{ width: `calc(100% - ${u(40)})`, margin: `${u(16)} ${u(20)} ${u(6)}`, padding: `0 0 ${u(8)}`, fontSize: u(14) }}
           />
-          <ul id="country-list" ref={list} role="listbox" aria-label="Countries" className="overflow-y-auto overscroll-contain" style={{ maxHeight: u(190) }} data-lenis-prevent>
+          <ul id="country-list" ref={list} role="listbox" aria-label="Countries" className="country-scroll overflow-y-auto overscroll-contain" style={{ maxHeight: u(190), marginBottom: u(10) }} data-lenis-prevent>
             {shown.map((c, i) => (
               <li
                 key={c.code}
@@ -128,16 +127,16 @@ export function CountryPicker({ value, onChange }: { value: Country; onChange: (
                 onPointerDown={(e) => e.preventDefault()}
                 onClick={() => pick(c)}
                 onMouseEnter={() => setActive(i)}
-                className={`flex cursor-pointer items-center ${i === active ? "bg-white/15" : ""}`}
-                style={{ gap: u(10), padding: `${u(6)} ${u(14)}`, fontSize: u(14) }}
+                className={`flex cursor-pointer items-center transition-colors duration-150 ${i === active ? "bg-white/15" : ""} ${c.code === value.code ? "text-crimson" : ""}`}
+                style={{ gap: u(10), padding: `${u(6)} ${u(20)}`, fontSize: u(14) }}
               >
                 <Flag code={c.code} w={21} h={14} />
                 <span className="min-w-0 flex-1 truncate">{c.name}</span>
-                <span className="text-white/70">{c.dial}</span>
+                <span className={c.code === value.code ? "" : "text-white/70"}>{c.dial}</span>
               </li>
             ))}
             {shown.length === 0 && (
-              <li className="text-white/70" style={{ padding: `${u(10)} ${u(14)}`, fontSize: u(14) }}>
+              <li className="text-white/70" style={{ padding: `${u(10)} ${u(20)}`, fontSize: u(14) }}>
                 No match
               </li>
             )}
