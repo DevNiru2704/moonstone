@@ -1,12 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { u } from "@/lib/lenis";
-
-gsap.registerPlugin(ScrollTrigger);
 
 type Card = {
   photo: string;
@@ -45,35 +40,8 @@ const CARDS: Card[] = [
 ];
 
 export function Cards() {
-  const root = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const ctx = gsap.context(() => {
-      // scroll-scrubbed, one card after another; once all are up the state is kept for good
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: root.current,
-          start: "top 95%",
-          end: "top 35%",
-          scrub: 0.6,
-          onUpdate: (self) => {
-            if (self.progress === 1) {
-              tl.progress(1);
-              self.kill(false, true);
-            }
-          },
-        },
-      });
-      gsap.utils.toArray<HTMLElement>(".studio-card").forEach((card, i) => {
-        tl.fromTo(card, { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, ease: "none", duration: 1 }, i * 0.5);
-      });
-    }, root);
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <div ref={root} className="flex justify-center" style={{ gap: u(25) }}>
+    <div className="flex justify-center" style={{ gap: u(25) }}>
       {CARDS.map((c) => (
         <article
           key={c.title}
