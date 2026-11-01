@@ -93,7 +93,7 @@ export function SiteFooter() {
         }}
       >
         {/* Figma bleeds the blurred wordmark past its frame (-31.69% / -3.34%) */}
-        <div className="absolute" style={{ inset: "-31.69% -3.34%", opacity: 0.5 }}>
+        <div className="absolute" style={{ inset: "-31.69% -3.34%", opacity: 0.35 }}>
           {/* Figma: progressive layer blur, radius 0 at the top growing to 50 (sigma 25) 208px down. Built from
               five blur levels stacked sharpest-on-top; each fades out between its own depth and the next. */}
           {/* lower half: an extra, much blurrier layer fades in over the stack so the letters turn soft and translucent */}
