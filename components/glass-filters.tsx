@@ -1,19 +1,20 @@
 import { Fragment } from "react";
 
-// Lens filters for backdrop-filter: url(#lens-*). The map bitmap (R = x shift, G = y shift, 128 = none) pulls the
-// edges toward the centre, so the glass magnifies what is behind it. The colour channels are bent by slightly
+// Lens filters for backdrop-filter: url(#lens-*). The map bitmap (R = x shift, G = y shift, 128 = none) splits the
+// glass in three: the middle band shows the backdrop as it is, the top and bottom bands show it smaller and
+// mirrored (the sample point runs back past the band edge); the end caps pull a little inward. The colour channels are bent by slightly
 // different amounts for the rainbow fringe of real glass: `passes` 3 = one displacement per channel (small
 // elements), 2 = red vs green+blue (big elements, 3 fewer full-size passes).
 const FILTERS = [
-  // scale is a fraction of the element's own size, so the lens looks the same at any viewport width
-  { id: "lens-pill", map: "lens-map-pill", scale: 0.12, passes: 3 },
-  { id: "lens-dot", map: "lens-map", scale: 0.35, passes: 3 },
+  // scale is a fraction of the element's width (Skia uses it for both axes), so the lens looks the same at any viewport width
+  { id: "lens-pill", map: "lens-map-pill", scale: 0.283, passes: 3 }, // 1.08 * height / width
+  { id: "lens-dot", map: "lens-map-pill", scale: 1.08, passes: 3 },
   // card bands: the photo hides most of the backdrop, so the lens only runs on the thin bands where sky shows;
   // each band pulls its content toward the card centre along one axis
   { id: "edge-l", map: "lens-edge-l", scale: 1, passes: 2 },
   { id: "edge-r", map: "lens-edge-r", scale: 1, passes: 2 },
-  { id: "edge-t", map: "lens-edge-t", scale: 1, passes: 2 },
-  { id: "edge-b", map: "lens-edge-b", scale: 0.3, passes: 2 },
+  { id: "edge-t", map: "lens-edge-t", scale: 0.061, passes: 2 },
+  { id: "edge-b", map: "lens-edge-b", scale: 0.093, passes: 2 },
 ] as const;
 
 // [result, scale factor, colour matrix keeping that channel (and alpha)]
