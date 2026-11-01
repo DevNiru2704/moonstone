@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import "flag-icons/css/flag-icons.min.css";
 import countries from "@/lib/countries.json";
 import { u } from "@/lib/lenis";
@@ -17,7 +18,9 @@ export function CountryPicker({ value, onChange }: { value: Country; onChange: (
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [active, setActive] = useState(0);
+  const [pos, setPos] = useState({ left: 0, top: 0 });
   const root = useRef<HTMLDivElement>(null);
+  const popup = useRef<HTMLDivElement>(null);
   const search = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLUListElement>(null);
 
@@ -28,9 +31,18 @@ export function CountryPicker({ value, onChange }: { value: Country; onChange: (
 
   useEffect(() => {
     if (!open) return;
-    const away = (e: PointerEvent) => !root.current?.contains(e.target as Node) && setOpen(false);
+    const away = (e: PointerEvent) =>
+      !root.current?.contains(e.target as Node) && !popup.current?.contains(e.target as Node) && setOpen(false);
+    // the popup is fixed to the page, so it would drift away from the field: close it when the page moves
+    const shut = () => setOpen(false);
     addEventListener("pointerdown", away);
-    return () => removeEventListener("pointerdown", away);
+    addEventListener("scroll", shut, { passive: true });
+    addEventListener("resize", shut);
+    return () => {
+      removeEventListener("pointerdown", away);
+      removeEventListener("scroll", shut);
+      removeEventListener("resize", shut);
+    };
   }, [open]);
 
   // keep the highlighted row in view
@@ -54,10 +66,12 @@ export function CountryPicker({ value, onChange }: { value: Country; onChange: (
         aria-label={`Country code: ${value.name} ${value.dial}`}
         aria-haspopup="listbox"
         aria-expanded={open}
-        onClick={() => {
+        onClick={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          setPos({ left: r.left, top: r.bottom + 6 });
           setOpen((o) => !o);
           setActive(Math.max(0, countries.findIndex((c) => c.code === value.code)));
-          setTimeout(() => search.current?.focus());
+          setTimeout(() => search.current?.focus({ preventScroll: true }));
         }}
         className="flex cursor-pointer items-center"
         style={{ height: u(28), gap: u(8), paddingTop: u(3), alignItems: "flex-start" }}
@@ -74,16 +88,20 @@ export function CountryPicker({ value, onChange }: { value: Country; onChange: (
         />
       </button>
 
-      {open && (
+      {open &&
+        createPortal(
         <div
-          className="glass-rim absolute z-10 text-white"
+          ref={popup}
+          // outside the form card (portal), so the blur sees the page behind it: same glass look as the cards and the menu
+          className="glass-rim fixed z-[70] text-white"
           style={{
-            top: u(34),
-            left: 0,
+            top: pos.top,
+            left: pos.left,
             width: u(284),
             borderRadius: u(20),
-            background: "rgba(18,18,18,0.985)",
-            backdropFilter: "blur(14px)", // nested inside the glass card, Chrome does not blur the card contents behind it: so the fill stays mostly opaque
+            background: "rgba(10,10,10,0.38)",
+            backdropFilter: "blur(14px)",
+            WebkitBackdropFilter: "blur(14px)",
           }}
           onKeyDown={(e) => {
             if (e.key === "Escape") {
@@ -141,7 +159,8 @@ export function CountryPicker({ value, onChange }: { value: Country; onChange: (
               </li>
             )}
           </ul>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );
