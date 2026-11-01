@@ -41,10 +41,11 @@ const CARDS: Card[] = [
 
 // [filter, x, y, w, h, radius] of the bands around the photo where the sky shows through the card
 const BANDS = [
-  ["edge-t", 0, 0, 426.71, 26.31, `${u(25)} ${u(25)} 0 0`],
+  // top/bottom bands are ~3.6x the visible rim: the mirrored sky is sampled from the hidden part behind the photo
+  ["edge-t", 0, 0, 426.71, 95, `${u(25)} ${u(25)} 0 0`],
   ["edge-l", 0, 26.31, 26.31, 630.63, "0"],
   ["edge-r", 400.4, 26.31, 26.31, 630.63, "0"],
-  ["edge-b", 0, 656.94, 426.71, 132.29, `0 0 ${u(25)} ${u(25)}`],
+  ["edge-b", 0, 684.23, 426.71, 105, `0 0 ${u(25)} ${u(25)}`],
 ] as const;
 
 export function Cards() {
