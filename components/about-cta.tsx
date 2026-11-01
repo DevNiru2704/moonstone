@@ -6,7 +6,7 @@ import { bounceReveal } from "@/lib/reveal";
 import { u } from "@/lib/lenis";
 
 /** Figma "cta": the grey box opens with "Let's build something." when the pointer enters it. */
-export function AboutCta() {
+export function AboutCta({ top = 2796 }: { top?: number }) {
   const box = useRef<HTMLDivElement>(null);
   const shown = useRef(false);
 
@@ -26,7 +26,7 @@ export function AboutCta() {
   return (
     <div
       className="absolute"
-      style={{ left: u(60), top: u(2796), width: u(1320), height: u(342.04) }}
+      style={{ left: u(60), top: u(top), width: u(1320), height: u(342.04) }}
       onPointerEnter={show}
       onPointerDown={show}
     >
