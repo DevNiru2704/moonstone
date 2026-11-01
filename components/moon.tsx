@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Cards } from "@/components/cards";
 import Image from "next/image";
-import { u } from "@/lib/lenis";
+import { getLenis, u } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,7 +15,7 @@ const sky = `radial-gradient(ellipse ${u(3533)} ${u(1359.6)} at 50% ${u(-30.76)}
   rgb(97,136,158) 44.8%, rgb(65,112,139) 49%, rgb(34,88,119) 53.3%, rgb(18,76,110) 55.4%,
   rgb(2,64,100) 57.5%, rgb(12,48,70) 61.5%, rgb(21,31,40) 65.5%, rgb(20,22,17) 77.9%)`;
 
-/** Cards on the dusk sky over the sunset; a small moon at the horizon grows and floods the section white. */
+/** Cards on the dusk sky over the sunset; scrolling grows the glass moon at the horizon, then reveals the CTA. */
 export function Moon() {
   const root = useRef<HTMLElement>(null);
   const moon = useRef<HTMLDivElement>(null);
@@ -23,26 +23,54 @@ export function Moon() {
   const box = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    // the solid white moon grows from the horizon and floods the sky, then the black mountain fades in
-    const tl = gsap
-      .timeline({
-        scrollTrigger: { trigger: root.current, start: "top 100%", end: "top+=700 top", scrub: 0.6 },
-      })
-      .fromTo(moon.current, { scale: 1 }, { scale: 17, ease: "none", duration: 1 })
-      .fromTo(hills.current, { opacity: 0 }, { opacity: 1, ease: "none", duration: 0.25 }, 0.75);
+    const final = () => {
+      gsap.set(moon.current, { scale: 17, backgroundColor: "rgb(255,255,255)" });
+      gsap.set(hills.current, { opacity: 1 });
+      gsap.set(box.current, { clipPath: "inset(0 0% 0 0)" });
+    };
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      final();
+      return;
+    }
     gsap.set(box.current, { clipPath: "inset(0 100% 0 0)" });
-    const wipe = gsap.to(box.current, {
-      clipPath: "inset(0 0% 0 0)",
-      duration: 1,
-      ease: "power3.inOut",
-      scrollTrigger: { trigger: box.current, start: "top 85%" },
+
+    // scroll drives this while the hill scene is pinned: the glass ball grows and floods the sky white,
+    // the mountain fades in, then the CTA box wipes open
+    const tl = gsap
+      .timeline({ paused: true })
+      .fromTo(moon.current, { scale: 1 }, { scale: 17, ease: "none", duration: 0.6 }, 0)
+      .fromTo(moon.current, { backgroundColor: "rgba(255,255,255,0.2)" }, { backgroundColor: "rgb(255,255,255)", ease: "none", duration: 0.12 }, 0)
+      .fromTo(hills.current, { opacity: 0 }, { opacity: 1, ease: "none", duration: 0.2 }, 0.5)
+      .fromTo(box.current, { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", ease: "none", duration: 0.3 }, 0.7);
+
+    const PIN = 2000;
+    let done = false;
+    const st = ScrollTrigger.create({
+      trigger: root.current,
+      start: "bottom bottom",
+      end: `+=${PIN}`,
+      pin: true,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        if (done) return;
+        tl.progress(self.progress);
+        if (self.progress === 1) {
+          done = true;
+          final();
+        }
+      },
+      // flow finished and scrolled past: keep the end state, drop the pin and the scroll room it added
+      onLeave: () => {
+        done = true;
+        final();
+        const y = window.scrollY;
+        st.kill(true);
+        getLenis()?.scrollTo(y - PIN, { immediate: true, force: true });
+      },
     });
     return () => {
-      tl.scrollTrigger?.kill();
+      st.kill(true);
       tl.kill();
-      wipe.scrollTrigger?.kill();
-      wipe.kill();
     };
   }, []);
 
@@ -70,12 +98,13 @@ export function Moon() {
       />
       <div
         ref={moon}
-        className="absolute left-1/2 rounded-full bg-white"
+        className="absolute left-1/2 rounded-full"
         style={{
           top: u(1587.43),
           width: u(230.675),
           height: u(230.675),
           marginLeft: u(-115.338),
+          backgroundColor: "rgba(255,255,255,0.2)",
         }}
       />
       {/* 1024x681 comp: white sky above black ground, mountain at y=361 */}

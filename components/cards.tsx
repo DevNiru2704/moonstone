@@ -50,14 +50,23 @@ export function Cards() {
   useEffect(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const ctx = gsap.context(() => {
-      // slide up one card at a time
-      gsap.from(".studio-card", {
-        yPercent: 40,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out",
-        stagger: 0.4,
-        scrollTrigger: { trigger: root.current, start: "top 90%" },
+      // scroll-scrubbed, one card after another; once all are up the state is kept for good
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: root.current,
+          start: "top 95%",
+          end: "top 35%",
+          scrub: 0.6,
+          onUpdate: (self) => {
+            if (self.progress === 1) {
+              tl.progress(1);
+              self.kill(false, true);
+            }
+          },
+        },
+      });
+      gsap.utils.toArray<HTMLElement>(".studio-card").forEach((card, i) => {
+        tl.fromTo(card, { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, ease: "none", duration: 1 }, i * 0.5);
       });
     }, root);
     return () => ctx.revert();
