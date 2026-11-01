@@ -20,7 +20,7 @@ export function AboutCta() {
   const show = () => {
     if (shown.current) return;
     shown.current = true;
-    bounceReveal(box.current, 105);
+    bounceReveal(box.current!, 105);
   };
 
   return (

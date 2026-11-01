@@ -1,17 +1,22 @@
 import gsap from "gsap";
 
+const ink = (el: HTMLElement, hidden: boolean) =>
+  hidden ? el.style.setProperty("-webkit-text-fill-color", "transparent") : el.style.removeProperty("-webkit-text-fill-color");
+
 /** Left-to-right reveal of a box that overshoots to the right, springs back and settles (same feel as the hero captions). */
-export const bounceReveal = (el: gsap.TweenTarget, over = 112) =>
+export const bounceReveal = (el: HTMLElement, over = 112) =>
   gsap
     .timeline()
+    .call(ink, [el, false])
     .to(el, { width: `${over}%`, duration: 0.6, ease: "power2.out" })
     .to(el, { width: "97%", duration: 0.3, ease: "sine.inOut" })
     .to(el, { width: "100%", duration: 0.3, ease: "sine.out" });
 
 /** Erase: the box sweeps left down to a thin line, springs out to the right, back to a line, out a little less, then vanishes. */
-export const bounceErase = (el: gsap.TweenTarget) =>
+export const bounceErase = (el: HTMLElement) =>
   gsap
     .timeline()
+    .call(ink, [el, true]) // the box empties first: no text while it shrinks
     .to(el, { width: "1%", duration: 0.45, ease: "power2.inOut" })
     .to(el, { width: "34%", duration: 0.22, ease: "power2.out" })
     .to(el, { width: "1%", duration: 0.22, ease: "power2.in" })
