@@ -24,6 +24,15 @@ const SOCIAL: Record<string, string> = {
   Linkedin: "https://www.linkedin.com/company/moonstone-multimedia/",
 };
 
+// [sigma, opaque until %, transparent from %] of the wordmark image height; sigma s sits s/25 * 208px below the group top
+const BLUR_LEVELS = [
+  [25, 0, 0],
+  [18, 77.6, 100],
+  [13, 61.3, 77.6],
+  [8, 45, 61.3],
+  [3, 29.1, 45],
+] as const;
+
 const COLS = 14;
 const ROWS = 6;
 
@@ -84,25 +93,22 @@ export function SiteFooter() {
         }}
       >
         {/* Figma bleeds the blurred wordmark past its frame (-31.69% / -3.34%) */}
-        <div className="absolute" style={{ inset: "-31.69% -3.34%" }}>
-          {/* the blur grows toward the bottom, like the text sinking in water: a lightly blurred copy fades out over the heavy one */}
-          {["footer-wordmark-soft", "footer-wordmark-sharp"].map((name, i) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={name}
-              src={`/img/${name}.svg`}
-              alt=""
-              className="absolute inset-0 block size-full max-w-none"
-              style={
-                i
-                  ? {
-                      maskImage: "linear-gradient(to bottom, #000 28%, transparent 62%)",
-                      WebkitMaskImage: "linear-gradient(to bottom, #000 28%, transparent 62%)",
-                    }
-                  : undefined
-              }
-            />
-          ))}
+        <div className="absolute" style={{ inset: "-31.69% -3.34%", opacity: 0.5 }}>
+          {/* Figma: progressive layer blur, radius 0 at the top growing to 50 (sigma 25) 208px down. Built from
+              five blur levels stacked sharpest-on-top; each fades out between its own depth and the next. */}
+          {BLUR_LEVELS.map(([sigma, from, to]) => {
+            const mask = to && `linear-gradient(to bottom, #000 ${from}%, transparent ${to}%)`;
+            return (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={sigma}
+                src={`/img/footer-wordmark-b${sigma}.svg`}
+                alt=""
+                className="absolute inset-0 block size-full max-w-none"
+                style={mask ? { maskImage: mask, WebkitMaskImage: mask } : undefined}
+              />
+            );
+          })}
         </div>
       </div>
 
