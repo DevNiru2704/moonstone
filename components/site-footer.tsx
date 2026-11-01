@@ -141,7 +141,7 @@ export function SiteFooter() {
           key={label}
           href={SOCIAL[label] ?? "#"}
           {...(SOCIAL[label] && { target: "_blank", rel: "noopener noreferrer" })}
-          className="absolute whitespace-nowrap"
+          className="absolute whitespace-nowrap transition-colors duration-200 hover:text-crimson"
           style={
             {
               top: u(y),
