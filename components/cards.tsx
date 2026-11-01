@@ -51,8 +51,9 @@ export function Cards() {
             height: u(789.23),
             borderRadius: u(25),
             background: "rgba(217,217,217,0.2)",
-            backdropFilter: "blur(2px) url(#lens-card)",
-            WebkitBackdropFilter: "blur(2px) url(#lens-card)",
+            // plain blur only: the SVG lens filter on three big cards cost ~100ms per frame while scrolling
+            backdropFilter: "blur(2px)",
+            WebkitBackdropFilter: "blur(2px)",
           }}
         >
           {[c.photo, c.color].map((src, i) => (
