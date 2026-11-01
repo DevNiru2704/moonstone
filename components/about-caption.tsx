@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { bounceErase, bounceReveal } from "@/lib/reveal";
+import { bounceErase, bounceReveal, ink } from "@/lib/reveal";
 import { u } from "@/lib/lenis";
 
 const PHRASES: [string, string?][] = [
@@ -29,10 +29,23 @@ export function AboutCaption() {
       return;
     }
     gsap.set(els, { width: 0 });
+    const [one, two, three] = els;
     const tl = gsap.timeline({ repeat: -1, delay: 0.5 });
-    els.forEach((el) => {
-      tl.add(bounceReveal(el)).add(bounceErase(el), "+=1.6").to({}, { duration: 0.2 });
-    });
+    // 1) "Built on music." wipes in and erases
+    tl.add(bounceReveal(one)).add(bounceErase(one), "+=1.6").to({}, { duration: 0.2 });
+    // 2) "Driven by culture." wipes in, then fades out while "Open to possibility." fades in (no wipe)
+    tl.add(bounceReveal(two))
+      .call(() => {
+        ink(three, false);
+        gsap.set(three, { width: "100%", opacity: 0 });
+      }, [], "+=1.6")
+      .addLabel("swap")
+      .to(two, { opacity: 0, duration: 0.5, ease: "power1.inOut" }, "swap+=0.01")
+      .to(three, { opacity: 1, duration: 0.5, ease: "power1.inOut" }, "swap+=0.01")
+      .set(two, { width: 0, opacity: 1 })
+      // 3) the normal erase follows
+      .add(bounceErase(three), "+=1.6")
+      .to({}, { duration: 0.2 });
     return () => {
       tl.kill();
     };

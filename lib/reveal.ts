@@ -1,7 +1,7 @@
 import gsap from "gsap";
 import { unit } from "@/lib/lenis";
 
-const ink = (el: HTMLElement, hidden: boolean) =>
+export const ink = (el: HTMLElement, hidden: boolean) =>
   hidden ? el.style.setProperty("-webkit-text-fill-color", "transparent") : el.style.removeProperty("-webkit-text-fill-color");
 
 /** Left-to-right reveal of a box that overshoots to the right, springs back and settles (same feel as the hero captions). */
