@@ -22,7 +22,7 @@ const UP = 500; // the glass ball comes up from behind the horizon
 const BALL = 1500; // the ball grows into the white dome
 const HOLD = 400; // scroll left to watch the CTA reveal, which plays by itself
 const TOTAL = CARDS + MOVE + UP + BALL + HOLD;
-const DOME = 780; // final dome radius (design px): dark sky stays visible in the top corners
+const DOME = 860; // final dome radius (design px): must cover the CTA box corners (794 away from the centre)
 
 // Where the scene sits in the viewport (stage translate, px). The viewport is often shorter than the design,
 // so the card text and the horizon are placed from the viewport height, not from fixed numbers.
