@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { bounceReveal } from "@/lib/reveal";
+import { bounceErase, bounceReveal } from "@/lib/reveal";
 import { u } from "@/lib/lenis";
 
 const PHRASES: [string, string?][] = [
@@ -31,9 +31,7 @@ export function AboutCaption() {
     gsap.set(els, { width: 0 });
     const tl = gsap.timeline({ repeat: -1, delay: 0.5 });
     els.forEach((el) => {
-      tl.add(bounceReveal(el))
-        .to(el, { width: 0, duration: 0.5, ease: "power2.in" }, "+=1.6")
-        .to({}, { duration: 0.2 });
+      tl.add(bounceReveal(el)).add(bounceErase(el), "+=1.6").to({}, { duration: 0.2 });
     });
     return () => {
       tl.kill();
