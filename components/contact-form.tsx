@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
+import { CountryPicker, DEFAULT_COUNTRY, type Country } from "@/components/country-picker";
 import { u } from "@/lib/lenis";
 
 type Status = "idle" | "sending" | "sent" | "error" | "unconfigured";
@@ -36,7 +37,7 @@ function Field({
   height?: number;
   area?: boolean;
   type?: string;
-  indent?: number;
+  indent?: number | string;
   required?: boolean;
   error?: string;
   autoComplete?: string;
@@ -54,12 +55,12 @@ function Field({
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `e-${name}` : undefined}
         className={`${field} ${line}`}
-        style={{ fontSize: u(16), lineHeight: u(19), paddingLeft: u(indent), paddingBottom: u(area ? 0 : 9) }}
+        style={{ fontSize: u(16), lineHeight: u(19), paddingLeft: typeof indent === "number" ? u(indent) : indent, paddingBottom: u(area ? 0 : 9) }}
       />
       <label
         htmlFor={`f-${name}`}
         className="pointer-events-none absolute left-0 top-0 whitespace-nowrap text-white transition-opacity duration-200 peer-[:not(:placeholder-shown)]:opacity-0"
-        style={{ fontSize: u(16), lineHeight: u(19), paddingLeft: u(indent) }}
+        style={{ fontSize: u(16), lineHeight: u(19), paddingLeft: typeof indent === "number" ? u(indent) : indent }}
       >
         {label}
         {star && <span className="text-crimson">*</span>}
@@ -107,6 +108,7 @@ export function ContactForm() {
   const form = useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<Status>("idle");
+  const [country, setCountry] = useState<Country>(DEFAULT_COUNTRY);
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -128,6 +130,9 @@ export function ContactForm() {
       return;
     }
     setStatus("sending");
+    const number = String(fd.get("phone") ?? "").trim();
+    fd.set("phone", number ? `${country.dial} ${number}` : "");
+    fd.set("country", country.name);
     fd.append("access_key", key);
     fd.append("subject", "New message from the Moonstone website");
     fd.append("from_name", "Moonstone website");
@@ -170,20 +175,12 @@ export function ContactForm() {
         <Field name="first_name" label="First Name" star required left={35} top={35} width={284} error={errors.first} autoComplete="given-name" />
         <Field name="last_name" label="Last Name" left={340} top={35} width={279} autoComplete="family-name" />
         <Field name="organization" label="Organization" left={35} top={98} width={584} autoComplete="organization" />
-        <Field name="phone" label="Contact" type="tel" left={35} top={161} width={284} indent={46} autoComplete="tel" />
-        {/* country picker: flag box and caret as drawn in Figma (visual only for now) */}
-        <span aria-hidden className="absolute bg-white" style={{ left: u(35), top: u(164), width: u(27), height: u(16) }} />
-        <span
-          aria-hidden
-          className="absolute"
-          style={{
-            left: u(73),
-            top: u(174),
-            borderLeft: `${u(4)} solid transparent`,
-            borderRight: `${u(4)} solid transparent`,
-            borderTop: `${u(5)} solid #fff`,
-          }}
-        />
+        {/* the dial code sits after the flag; the label and typed number start after it */}
+        <Field name="phone" label="Contact" type="tel" left={35} top={161} width={284} indent={`calc(${u(46)} + ${country.dial.length + 0.6}ch)`} autoComplete="tel-national" />
+        <span aria-hidden className="pointer-events-none absolute text-white" style={{ left: u(81), top: u(161), fontSize: u(16), lineHeight: u(19) }}>
+          {country.dial}
+        </span>
+        <CountryPicker value={country} onChange={setCountry} />
         <Field name="email" label="Email" type="email" left={340} top={161} width={279} error={errors.email} autoComplete="email" />
         <Field name="message" label="Message" area left={35} top={224} width={584} height={68} />
 
