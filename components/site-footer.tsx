@@ -79,12 +79,24 @@ export function SiteFooter() {
       >
         {/* Figma bleeds the blurred wordmark past its frame (-31.69% / -3.34%) */}
         <div className="absolute" style={{ inset: "-31.69% -3.34%" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/img/footer-wordmark.svg"
-            alt=""
-            className="block size-full max-w-none"
-          />
+          {/* the blur grows toward the bottom, like the text sinking in water: a lightly blurred copy fades out over the heavy one */}
+          {["footer-wordmark", "footer-wordmark-sharp"].map((name, i) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={name}
+              src={`/img/${name}.svg`}
+              alt=""
+              className="absolute inset-0 block size-full max-w-none"
+              style={
+                i
+                  ? {
+                      maskImage: "linear-gradient(to bottom, #000 28%, transparent 62%)",
+                      WebkitMaskImage: "linear-gradient(to bottom, #000 28%, transparent 62%)",
+                    }
+                  : undefined
+              }
+            />
+          ))}
         </div>
       </div>
 
