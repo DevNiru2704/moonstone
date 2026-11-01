@@ -2,7 +2,8 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { SOCIAL } from "@/lib/links";
+import Link from "next/link";
+import { ROUTES, SOCIAL } from "@/lib/links";
 import { u } from "@/lib/lenis";
 
 // [label, x, y, right-aligned?]; positions and labels from Figma "Footer" (1440x556) and the prototype.
@@ -150,24 +151,24 @@ export function SiteFooter() {
         />
       </div>
 
-      {LINKS.map(([label, x, y, right]) => (
-        <a
-          key={label}
-          href={SOCIAL[label] ?? "#"}
-          {...(SOCIAL[label] && { target: "_blank", rel: "noopener noreferrer" })}
-          className="absolute whitespace-nowrap transition-colors duration-200 hover:text-crimson"
-          style={
-            {
-              top: u(y),
-              ...(right ? { right: u(1440 - x) } : { left: u(x) }),
-              fontSize: u(16),
-              textBox: "trim-both cap alphabetic",
-            } as React.CSSProperties
-          }
-        >
-          {label}
-        </a>
-      ))}
+      {LINKS.map(([label, x, y, right]) => {
+        const cls = "absolute whitespace-nowrap transition-colors duration-200 hover:text-crimson";
+        const style = {
+          top: u(y),
+          ...(right ? { right: u(1440 - x) } : { left: u(x) }),
+          fontSize: u(16),
+          textBox: "trim-both cap alphabetic",
+        } as React.CSSProperties;
+        return SOCIAL[label] ? (
+          <a key={label} href={SOCIAL[label]} target="_blank" rel="noopener noreferrer" className={cls} style={style}>
+            {label}
+          </a>
+        ) : (
+          <Link key={label} href={ROUTES[label]} className={cls} style={style}>
+            {label}
+          </Link>
+        );
+      })}
 
       <p
         className="pointer-events-none absolute whitespace-nowrap text-right mix-blend-difference"

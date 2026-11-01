@@ -13,7 +13,8 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const lenis = new Lenis({ lerp: 0.1 });
-    lenis.stop(); // the preloader calls start() when it finishes
+    // the splash (home page only) calls start() when it finishes
+    if (document.getElementById("preloader")) lenis.stop();
     setLenis(lenis);
     lenis.on("scroll", ScrollTrigger.update);
     const tick = (t: number) => lenis.raf(t * 1000);

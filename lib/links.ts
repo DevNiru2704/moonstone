@@ -4,14 +4,18 @@ export const SOCIAL: Record<string, string> = {
   Linkedin: "https://www.linkedin.com/company/moonstone-multimedia/",
 };
 
-/** Menu pages: the routes are not built yet. */
-export const PAGES: [string, string][] = [
-  ["ABOUT", "/about"],
-  ["HOW WE WORK", "/how-we-work"],
-  ["CONTACT", "/contact"],
-];
+/** Internal pages by the label shown in the footer and the menu. */
+export const ROUTES: Record<string, string> = {
+  ABOUT: "/about",
+  "HOW WE WORK": "/how-we-work",
+  SERVICES: "/services",
+  CONTACT: "/contact",
+  "Privacy Policy": "/privacy-policy",
+  "Terms of Service": "/terms-of-service",
+  "Terms of Services": "/terms-of-service",
+  FAQ: "/faq",
+};
 
-export const LEGAL: [string, string][] = [
-  ["Terms of Service", "#"],
-  ["Privacy Policy", "#"],
-];
+export const PAGES: [string, string][] = ["ABOUT", "HOW WE WORK", "CONTACT"].map((l) => [l, ROUTES[l]]);
+
+export const LEGAL: [string, string][] = ["Terms of Service", "Privacy Policy"].map((l) => [l, ROUTES[l]]);
