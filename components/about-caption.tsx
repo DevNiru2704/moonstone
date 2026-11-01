@@ -5,7 +5,18 @@ import gsap from "gsap";
 import { bounceReveal } from "@/lib/reveal";
 import { u } from "@/lib/lenis";
 
-const PHRASES = ["Built on music.", "Driven by culture.", "Open to possibility."];
+const PHRASES: [string, string?][] = [
+  ["Built on music."],
+  ["Driven by culture."],
+  ["Open to ", "possibility."], // the last word is italic crimson
+];
+
+const Phrase = ({ p }: { p: [string, string?] }) => (
+  <>
+    {p[0]}
+    {p[1] && <em className="font-medium text-crimson">{p[1]}</em>}
+  </>
+);
 
 /** Figma "about-header-text": a white box wipes open over the photo with one phrase, wipes shut, and the next follows, forever. */
 export function AboutCaption() {
@@ -33,9 +44,9 @@ export function AboutCaption() {
     // centred on the first screen, each phrase box centred on its own width
     <div className="absolute inset-x-0 -translate-y-1/2" style={{ top: "50svh", height: u(80) }}>
       {PHRASES.map((text, i) => (
-        <div key={text} className="absolute left-1/2 top-0 inline-block -translate-x-1/2" style={{ height: u(79.5) }}>
+        <div key={text[0]} className="absolute left-1/2 top-0 inline-block -translate-x-1/2" style={{ height: u(79.5) }}>
           <span className="invisible block whitespace-nowrap" style={{ padding: `0 ${u(13.5)}`, fontSize: u(60) }}>
-            {text}
+            <Phrase p={text} />
           </span>
           <div
             ref={(el) => {
@@ -47,7 +58,7 @@ export function AboutCaption() {
             <span
               style={{ marginLeft: u(13.5), textBox: "trim-both cap alphabetic" } as React.CSSProperties}
             >
-              {text}
+              <Phrase p={text} />
             </span>
           </div>
         </div>
