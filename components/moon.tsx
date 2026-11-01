@@ -36,13 +36,18 @@ export function Moon() {
     const k = () => unit();
     const final = () => {
       gsap.set(stage.current, { y: () => -MOVE * k() });
-      gsap.set(moon.current, { width: () => 2 * DOME * k(), height: () => 2 * DOME * k(), backgroundColor: "rgb(255,255,255)" });
+      gsap.set(moon.current, { width: () => 2 * DOME * k(), height: () => 2 * DOME * k(), backgroundColor: "rgb(255,255,255)", backdropFilter: "none" });
       gsap.set(hills.current, { opacity: 1 });
       gsap.set(box.current, { clipPath: "inset(0 0% 0 0)" });
       gsap.set(el.querySelectorAll(".studio-card"), { yPercent: 0, opacity: 1 });
     };
+    // after the sequence the section is just the final view: cut the 700px the scene moved up
+    const shrink = () => {
+      el.style.height = u(1761 - MOVE);
+    };
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
       final();
+      shrink();
       return;
     }
     const cards = gsap.utils.toArray<HTMLElement>(".studio-card", el);
@@ -59,7 +64,7 @@ export function Moon() {
         { width: () => 2 * DOME * k(), height: () => 2 * DOME * k(), ease: "none", duration: BALL },
         CARDS + MOVE,
       )
-      .fromTo(moon.current, { backgroundColor: "rgba(255,255,255,0.2)" }, { backgroundColor: "rgb(255,255,255)", ease: "none", duration: BALL * 0.9 }, CARDS + MOVE)
+      .fromTo(moon.current, { backgroundColor: "rgba(255,255,255,0.2)", backdropFilter: "blur(2px)" }, { backgroundColor: "rgb(255,255,255)", backdropFilter: "blur(0px)", ease: "none", duration: BALL * 0.9 }, CARDS + MOVE)
       .fromTo(hills.current, { opacity: 0 }, { opacity: 1, ease: "none", duration: BALL * 0.25 }, CARDS + MOVE + BALL * 0.75)
       .fromTo(box.current, { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", ease: "none", duration: CTA }, CARDS + MOVE + BALL);
 
@@ -83,7 +88,8 @@ export function Moon() {
         final();
         const y = window.scrollY;
         st.kill(true);
-        getLenis()?.scrollTo(y - TOTAL, { immediate: true, force: true });
+        shrink();
+        getLenis()?.scrollTo(y - TOTAL - MOVE * k(), { immediate: true, force: true });
       },
     });
     const resize = () => {
