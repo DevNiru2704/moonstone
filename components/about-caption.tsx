@@ -33,7 +33,7 @@ export function AboutCaption() {
     const tl = gsap.timeline({ repeat: -1, delay: 0.5 });
     // 1) "Built on music." wipes in and erases
     tl.add(bounceReveal(one)).add(bounceErase(one), "+=1.6").to({}, { duration: 0.2 });
-    // 2) "Driven by culture." wipes in and fades out; after a 1.5s gap "Open to possibility." fades in (no wipe)
+    // 2) "Driven by culture." wipes in and fades out; after a 1s gap "Open to possibility." fades in (no wipe)
     tl.add(bounceReveal(two))
       .call(() => {
         ink(three, false);
@@ -43,7 +43,7 @@ export function AboutCaption() {
       .to(two, { opacity: 0, duration: 0.5, ease: "power1.inOut" }, "swap+=0.01")
       .set(two, { width: 0, opacity: 1 })
       // nothing on screen for a beat, then the next phrase fades in
-      .to(three, { opacity: 1, duration: 0.5, ease: "power1.inOut" }, "+=1.5")
+      .to(three, { opacity: 1, duration: 0.5, ease: "power1.inOut" }, "+=1")
       // 3) the normal erase follows
       .add(bounceErase(three), "+=1.6")
       .to({}, { duration: 0.2 });
