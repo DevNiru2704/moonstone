@@ -36,6 +36,7 @@ const shadowOn = () => `inset 0 0 ${50 * unit()}px ${3 * unit()}px rgba(24,24,24
 
 export function OrbitStage() {
   const track = useRef<HTMLDivElement>(null);
+  const fit = useRef<HTMLDivElement>(null);
   const moon = useRef<HTMLDivElement>(null);
   const glow = useRef<HTMLDivElement>(null);
   const dim = useRef<HTMLDivElement>(null);
@@ -48,6 +49,10 @@ export function OrbitStage() {
   useEffect(() => {
     const k = () => unit();
     const px = (v: number) => () => v * k();
+    // shrink the whole constellation when the screen is shorter than the 1024-high design, so it always fits
+    const fitNow = () => gsap.set(fit.current, { scale: Math.min(1, innerHeight / (1024 * k())) });
+    fitNow();
+    addEventListener("resize", fitNow);
     const awakeNow = () => {
       gsap.set(moon.current, { left: AWAKE.left * k(), top: AWAKE.top * k(), width: AWAKE.size * k(), height: AWAKE.size * k(), boxShadow: shadowOn() });
       gsap.set(dim.current, { opacity: 0 });
@@ -59,7 +64,7 @@ export function OrbitStage() {
     };
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
       awakeNow();
-      return;
+      return () => removeEventListener("resize", fitNow);
     }
 
     // 1) wake: the dim big moon shrinks into place, brightens, the rings and the dot appear
@@ -98,6 +103,7 @@ export function OrbitStage() {
     });
     master.add(wake).add(steps, `>+${HOLD}`);
     return () => {
+      removeEventListener("resize", fitNow);
       master.scrollTrigger?.kill();
       master.kill();
     };
@@ -112,6 +118,7 @@ export function OrbitStage() {
       </div>
       <div className="sticky z-10" style={{ top: `calc((100svh - ${u(1024)}) / 2)` }}>
     <div className="relative overflow-hidden bg-ink text-white" style={{ height: u(1024) }} aria-label="How we work">
+      <div ref={fit} className="absolute inset-0">
       {/* orbit rings: 0.5px white outlines around the stage centre */}
       <div ref={rings} className="pointer-events-none absolute inset-0" style={{ opacity: 0 }} aria-hidden>
         {RINGS.map((r) => (
@@ -193,6 +200,7 @@ export function OrbitStage() {
           </p>
         </div>
       ))}
+      </div>
     </div>
       </div>
     </div>
