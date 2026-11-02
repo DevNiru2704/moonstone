@@ -108,7 +108,7 @@ export function OrbitStage() {
     <div ref={track} className="absolute inset-x-0 top-0" style={{ height: `calc(${u(1210.43)} + ${ORBIT_SCROLL}px)`, paddingTop: u(186.43) }}>
       {/* the outer rings fade out under the header: stays at the top of the screen while locked */}
       <div className="pointer-events-none sticky top-0 z-20 h-0" aria-hidden>
-        <div className="absolute inset-x-0 top-0" style={{ height: u(320.28), background: "linear-gradient(to bottom, #0a0a0a 65%, rgba(10,10,10,0) 100%)" }} />
+        <div className="absolute inset-x-0 top-0" style={{ height: u(130), background: "linear-gradient(to bottom, #0a0a0a 65%, rgba(10,10,10,0) 100%)" }} />
       </div>
       <div className="sticky z-10" style={{ top: `calc((100svh - ${u(1024)}) / 2)` }}>
     <div className="relative overflow-hidden bg-ink text-white" style={{ height: u(1024) }} aria-label="How we work">
