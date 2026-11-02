@@ -39,8 +39,10 @@ export function Preloader() {
       duration: 2.6,
       ease: "power2.inOut",
       onUpdate: () => {
-        bar.current!.style.width = `${n.v}%`;
-        reel.current!.style.transform = `translateY(${-Math.round(n.v) * STEP * unit()}px)`;
+        // the refs are null if the preloader unmounted mid-tween (dev hot reload)
+        if (!bar.current || !reel.current) return;
+        bar.current.style.width = `${n.v}%`;
+        reel.current.style.transform = `translateY(${-Math.round(n.v) * STEP * unit()}px)`;
       },
     }).to(
       root.current,
