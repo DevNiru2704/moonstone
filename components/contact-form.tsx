@@ -230,7 +230,7 @@ export function ContactForm() {
           <span className="text-crimson">*</span>
         </Check>
         <Check name="marketing" top={339}>
-          I agree to receive marketing emails and newsletters from Scale360*
+          I agree to receive marketing emails and newsletters from Moonstone
         </Check>
 
         {/* spam trap for Web3Forms: bots tick it, people never see it */}
