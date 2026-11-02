@@ -16,6 +16,6 @@ export const ROUTES: Record<string, string> = {
   FAQ: "/faq",
 };
 
-export const PAGES: [string, string][] = ["SERVICES", "ABOUT", "HOW WE WORK", "CONTACT"].map((l) => [l, ROUTES[l]]);
+export const PAGES: [string, string][] = ["ABOUT", "HOW WE WORK", "SERVICES", "CONTACT"].map((l) => [l, ROUTES[l]]);
 
 export const LEGAL: [string, string][] = ["Privacy Policy", "Terms of Services", "FAQ"].map((l) => [l, ROUTES[l]]);
