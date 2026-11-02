@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { u, unit } from "@/lib/lenis";
-import { ORBIT_SCROLL } from "@/lib/orbit";
+import { ORBIT_OFF, ORBIT_SCROLL } from "@/lib/orbit";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -90,12 +90,11 @@ export function OrbitStage() {
     }
     steps.to({}, { duration: HOLD }); // the last caption rests before the lock ends
 
-    // the stage sticks (CSS) once its top reaches the centred position; the timeline then follows the scroll both ways
-    const off = () => (innerHeight - 1024 * k()) / 2;
+    // the stage is stuck (CSS) from the start; the timeline follows the scroll both ways
     const master = gsap.timeline({
       scrollTrigger: {
         trigger: track.current,
-        start: () => `top+=${186.43 * k() - off()} top`,
+        start: "top top",
         end: () => `+=${ORBIT_SCROLL}`,
         scrub: 0.6,
         invalidateOnRefresh: true,
@@ -110,13 +109,13 @@ export function OrbitStage() {
   }, []);
 
   return (
-    // the track is as tall as the page above the dusk plus the lock distance; the stage sticks inside it
-    <div ref={track} className="absolute inset-x-0 top-0" style={{ height: `calc(${u(1210.43)} + ${ORBIT_SCROLL}px)`, paddingTop: u(186.43) }}>
+    // the track holds the stage for the lock distance; the stage is centred on the screen from the very start
+    <div ref={track} className="absolute inset-x-0 top-0" style={{ height: `calc(${u(1024)} + ${ORBIT_SCROLL}px + ${ORBIT_OFF})` }}>
       {/* the outer rings fade out under the header: stays at the top of the screen while locked */}
       <div className="pointer-events-none sticky top-0 z-20 h-0" aria-hidden>
-        <div className="absolute inset-x-0 top-0" style={{ height: u(130), background: "linear-gradient(to bottom, #0a0a0a 65%, rgba(10,10,10,0) 100%)" }} />
+        <div className="absolute inset-x-0 top-0" style={{ height: "8svh", background: "linear-gradient(to bottom, #0a0a0a 65%, rgba(10,10,10,0) 100%)" }} />
       </div>
-      <div className="sticky z-10" style={{ top: `calc((100svh - ${u(1024)}) / 2)` }}>
+      <div className="sticky z-10" style={{ top: ORBIT_OFF, marginTop: ORBIT_OFF }}>
     <div className="relative overflow-hidden bg-ink text-white" style={{ height: u(1024) }} aria-label="How we work">
       <div ref={fit} className="absolute inset-0">
       {/* orbit rings: 0.5px white outlines around the stage centre */}
