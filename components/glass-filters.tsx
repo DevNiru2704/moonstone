@@ -14,7 +14,7 @@ const FILTERS = [
   { id: "lens-dot", map: "lens-map-pill", scale: 1.08, passes: 3 },
   // menu: the same 40px-high pill map at the menu's other sizes (scale = 1.08 * height / width)
   { id: "lens-bar", map: "lens-map-pill", scale: 0.216, passes: 3 },
-  { id: "lens-panel", map: "lens-map-pill", scale: 1.21, passes: 3 },
+  { id: "lens-panel", map: "lens-map-pill", scale: 1.464, passes: 3 },
   // card bands: the photo hides most of the backdrop, so the lens only runs where sky shows. Top and bottom rims
   // use the same three-part idea as the pill (rim = smaller, mirrored sky from further in; rest untouched), the
   // side rims pull inward like the pill's end caps

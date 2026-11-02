@@ -10,7 +10,7 @@ import { LEGAL, PAGES, SOCIAL } from "@/lib/links";
 type Phase = "closed" | "bar" | "open";
 
 // Figma "menu" variants: circle -> bar (click) -> open panel (hover) -> bar -> circle (leave)
-const SIZE: Record<Phase, [number, number]> = { closed: [40, 40], bar: [200, 40], open: [200, 224] };
+const SIZE: Record<Phase, [number, number]> = { closed: [40, 40], bar: [200, 40], open: [200, 271] };
 const LENS: Record<Phase, string> = { closed: "lens-dot", bar: "lens-bar", open: "lens-panel" };
 const BAR_W = 161.949;
 
@@ -141,11 +141,11 @@ export function SiteMenu() {
         ref={panel}
         aria-label="Main menu"
         className="absolute left-0 top-0"
-        style={{ width: u(200), height: u(224), visibility: "hidden", opacity: 0 }}
+        style={{ width: u(200), height: u(271), visibility: "hidden", opacity: 0 }}
       >
-        <Group rows={PAGES} size={16} pitch={31} top={20} height={73.5} />
-        <Group rows={LEGAL} size={10} pitch={16} top={117.5} height={23.2} />
-        <Group rows={Object.entries(SOCIAL)} size={10} pitch={16} top={164.7} height={39.2} />
+        <Group rows={PAGES} size={16} pitch={31} top={20} height={104.5} />
+        <Group rows={LEGAL} size={10} pitch={16} top={148.5} height={39.2} />
+        <Group rows={Object.entries(SOCIAL)} size={10} pitch={16} top={211.7} height={39.2} />
       </nav>
     </div>
   );
