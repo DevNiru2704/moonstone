@@ -4,15 +4,17 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { u, unit } from "@/lib/lenis";
+import { ORBIT_SCROLL } from "@/lib/orbit";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Figma "how-we-work" (1440 x 1024). Dim moon -> awake moon (4s), then the three captions step round and round.
+// Figma "how-we-work" (1440 x 1024). The stage stays locked while scrolling: dim moon -> awake moon, then the captions step round
+// (scrolling back rewinds). One unit of the timeline is a second of Figma smart animate; the scroll drives it, not the clock.
 const DIM = { left: 424, top: 216, size: 592 };
 const AWAKE = { left: 554, top: 346, size: 332 };
 const TEX_RATIO = 1024 / 313; // both moon textures
 const STEP = 4; // seconds each change takes (Figma smart animate)
-const HOLD = 3; // seconds a caption stays before the next step (not in Figma)
+const HOLD = 2; // units a caption rests before the next step (not in Figma)
 // Dot angle on the 718 ring (CSS degrees). Three steps add up to one full turn, so the loop is seamless.
 const ANGLES = [-177.02, -62.8, 68.7, 182.98];
 const PAN = 100 / 9; // % of the 3-copy texture strip per step (one third of one texture width)
@@ -33,7 +35,7 @@ const SHADOW_OFF = "inset 0 0 0px 0px rgba(24,24,24,0)";
 const shadowOn = () => `inset 0 0 ${50 * unit()}px ${3 * unit()}px rgba(24,24,24,1)`;
 
 export function OrbitStage() {
-  const stage = useRef<HTMLDivElement>(null);
+  const track = useRef<HTMLDivElement>(null);
   const moon = useRef<HTMLDivElement>(null);
   const glow = useRef<HTMLDivElement>(null);
   const dim = useRef<HTMLDivElement>(null);
@@ -72,36 +74,44 @@ export function OrbitStage() {
       .fromTo(caps.current[0], { opacity: 0 }, { opacity: 1, duration: 1, ease: "power1.inOut" }, STEP - 1);
 
     // 2) then 1 -> 2 -> 3 -> 1 forever; every step turns the moon, moves the dot and swaps the caption
-    const loop = gsap.timeline({ repeat: -1, defaults: { immediateRender: false } });
-    for (let i = 0; i < 3; i++) {
-      const at = i * (HOLD + STEP) + HOLD;
-      const next = (i + 1) % 3;
-      loop
+    const steps = gsap.timeline({ defaults: { immediateRender: false } });
+    for (let i = 0; i < 2; i++) {
+      const at = i * (HOLD + STEP);
+      steps
         .fromTo(strip.current, { xPercent: -PAN * i }, { xPercent: -PAN * (i + 1), duration: STEP, ease: "power2.inOut" }, at)
         .fromTo(dot.current, { rotation: ANGLES[i] }, { rotation: ANGLES[i + 1], duration: STEP, ease: "power2.inOut" }, at)
         .fromTo(caps.current[i], { opacity: 1 }, { opacity: 0, duration: 1, ease: "power1.in" }, at)
-        .fromTo(caps.current[next], { opacity: 0 }, { opacity: 1, duration: 1, ease: "power1.out" }, at + STEP - 1);
+        .fromTo(caps.current[i + 1], { opacity: 0 }, { opacity: 1, duration: 1, ease: "power1.out" }, at + STEP - 1);
     }
-    loop.to({}, { duration: HOLD }); // the last caption holds too, then the cycle restarts from the same picture
+    steps.to({}, { duration: HOLD }); // the last caption rests before the lock ends
 
-    const master = gsap.timeline({ paused: true }).add(wake).add(loop);
-    const st = ScrollTrigger.create({
-      trigger: stage.current,
-      start: "top 75%",
-      end: "bottom top",
-      onToggle: (self) => master.paused(!self.isActive),
+    // the stage sticks (CSS) once its top reaches the centred position; the timeline then follows the scroll both ways
+    const off = () => (innerHeight - 1024 * k()) / 2;
+    const master = gsap.timeline({
+      scrollTrigger: {
+        trigger: track.current,
+        start: () => `top+=${186.43 * k() - off()} top`,
+        end: () => `+=${ORBIT_SCROLL}`,
+        scrub: 0.6,
+        invalidateOnRefresh: true,
+      },
     });
-    const resize = () => master.invalidate();
-    addEventListener("resize", resize);
+    master.add(wake).add(steps, `>+${HOLD}`);
     return () => {
-      removeEventListener("resize", resize);
-      st.kill();
+      master.scrollTrigger?.kill();
       master.kill();
     };
   }, []);
 
   return (
-    <div ref={stage} className="relative overflow-hidden bg-ink text-white" style={{ height: u(1024) }} aria-label="How we work">
+    // the track is as tall as the page above the dusk plus the lock distance; the stage sticks inside it
+    <div ref={track} className="absolute inset-x-0 top-0" style={{ height: `calc(${u(1210.43)} + ${ORBIT_SCROLL}px)`, paddingTop: u(186.43) }}>
+      {/* the outer rings fade out under the header: stays at the top of the screen while locked */}
+      <div className="pointer-events-none sticky top-0 z-20 h-0" aria-hidden>
+        <div className="absolute inset-x-0 top-0" style={{ height: u(320.28), background: "linear-gradient(to bottom, #0a0a0a 65%, rgba(10,10,10,0) 100%)" }} />
+      </div>
+      <div className="sticky z-10" style={{ top: `calc((100svh - ${u(1024)}) / 2)` }}>
+    <div className="relative overflow-hidden bg-ink text-white" style={{ height: u(1024) }} aria-label="How we work">
       {/* orbit rings: 0.5px white outlines around the stage centre */}
       <div ref={rings} className="pointer-events-none absolute inset-0" style={{ opacity: 0 }} aria-hidden>
         {RINGS.map((r) => (
@@ -183,6 +193,8 @@ export function OrbitStage() {
           </p>
         </div>
       ))}
+    </div>
+      </div>
     </div>
   );
 }
