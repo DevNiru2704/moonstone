@@ -36,8 +36,8 @@ export default function Page() {
           +91 7980254641
         </a>{" "}
         /{" "}
-        <a href="mailto:moonstonemultimedia@gmail.com" className={link}>
-          moonstonemultimedia@gmail.com
+        <a href="mailto:contact@moonstonemultimedia.com" className={link}>
+          contact@moonstonemultimedia.com
         </a>
       </p>
 
