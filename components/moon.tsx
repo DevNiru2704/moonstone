@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Cards } from "@/components/cards";
 import Image from "next/image";
-import { getLenis, u, unit } from "@/lib/lenis";
+import { u, unit } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,24 +15,13 @@ const sky = `radial-gradient(ellipse ${u(3533)} ${u(1359.6)} at 50% ${u(-30.76)}
   rgb(97,136,158) 44.8%, rgb(65,112,139) 49%, rgb(34,88,119) 53.3%, rgb(18,76,110) 55.4%,
   rgb(2,64,100) 57.5%, rgb(12,48,70) 61.5%, rgb(21,31,40) 65.5%, rgb(20,22,17) 77.9%)`;
 
-// Scroll distances (px) of the pinned sequence, in order.
-const CARDS = 1800; // three cards swipe up one by one
-const MOVE = 900; // the scene moves down to the sunset photo (nothing on it yet)
-const UP = 500; // the glass ball comes up from behind the horizon
-const BALL = 1500; // the ball grows into the white dome
-const HOLD = 400; // scroll left to watch the CTA reveal, which plays by itself
-const TOTAL = CARDS + MOVE + UP + BALL + HOLD;
 const DOME = 860; // final dome radius (design px): must cover the CTA box corners (794 away from the centre)
+const CARD_GAP = 1.4; // seconds between one card starting to swipe up and the next
+const CARD_TIME = 1.6; // seconds one card takes to swipe up
 
-// Where the scene sits in the viewport (stage translate, px). The viewport is often shorter than the design,
-// so the card text and the horizon are placed from the viewport height, not from fixed numbers.
-const cardsY = () => Math.min(0, innerHeight - 919.23 * unit() - 24);
-const hillY = () => Math.max(0.74 * innerHeight - 1561 * unit(), innerHeight - 1761 * unit());
-
-/** Pinned, scroll-driven: cards swipe up, the scene moves to the sunset, the glass ball rises and grows into a white dome; then the CTA reveals by itself. */
+/** Plays by itself as it scrolls into view: the cards swipe up one by one; further down the glass ball rises and grows into a white dome, then the CTA reveals. */
 export function Moon() {
   const root = useRef<HTMLElement>(null);
-  const stage = useRef<HTMLDivElement>(null);
   const moon = useRef<HTMLDivElement>(null);
   const hills = useRef<HTMLImageElement>(null);
   const box = useRef<HTMLDivElement>(null);
@@ -40,13 +29,10 @@ export function Moon() {
   useEffect(() => {
     const el = root.current!;
     const k = () => unit();
-    let released = false;
-    // end state; while still pinned the scene stays at the sunset view, once released it is the plain full section
+    // end state of the ball and the front mountain
     const final = () => {
-      gsap.set(stage.current, { y: () => (released ? 0 : hillY()) });
       gsap.set(moon.current, { y: () => -200 * k(), width: () => 2 * DOME * k(), height: () => 2 * DOME * k(), backgroundColor: "rgb(255,255,255)", backdropFilter: "none" });
       gsap.set(hills.current, { opacity: 1 });
-      gsap.set(el.querySelectorAll(".studio-card"), { yPercent: 0 });
     };
     // same bouncy left-to-right reveal as the hero captions
     const reveal = () =>
@@ -55,81 +41,53 @@ export function Moon() {
         .to(box.current, { width: "105%", duration: 0.6, ease: "power2.out" })
         .to(box.current, { width: "97%", duration: 0.3, ease: "sine.inOut" })
         .to(box.current, { width: "100%", duration: 0.3, ease: "sine.out" });
+    // centre the ball on its own point (percent offsets keep working while it grows)
+    gsap.set(moon.current, { xPercent: -50, yPercent: -50 });
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      released = true;
-      gsap.set(moon.current, { xPercent: -50, yPercent: -50 });
       final();
       gsap.set(box.current, { width: "100%" });
       return;
     }
     const cards = gsap.utils.toArray<HTMLElement>(".studio-card", el);
     gsap.set(box.current, { width: 0 });
-    // centre the ball on its own point (percent offsets keep working while it grows)
-    gsap.set(moon.current, { xPercent: -50, yPercent: -50 });
 
-    const tl = gsap.timeline({ paused: true });
+    const cardsTl = gsap.timeline({ paused: true });
     cards.forEach((c, i) =>
-      tl.fromTo(c, { yPercent: 110 }, { yPercent: 0, ease: "none", duration: CARDS / 3.4 }, (i * CARDS) / 3.4),
+      cardsTl.fromTo(c, { yPercent: 110 }, { yPercent: 0, ease: "power3.out", duration: CARD_TIME }, i * CARD_GAP),
     );
-    const up = CARDS + MOVE;
-    const grow = up + UP;
-    tl.fromTo(stage.current, { y: () => cardsY() }, { y: () => hillY(), ease: "none", duration: MOVE }, CARDS)
-      .fromTo(moon.current, { y: 0 }, { y: () => -200 * k(), ease: "none", duration: UP }, up)
+
+    const ballTl = gsap
+      .timeline({ paused: true, onComplete: reveal })
+      .fromTo(moon.current, { y: 0 }, { y: () => -200 * k(), ease: "power2.out", duration: 1.8 })
       .fromTo(
         moon.current,
         { width: () => 230.675 * k(), height: () => 230.675 * k() },
-        { width: () => 2 * DOME * k(), height: () => 2 * DOME * k(), ease: "none", duration: BALL },
-        grow,
+        { width: () => 2 * DOME * k(), height: () => 2 * DOME * k(), ease: "power2.inOut", duration: 3 },
+        ">+0.2",
       )
-      .fromTo(moon.current, { backgroundColor: "rgba(255,255,255,0.2)", backdropFilter: "blur(2px)" }, { backgroundColor: "rgb(255,255,255)", backdropFilter: "blur(0px)", ease: "none", duration: BALL * 0.9 }, grow)
-      .fromTo(hills.current, { opacity: 0 }, { opacity: 1, ease: "none", duration: BALL * 0.25 }, grow + BALL * 0.75);
+      .fromTo(moon.current, { backgroundColor: "rgba(255,255,255,0.2)", backdropFilter: "blur(2px)" }, { backgroundColor: "rgb(255,255,255)", backdropFilter: "blur(0px)", ease: "none", duration: 2.7 }, "<")
+      .fromTo(hills.current, { opacity: 0 }, { opacity: 1, ease: "none", duration: 0.8 }, "-=0.8");
 
-    let done = false;
-    const finish = () => {
-      if (done) return;
-      done = true;
-      final();
-      reveal();
-    };
-    const st = ScrollTrigger.create({
-      trigger: el,
-      start: "top top",
-      end: `+=${TOTAL}`,
-      pin: true,
-      onUpdate: (self) => {
-        if (done) return;
-        const px = self.progress * TOTAL;
-        tl.time(Math.min(px, tl.duration())); // the timeline is in scroll px
-        if (px >= tl.duration()) finish();
-      },
-      // finished and scrolled past: keep the end state, drop the pin and the scroll room it added,
-      // and show the same picture in the normal flow
-      onLeave: () => {
-        finish();
-        released = true;
-        const y = window.scrollY;
-        const over = y - (st.start + TOTAL);
-        st.kill(true);
-        final();
-        const top = el.getBoundingClientRect().top + window.scrollY;
-        getLenis()?.scrollTo(top - hillY() + over, { immediate: true, force: true });
-      },
-    });
+    // cards: as soon as the section's top is near the top of the screen; ball: once the sunset fills the screen
+    const t1 = ScrollTrigger.create({ trigger: el, start: "top 15%", once: true, onEnter: () => cardsTl.play() });
+    const t2 = ScrollTrigger.create({ trigger: el, start: "bottom bottom+=60", once: true, onEnter: () => ballTl.play() });
     const resize = () => {
-      if (done) return final();
-      tl.invalidate().progress(tl.progress());
+      if (ballTl.progress() === 1) final();
+      else if (ballTl.progress() === 0) ballTl.invalidate();
     };
     addEventListener("resize", resize);
     return () => {
       removeEventListener("resize", resize);
-      st.kill(true);
-      tl.kill();
+      t1.kill();
+      t2.kill();
+      cardsTl.kill();
+      ballTl.kill();
     };
   }, []);
 
   return (
     <section ref={root} className="relative overflow-hidden bg-white" style={{ height: u(1761) }}>
-      <div ref={stage} className="absolute inset-0" style={{ transform: "translateY(0)" }}>
+      <div className="absolute inset-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/img/hills-1.jpg"
@@ -189,7 +147,8 @@ export function Moon() {
             </div>
           </div>
         </div>
-        <div className="absolute inset-x-0 top-0" style={{ paddingTop: u(130) }}>
+        {/* clips the cards while they wait below their slot */}
+        <div className="absolute inset-x-0 top-0 overflow-hidden" style={{ paddingTop: u(130), height: u(930) }}>
           <Cards />
         </div>
       </div>
