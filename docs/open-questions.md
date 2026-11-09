@@ -9,3 +9,7 @@ Things to confirm with the client or finish later.
 - **Menu hover colour:** link hover is crimson, but the menu text uses a difference blend, so over white sections the red shows as teal.
 - **How we work, moon constellation:** Figma defines only the 4s transitions (hover/click prototype). It runs automatically here: it wakes when scrolled into view and steps through the three captions every 3s hold + 4s turn, looping. The 3s hold is our choice, and three steps are treated as one full turn of the moon texture so the loop is seamless. Confirm the pacing with the client.
 - **Pages still placeholders:** Services, Privacy Policy, Terms of Service, FAQ.
+
+## Olindo event (Upcoming Events + /events/olindo)
+- The three dates disagree: the poster image says 14.10.2026, the Figma copy says "November 14, 2026" (shown on the site), and the District ticket link says nov12-2026. Which is right?
+- The listing page "Events & IP" (Figma 185:171385) is not built; VIEW ALL goes to a placeholder /events page.
