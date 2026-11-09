@@ -27,6 +27,7 @@ const CARDS: Card[] = [
     photo: "/img/card-multimedia.png",
     color: "/img/card-multimedia-color.png",
     title: "Moonstone Multimedia",
+    href: "/about",
     text: "An independent record label and production house shaping stories.",
     logo: "multimedia",
     tag: { label: "MULTIMEDIA", spacing: 8.7964 },
