@@ -53,7 +53,7 @@ export function Moon() {
     const cards = gsap.utils.toArray<HTMLElement>(".studio-card", el);
     gsap.set(box.current, { width: 0 });
 
-    // backdrop filters are re-computed every frame while a card moves: off during the swipe, back at rest
+    // the cards' 2px blur is re-computed every frame while they move: off during the swipe, back at rest (the lens bands, i.e. the distortion, stay on)
     const glass = cards.flatMap((c) => [...c.children] as HTMLElement[]).filter((g) => g.tagName === "ARTICLE" && g.style.backdropFilter);
     const saved = glass.map((g) => g.style.backdropFilter);
     glass.forEach((g) => (g.style.backdropFilter = "none"));
@@ -84,6 +84,7 @@ export function Moon() {
     addEventListener("resize", resize);
     return () => {
       removeEventListener("resize", resize);
+      glass.forEach((g, i) => (g.style.backdropFilter = saved[i])); // React strict mode (dev) runs this effect twice: leave the blur as found
       t1.kill();
       t2.kill();
       cardsTl.kill();
