@@ -57,8 +57,8 @@ export function Statement() {
         className="absolute"
         style={{ left: u(53.11), top: u(107.97), width: u(340.45) }}
       >
-        An independent creative company shaping music, culture and ideas into
-        work that moves people.
+        Our ambition is to build a creative institution where music and cinema
+        grow together, each informing and enriching the other.
       </p>
 
       <div
@@ -68,15 +68,16 @@ export function Statement() {
           left: u(603.98),
           top: u(97.97),
           width: u(806.02),
-          fontSize: u(60),
+          fontSize: u(44), // the longer text needs a smaller size to stay above the waves
           backgroundImage: "linear-gradient(90deg, #000 var(--p), #fff var(--p))",
           filter: "drop-shadow(1px 1px 0 rgba(0,0,0,.5)) drop-shadow(-1px -1px 0 rgba(0,0,0,.12))",
         }}
       >
-        <p>We don’t follow a formula.</p>
         <p>
-          We build music, shape identities, and create work that moves culture
-          forward.
+          Through original music, independent live experiences, audiovisual
+          storytelling, and interdisciplinary collaborations, we’re building a
+          platform where these sounds can meet, evolve, and travel beyond their
+          geographical origins.
         </p>
       </div>
 
