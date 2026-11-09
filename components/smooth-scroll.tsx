@@ -4,11 +4,18 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { setLenis } from "@/lib/lenis";
+import { usePathname } from "next/navigation";
+import { getLenis, setLenis } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
+  const path = usePathname();
+  // Lenis lives in the layout and remembers its old scroll target: a new page must start at the top, not slide back to the old position
+  useEffect(() => {
+    getLenis()?.scrollTo(0, { immediate: true, force: true });
+  }, [path]);
+
   useEffect(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
