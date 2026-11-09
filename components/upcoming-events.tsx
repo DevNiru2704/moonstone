@@ -4,20 +4,41 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { OLINDO } from "@/lib/events";
-import { u } from "@/lib/lenis";
+import { u, unit } from "@/lib/lenis";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Figma "Upcoming Events": the 220-high row grows to 870 on hover (smart animate, ease-out, 0.5s) and shrinks back on leave.
-const LETTERS: [string, number][] = [["U", 556.12], ["P", 599.58], ["C", 638.58], ["O", 681.46], ["M", 727.46], ["I", 779.57], ["N", 795.06], ["G", 838.31]];
+// [letter, x together (Figma), x spread across the screen]: the letters drift apart as the section scrolls into view
+const LETTERS: [string, number, number][] = [["U", 556.12, 96.7], ["P", 599.58, 274.6], ["C", 638.58, 453.6], ["O", 681.46, 637], ["M", 727.46, 821.6], ["I", 779.57, 1011.6], ["N", 795.06, 1164], ["G", 838.31, 1349]];
 const trim = { textBox: "trim-both cap alphabetic" } as React.CSSProperties;
 // everything in the row is a function of --p (0 = collapsed, 1 = open), so one tween drives it all
 const grow = (a: number, b: number) => `calc(var(--u) * (${a} + ${b - a} * var(--p)))`;
 
 export function UpcomingEvents() {
   const row = useRef<HTMLDivElement>(null);
+  const title = useRef<HTMLDivElement>(null);
   const tween = useRef<gsap.core.Tween | null>(null);
 
-  useEffect(() => () => void tween.current?.kill(), []);
+  useEffect(() => {
+    const letters = gsap.utils.toArray<HTMLElement>("[data-letter]", title.current);
+    const shift = (i: number) => (LETTERS[i][2] - LETTERS[i][1]) * unit();
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      letters.forEach((l, i) => gsap.set(l, { x: shift(i) }));
+      return;
+    }
+    const tl = gsap.timeline({
+      scrollTrigger: { trigger: title.current, start: "top 85%", end: "top 10%", scrub: 0.6, invalidateOnRefresh: true },
+    });
+    letters.forEach((l, i) => tl.fromTo(l, { x: 0 }, { x: () => shift(i), ease: "none", duration: 1 }, 0));
+    return () => {
+      tl.scrollTrigger?.kill();
+      tl.kill();
+      tween.current?.kill();
+    };
+  }, []);
 
   const to = (p: number) => {
     tween.current?.kill();
@@ -26,9 +47,9 @@ export function UpcomingEvents() {
 
   return (
     <section className="relative bg-white text-black">
-      <div className="relative" style={{ height: u(350) }}>
+      <div ref={title} className="relative" style={{ height: u(350) }}>
         {LETTERS.map(([l, x]) => (
-          <span key={x} className="absolute whitespace-nowrap" style={{ left: u(x), top: u(119.55), fontSize: u(60), ...trim }}>
+          <span key={x} data-letter className="absolute whitespace-nowrap" style={{ left: u(x), top: u(119.55), fontSize: u(60), ...trim }}>
             {l}
           </span>
         ))}
