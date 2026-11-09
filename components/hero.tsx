@@ -3,11 +3,8 @@
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import Image from "next/image";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { onReady, u, unit } from "@/lib/lenis";
 import { bounceErase, bounceReveal as reveal } from "@/lib/reveal";
-
-gsap.registerPlugin(ScrollTrigger);
 
 // Figma: the photo is masked to a 43x42 pill sitting on the "o" dot of the wordmark.
 const DOT = { x: 962.99, y: 503.48, w: 43.2, h: 42.22 };
@@ -26,8 +23,6 @@ export function Hero() {
   const box1 = useRef<HTMLDivElement>(null);
   const box2 = useRef<HTMLDivElement>(null);
   const card = useRef<HTMLDivElement>(null);
-  const section = useRef<HTMLElement>(null);
-  const intro = useRef({ done: false, scrolled: false });
   // with a mouse the "ideas in action" card is the cursor (fixed, follows the pointer); without one it stays centred
   const mouse = useSyncExternalStore(subscribeMouse, hasMouse, () => false);
 
@@ -42,22 +37,20 @@ export function Hero() {
       my(e.clientY);
     };
     addEventListener("pointermove", move);
-    // scrolling down just fades the card out (no bounce), scrolling back to the top fades it in
-    const st = ScrollTrigger.create({
-      trigger: section.current,
-      start: "top top-=80",
-      onEnter: () => {
-        intro.current.scrolled = true;
-        if (intro.current.done) gsap.to(el, { opacity: 0, duration: 0.25 });
-      },
-      onLeaveBack: () => {
-        intro.current.scrolled = false;
-        if (intro.current.done) gsap.to(el, { opacity: 1, duration: 0.25 });
-      },
-    });
+    // the card belongs to the hero: faded out whenever the page is scrolled down (also when the page loads already scrolled), in again at the top
+    let away: boolean | null = null;
+    const check = () => {
+      const now = scrollY > 80;
+      if (now === away) return;
+      const first = away === null;
+      away = now;
+      gsap.to(el, { opacity: now ? 0 : 1, duration: first ? 0 : 0.25 });
+    };
+    check();
+    addEventListener("scroll", check, { passive: true });
     return () => {
       removeEventListener("pointermove", move);
-      st.kill();
+      removeEventListener("scroll", check);
     };
   }, [mouse]);
 
@@ -98,11 +91,7 @@ export function Hero() {
         .to(state, { p: 1, duration: 1.4, ease: "power2.in", onUpdate: apply })
         .add(reveal(first), "+=0.1")
         .add(bounceErase(first), "+=1.6")
-        .add(reveal(label), "+=0.25")
-        .call(() => {
-          intro.current.done = true;
-          if (intro.current.scrolled) gsap.to(card.current, { opacity: 0, duration: 0.25 }); // scrolled away before the card appeared
-        });
+        .add(reveal(label), "+=0.25");
     });
 
     return () => {
@@ -113,7 +102,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section ref={section} className={`relative h-svh overflow-hidden bg-white ${mouse ? "cursor-none" : ""}`}>
+    <section className={`relative h-svh overflow-hidden bg-white ${mouse ? "cursor-none" : ""}`}>
       <div className="absolute left-0 top-1/2 -translate-y-1/2" style={{ width: u(1440), height: u(1024) }}>
         <Image
           src="/img/wordmark.svg"
