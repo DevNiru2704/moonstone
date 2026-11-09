@@ -25,7 +25,6 @@ export function Moon() {
   const moon = useRef<HTMLDivElement>(null);
   const hills = useRef<HTMLImageElement>(null);
   const box = useRef<HTMLDivElement>(null);
-  const row = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = root.current!;
@@ -42,16 +41,12 @@ export function Moon() {
         .to(box.current, { width: "105%", duration: 0.6, ease: "power2.out" })
         .to(box.current, { width: "97%", duration: 0.3, ease: "sine.inOut" })
         .to(box.current, { width: "100%", duration: 0.3, ease: "sine.out" });
-    // the cards (789 high in the design) shrink on shorter screens so a whole card with its text fits the window
-    const fit = () => gsap.set(row.current, { scale: Math.min(1, (0.92 * innerHeight) / (789.23 * k())), transformOrigin: "50% 0" });
-    fit();
-    addEventListener("resize", fit);
     // centre the ball on its own point (percent offsets keep working while it grows)
     gsap.set(moon.current, { xPercent: -50, yPercent: -50 });
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
       final();
       gsap.set(box.current, { width: "100%" });
-      return () => removeEventListener("resize", fit);
+      return;
     }
     const cards = gsap.utils.toArray<HTMLElement>(".studio-card", el);
     gsap.set(box.current, { width: 0 });
@@ -82,7 +77,6 @@ export function Moon() {
     };
     addEventListener("resize", resize);
     return () => {
-      removeEventListener("resize", fit);
       removeEventListener("resize", resize);
       t1.kill();
       t2.kill();
@@ -155,9 +149,7 @@ export function Moon() {
         </div>
         {/* clips the cards while they wait below their slot */}
         <div className="absolute inset-x-0 top-0 overflow-hidden" style={{ paddingTop: u(130), height: u(930) }}>
-          <div ref={row}>
-            <Cards />
-          </div>
+          <Cards />
         </div>
       </div>
     </section>
