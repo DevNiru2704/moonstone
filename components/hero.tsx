@@ -1,19 +1,65 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import Image from "next/image";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { onReady, u, unit } from "@/lib/lenis";
 import { bounceErase, bounceReveal as reveal } from "@/lib/reveal";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Figma: the photo is masked to a 43x42 pill sitting on the "o" dot of the wordmark.
 const DOT = { x: 962.99, y: 503.48, w: 43.2, h: 42.22 };
 const FULL = { w: 3400, h: 3400 * (DOT.h / DOT.w) };
 
+const MOUSE_Q = "(hover: hover) and (pointer: fine)";
+const hasMouse = () => matchMedia(MOUSE_Q).matches && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+const subscribeMouse = (cb: () => void) => {
+  const q = matchMedia(MOUSE_Q);
+  q.addEventListener("change", cb);
+  return () => q.removeEventListener("change", cb);
+};
+
 export function Hero() {
   const photo = useRef<HTMLDivElement>(null);
   const box1 = useRef<HTMLDivElement>(null);
   const box2 = useRef<HTMLDivElement>(null);
+  const card = useRef<HTMLDivElement>(null);
+  const section = useRef<HTMLElement>(null);
+  const intro = useRef({ done: false, scrolled: false });
+  // with a mouse the "ideas in action" card is the cursor (fixed, follows the pointer); without one it stays centred
+  const mouse = useSyncExternalStore(subscribeMouse, hasMouse, () => false);
+
+  useEffect(() => {
+    if (!mouse) return;
+    const el = card.current!;
+    gsap.set(el, { xPercent: -50, yPercent: -50, x: innerWidth / 2, y: innerHeight / 2 });
+    const mx = gsap.quickTo(el, "x", { duration: 0.35, ease: "power3.out" });
+    const my = gsap.quickTo(el, "y", { duration: 0.35, ease: "power3.out" });
+    const move = (e: PointerEvent) => {
+      mx(e.clientX);
+      my(e.clientY);
+    };
+    addEventListener("pointermove", move);
+    // scrolling down erases the card, scrolling back to the top brings it back
+    const st = ScrollTrigger.create({
+      trigger: section.current,
+      start: "top top-=80",
+      onEnter: () => {
+        intro.current.scrolled = true;
+        if (intro.current.done) bounceErase(box2.current!);
+      },
+      onLeaveBack: () => {
+        intro.current.scrolled = false;
+        if (intro.current.done) reveal(box2.current!);
+      },
+    });
+    return () => {
+      removeEventListener("pointermove", move);
+      st.kill();
+    };
+  }, [mouse]);
 
   useEffect(() => {
     const el = photo.current!;
@@ -52,7 +98,11 @@ export function Hero() {
         .to(state, { p: 1, duration: 1.4, ease: "power2.in", onUpdate: apply })
         .add(reveal(first), "+=0.1")
         .add(bounceErase(first), "+=1.6")
-        .add(reveal(label), "+=0.25");
+        .add(reveal(label), "+=0.25")
+        .call(() => {
+          intro.current.done = true;
+          if (intro.current.scrolled) bounceErase(label); // scrolled away before the card appeared
+        });
     });
 
     return () => {
@@ -63,7 +113,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="relative h-svh overflow-hidden bg-white">
+    <section ref={section} className={`relative h-svh overflow-hidden bg-white ${mouse ? "cursor-none" : ""}`}>
       <div className="absolute left-0 top-1/2 -translate-y-1/2" style={{ width: u(1440), height: u(1024) }}>
         <Image
           src="/img/wordmark.svg"
@@ -92,26 +142,26 @@ export function Hero() {
       </div>
 
       <div className="absolute left-0 top-1/2 -translate-y-1/2" style={{ width: u(1440), height: u(1024) }}>
-        {(
-          [
-            [box1, "culture in motion"],
-            [box2, "ideas in action"],
-          ] as const
-        ).map(([ref, text]) => (
-          <div
-            key={text}
-            className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap"
-            style={{ top: u(452.5), height: u(119), padding: `0 ${u(20)}`, fontSize: u(80) }}
-          >
-            <span className="invisible flex h-full items-center">{text}</span>
-            <div
-              ref={ref}
-              className="absolute left-0 top-0 flex h-full items-center overflow-hidden bg-white text-black"
-            >
-              <span style={{ marginLeft: u(20) }}>{text}</span>
-            </div>
+        <div
+          className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap"
+          style={{ top: u(452.5), height: u(119), padding: `0 ${u(20)}`, fontSize: u(80) }}
+        >
+          <span className="invisible flex h-full items-center">culture in motion</span>
+          <div ref={box1} className="absolute left-0 top-0 flex h-full items-center overflow-hidden bg-white text-black">
+            <span style={{ marginLeft: u(20) }}>culture in motion</span>
           </div>
-        ))}
+        </div>
+      </div>
+
+      <div
+        ref={card}
+        className={`pointer-events-none whitespace-nowrap ${mouse ? "fixed left-0 top-0 z-40" : "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"}`}
+        style={{ height: u(119), padding: `0 ${u(20)}`, fontSize: u(80) }}
+      >
+        <span className="invisible flex h-full items-center">ideas in action</span>
+        <div ref={box2} className="absolute left-0 top-0 flex h-full items-center overflow-hidden bg-white text-black">
+          <span style={{ marginLeft: u(20) }}>ideas in action</span>
+        </div>
       </div>
     </section>
   );
