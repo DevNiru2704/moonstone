@@ -11,8 +11,8 @@ import { u, unit } from "@/lib/lenis";
 gsap.registerPlugin(ScrollTrigger);
 
 // Figma "Upcoming Events": the 220-high row grows to 870 on hover (smart animate, ease-out, 0.5s) and shrinks back on leave.
-// [letter, x together (Figma), x spread across the screen]: the letters drift apart by themselves when the heading comes into view
-const LETTERS: [string, number, number][] = [["U", 556.12, 96.7], ["P", 599.58, 274.6], ["C", 638.58, 453.6], ["O", 681.46, 637], ["M", 727.46, 821.6], ["I", 779.57, 1011.6], ["N", 795.06, 1164], ["G", 838.31, 1349]];
+const LETTERS: [string, number][] = [["U", 556.12], ["P", 599.58], ["C", 638.58], ["O", 681.46], ["M", 727.46], ["I", 779.57], ["N", 795.06], ["G", 838.31]];
+const MARGIN = 80; // design px from each screen edge to the outer letters once they have spread
 const trim = { textBox: "trim-both cap alphabetic" } as React.CSSProperties;
 // everything in the row is a function of --p (0 = collapsed, 1 = open), so one tween drives it all
 const grow = (a: number, b: number) => `calc(var(--u) * (${a} + ${b - a} * var(--p)))`;
@@ -24,7 +24,13 @@ export function UpcomingEvents() {
 
   useEffect(() => {
     const letters = gsap.utils.toArray<HTMLElement>("[data-letter]", title.current);
-    const shift = (i: number) => (LETTERS[i][2] - LETTERS[i][1]) * unit();
+    // the letter centres are spread evenly, so the word stays centred whatever the letter widths
+    const shift = (i: number) => {
+      const w = letters.map((l) => l.offsetWidth / unit());
+      const c0 = MARGIN + w[0] / 2;
+      const c1 = 1440 - MARGIN - w[7] / 2;
+      return (c0 + ((c1 - c0) * i) / 7 - w[i] / 2 - LETTERS[i][1]) * unit();
+    };
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
       letters.forEach((l, i) => gsap.set(l, { x: shift(i) }));
       return;
