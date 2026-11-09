@@ -33,7 +33,7 @@ export default function Page() {
         style={{ left: u(822.82), top: u(397.44), width: u(432.742), fontSize: u(16) }}
       >
         <p>
-          Based out of Kolkata, O LINDO is the brainchild of Tilang Sengupta and Neil. After a successful run together in college
+          Based out of Kolkata, OLINDO is the brainchild of Tilang Sengupta and Neil. After a successful run together in college
           competitions the duo continued with a shared obsession; a desire to make music that hit home.
         </p>
         <p style={{ marginTop: "1lh" }}>
