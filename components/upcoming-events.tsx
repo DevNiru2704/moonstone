@@ -17,7 +17,7 @@ const trim = { textBox: "trim-both cap alphabetic" } as React.CSSProperties;
 // everything in the row is a function of --p (0 = collapsed, 1 = open), so one tween drives it all
 const grow = (a: number, b: number) => `calc(var(--u) * (${a} + ${b - a} * var(--p)))`;
 
-export function UpcomingEvents() {
+export function UpcomingEvents({ showAll = true }: { showAll?: boolean }) {
   const row = useRef<HTMLDivElement>(null);
   const title = useRef<HTMLDivElement>(null);
   const tween = useRef<gsap.core.Tween | null>(null);
@@ -59,15 +59,17 @@ export function UpcomingEvents() {
             {l}
           </span>
         ))}
-        <Link
-          href="/events"
-          className="absolute border border-black transition-colors duration-300 ease-out hover:border-crimson hover:bg-crimson hover:text-white"
-          style={{ left: u(662), top: u(203.46), padding: u(20), fontSize: u(16) }}
-        >
-          <span className="block" style={trim}>
-            VIEW ALL
-          </span>
-        </Link>
+        {showAll && (
+          <Link
+            href="/events"
+            className="absolute border border-black transition-colors duration-300 ease-out hover:border-crimson hover:bg-crimson hover:text-white"
+            style={{ left: u(662), top: u(203.46), padding: u(20), fontSize: u(16) }}
+          >
+            <span className="block" style={trim}>
+              VIEW ALL
+            </span>
+          </Link>
+        )}
       </div>
 
       <div
