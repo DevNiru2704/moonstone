@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { u } from "@/lib/lenis";
 
 type Card = {
@@ -10,6 +11,7 @@ type Card = {
   text: string;
   logo: "moonstoned" | "multimedia";
   tag?: { label: string; spacing: number };
+  href?: string;
 };
 
 // Figma: card 426.7x789.2 (Moonstone*d / Multimedia / Artists, in recording order)
@@ -32,10 +34,11 @@ const CARDS: Card[] = [
   {
     photo: "/img/card-artists.png",
     color: "/img/card-artists-color.png",
-    title: "Moonstone Artists",
+    title: "Moonstone Events & IP",
+    href: "/events",
     text: "Representing and supporting independent artists across India.",
     logo: "multimedia",
-    tag: { label: "ARTISTS", spacing: 1.4188 },
+    tag: { label: "EVENTS & IP", spacing: 1.4188 },
   },
 ];
 
@@ -152,6 +155,7 @@ export function Cards() {
             <br />
             <span style={{ fontWeight: 300 }}>{c.text}</span>
           </p>
+          {c.href && <Link href={c.href} aria-label={c.title} className="absolute inset-0 z-10" />}
         </article>
         </div>
       ))}
