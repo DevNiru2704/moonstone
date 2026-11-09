@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Cards } from "@/components/cards";
 import Image from "next/image";
 import Link from "next/link";
+import { CTA_HOVER } from "@/lib/cta";
 import { u, unit } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -147,7 +148,7 @@ export function Moon() {
           <Link
             ref={box}
             href="/contact"
-            className="absolute left-0 top-0 block h-full overflow-hidden bg-[#eee] text-black transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-2 hover:shadow-[0_18px_40px_rgba(0,0,0,0.25)]"
+            className={`absolute left-0 top-0 block h-full overflow-hidden bg-[#eee] text-black ${CTA_HOVER}`}
             style={{ width: 0 }}
           >
             <div className="flex h-full items-center justify-center" style={{ width: u(1320), fontSize: u(80) }}>
