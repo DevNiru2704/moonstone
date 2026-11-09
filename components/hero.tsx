@@ -42,17 +42,17 @@ export function Hero() {
       my(e.clientY);
     };
     addEventListener("pointermove", move);
-    // scrolling down erases the card, scrolling back to the top brings it back
+    // scrolling down just fades the card out (no bounce), scrolling back to the top fades it in
     const st = ScrollTrigger.create({
       trigger: section.current,
       start: "top top-=80",
       onEnter: () => {
         intro.current.scrolled = true;
-        if (intro.current.done) bounceErase(box2.current!);
+        if (intro.current.done) gsap.to(el, { opacity: 0, duration: 0.25 });
       },
       onLeaveBack: () => {
         intro.current.scrolled = false;
-        if (intro.current.done) reveal(box2.current!);
+        if (intro.current.done) gsap.to(el, { opacity: 1, duration: 0.25 });
       },
     });
     return () => {
@@ -101,7 +101,7 @@ export function Hero() {
         .add(reveal(label), "+=0.25")
         .call(() => {
           intro.current.done = true;
-          if (intro.current.scrolled) bounceErase(label); // scrolled away before the card appeared
+          if (intro.current.scrolled) gsap.to(card.current, { opacity: 0, duration: 0.25 }); // scrolled away before the card appeared
         });
     });
 
