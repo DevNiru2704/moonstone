@@ -34,7 +34,7 @@ export function Hero() {
   useEffect(() => {
     if (!mouse) return;
     const el = card.current!;
-    gsap.set(el, { xPercent: -50, yPercent: -50, x: innerWidth / 2, y: innerHeight / 2 });
+    gsap.set(el, { x: innerWidth / 2, y: innerHeight / 2 });
     const mx = gsap.quickTo(el, "x", { duration: 0.35, ease: "power3.out" });
     const my = gsap.quickTo(el, "y", { duration: 0.35, ease: "power3.out" });
     const move = (e: PointerEvent) => {
@@ -141,27 +141,28 @@ export function Hero() {
         <Image src="/img/hero.png" alt="" fill priority unoptimized sizes="100vw" className="object-cover" />
       </div>
 
-      <div className="absolute left-0 top-1/2 -translate-y-1/2" style={{ width: u(1440), height: u(1024) }}>
-        <div
-          className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap"
-          style={{ top: u(452.5), height: u(119), padding: `0 ${u(20)}`, fontSize: u(80) }}
-        >
-          <span className="invisible flex h-full items-center">culture in motion</span>
-          <div ref={box1} className="absolute left-0 top-0 flex h-full items-center overflow-hidden bg-white text-black">
-            <span style={{ marginLeft: u(20) }}>culture in motion</span>
-          </div>
-        </div>
-      </div>
-
+      {/* both captions are the cursor: one point that follows the mouse (fixed), or sits at the screen centre without a mouse; each card is centred on it */}
       <div
         ref={card}
-        className={`pointer-events-none whitespace-nowrap ${mouse ? "fixed left-0 top-0 z-40" : "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"}`}
-        style={{ height: u(119), padding: `0 ${u(20)}`, fontSize: u(80) }}
+        className={`pointer-events-none ${mouse ? "fixed left-0 top-0 z-40" : "absolute left-1/2 top-1/2"}`}
       >
-        <span className="invisible flex h-full items-center">ideas in action</span>
-        <div ref={box2} className="absolute left-0 top-0 flex h-full items-center overflow-hidden bg-white text-black">
-          <span style={{ marginLeft: u(20) }}>ideas in action</span>
-        </div>
+        {(
+          [
+            [box1, "culture in motion"],
+            [box2, "ideas in action"],
+          ] as const
+        ).map(([ref, text]) => (
+          <div
+            key={text}
+            className="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap"
+            style={{ height: u(119), padding: `0 ${u(20)}`, fontSize: u(80) }}
+          >
+            <span className="invisible flex h-full items-center">{text}</span>
+            <div ref={ref} className="absolute left-0 top-0 flex h-full items-center overflow-hidden bg-white text-black">
+              <span style={{ marginLeft: u(20) }}>{text}</span>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
