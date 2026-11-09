@@ -11,7 +11,7 @@ import { u, unit } from "@/lib/lenis";
 gsap.registerPlugin(ScrollTrigger);
 
 // Figma "Upcoming Events": the 220-high row grows to 870 on hover (smart animate, ease-out, 0.5s) and shrinks back on leave.
-// [letter, x together (Figma), x spread across the screen]: the letters drift apart as the section scrolls into view
+// [letter, x together (Figma), x spread across the screen]: the letters drift apart by themselves when the heading comes into view
 const LETTERS: [string, number, number][] = [["U", 556.12, 96.7], ["P", 599.58, 274.6], ["C", 638.58, 453.6], ["O", 681.46, 637], ["M", 727.46, 821.6], ["I", 779.57, 1011.6], ["N", 795.06, 1164], ["G", 838.31, 1349]];
 const trim = { textBox: "trim-both cap alphabetic" } as React.CSSProperties;
 // everything in the row is a function of --p (0 = collapsed, 1 = open), so one tween drives it all
@@ -30,9 +30,9 @@ export function UpcomingEvents() {
       return;
     }
     const tl = gsap.timeline({
-      scrollTrigger: { trigger: title.current, start: "top 85%", end: "top 10%", scrub: 0.6, invalidateOnRefresh: true },
+      scrollTrigger: { trigger: title.current, start: "top 75%", toggleActions: "play none none reverse", invalidateOnRefresh: true },
     });
-    letters.forEach((l, i) => tl.fromTo(l, { x: 0 }, { x: () => shift(i), ease: "none", duration: 1 }, 0));
+    letters.forEach((l, i) => tl.fromTo(l, { x: 0 }, { x: () => shift(i), ease: "power3.out", duration: 1.6 }, 0));
     return () => {
       tl.scrollTrigger?.kill();
       tl.kill();
