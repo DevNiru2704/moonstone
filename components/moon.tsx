@@ -54,7 +54,7 @@ export function Moon() {
     gsap.set(box.current, { width: 0 });
 
     // backdrop filters are re-computed every frame while a card moves: off during the swipe, back at rest
-    const glass = cards.flatMap((c) => [...c.children] as HTMLElement[]).filter((g) => g.style.backdropFilter);
+    const glass = cards.flatMap((c) => [...c.children] as HTMLElement[]).filter((g) => g.tagName === "ARTICLE" && g.style.backdropFilter);
     const saved = glass.map((g) => g.style.backdropFilter);
     glass.forEach((g) => (g.style.backdropFilter = "none"));
     const cardsTl = gsap.timeline({ paused: true, onComplete: () => glass.forEach((g, i) => (g.style.backdropFilter = saved[i])) });
