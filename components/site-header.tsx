@@ -25,8 +25,8 @@ export function SiteHeader() {
 
       <SiteMenu />
 
-      <a
-        href="#contact"
+      <Link
+        href="/contact"
         className={`${GLASS} transition-colors duration-300 ease-linear hover:bg-black/10`}
         style={{
           left: u(50),
@@ -41,7 +41,7 @@ export function SiteHeader() {
         }}
       >
         <span className="whitespace-nowrap">LET’S WORK TOGETHER</span>
-      </a>
+      </Link>
     </>
   );
 }

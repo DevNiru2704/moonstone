@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Cards } from "@/components/cards";
 import Image from "next/image";
+import Link from "next/link";
 import { u, unit } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -24,7 +25,7 @@ export function Moon() {
   const root = useRef<HTMLElement>(null);
   const moon = useRef<HTMLDivElement>(null);
   const hills = useRef<HTMLImageElement>(null);
-  const box = useRef<HTMLDivElement>(null);
+  const box = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     const el = root.current!;
@@ -143,13 +144,18 @@ export function Moon() {
           }}
         />
         <div className="absolute" style={{ left: u(60), top: u(1061.4), width: u(1320), height: u(342) }}>
-          <div ref={box} className="absolute left-0 top-0 h-full overflow-hidden bg-[#eee] text-black" style={{ width: 0 }}>
+          <Link
+            ref={box}
+            href="/contact"
+            className="absolute left-0 top-0 block h-full overflow-hidden bg-[#eee] text-black transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-2 hover:shadow-[0_18px_40px_rgba(0,0,0,0.25)]"
+            style={{ width: 0 }}
+          >
             <div className="flex h-full items-center justify-center" style={{ width: u(1320), fontSize: u(80) }}>
               <p className="whitespace-nowrap">
                 Let’s <em className="font-medium text-crimson">build</em> something.
               </p>
             </div>
-          </div>
+          </Link>
         </div>
         {/* clips the cards while they wait below their slot */}
         <div className="absolute inset-x-0 top-0 overflow-hidden" style={{ paddingTop: u(130), height: u(930) }}>
