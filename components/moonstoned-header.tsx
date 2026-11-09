@@ -52,11 +52,15 @@ export function MoonstonedHeader() {
           className="absolute max-w-none will-change-transform"
           style={{ left: u(BIG.left), top: u(BIG.top), width: u(BIG.w), height: u(BIG.h) }}
         />
-        <div className="absolute" style={{ left: u(410), top: u(472), width: u(621), height: u(80) }}>
-          <div ref={wipe} className="absolute left-0 overflow-hidden bg-white text-black" style={{ top: u(0.5), height: u(79.487) }}>
-            <p className="absolute whitespace-nowrap" style={{ left: u(16.08), top: "50%", transform: "translateY(-50%)", fontSize: u(60), lineHeight: 1 }}>
+        {/* the white card is as wide as its text (plus 16px each side), centred */}
+        <div className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap" style={{ top: u(472.5), height: u(79.487), padding: `0 ${u(16)}`, fontSize: u(60) }}>
+          <span className="invisible flex h-full items-center">
+            Built by <em>multi hatters.</em>
+          </span>
+          <div ref={wipe} className="absolute left-0 top-0 flex h-full items-center overflow-hidden bg-white text-black">
+            <span style={{ marginLeft: u(16) }}>
               Built by <em className="text-crimson">multi hatters.</em>
-            </p>
+            </span>
           </div>
         </div>
       </div>

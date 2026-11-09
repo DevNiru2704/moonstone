@@ -17,5 +17,5 @@ Things to confirm with the client or finish later.
 ## Moonstone*d page
 - The header text in Figma reads "Builty by multi hatters."; the site shows "Built by multi hatters." (likely typo). Please confirm.
 - All four project folders use the same placeholder photo, as in Figma.
-- The second paragraph is white until hovered (Figma's default state), then black sweeps through it. On touch screens it needs a tap.
+- The second paragraph is shown from the start (Figma hides it until hover; the client asked for it to be visible).
 - Figma's "Gentle" / "Slow" / "Quick" easing curves are not readable through the API; ease-in-out approximations are used.
