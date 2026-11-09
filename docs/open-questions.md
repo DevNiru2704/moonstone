@@ -13,3 +13,9 @@ Things to confirm with the client or finish later.
 ## Olindo event (Upcoming Events + /events/olindo)
 - The three dates disagree: the poster image says 14.10.2026, the Figma copy says "November 14, 2026" (shown on the site), and the District ticket link says nov12-2026. Which is right?
 - The listing page "Events & IP" (Figma 185:171385) is not built; VIEW ALL goes to a placeholder /events page.
+
+## Moonstone*d page
+- The header text in Figma reads "Builty by multi hatters."; the site shows "Built by multi hatters." (likely typo). Please confirm.
+- All four project folders use the same placeholder photo, as in Figma.
+- The second paragraph is white until hovered (Figma's default state), then black sweeps through it. On touch screens it needs a tap.
+- Figma's "Gentle" / "Slow" / "Quick" easing curves are not readable through the API; ease-in-out approximations are used.

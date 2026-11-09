@@ -20,6 +20,7 @@ const CARDS: Card[] = [
     photo: "/img/card-moonstoned.png",
     color: "/img/card-moonstoned-color.png",
     title: "Moonstone*d",
+    href: "/moonstoned",
     text: "A creative agency building brands through strategy and design.",
     logo: "moonstoned",
   },
