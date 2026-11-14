@@ -70,15 +70,15 @@ const outline = (g: Grid) => {
 
 // ---- palettes: o outline, f/d/b fur (base, shade, belly), e eye, n nose, i inner ear, then role colours
 const BASE = {
-  o: "#14101f", n: "#e07a8f", i: "#f4a6b5", s: "#9aa7b8", S: "#e2eaf4", k: "#4a5568", c: "#b31e32", g: "#f2c14e",
+  h: "#ffffff", m: "#4a2418", o: "#14101f", n: "#e07a8f", i: "#f4a6b5", s: "#9aa7b8", S: "#e2eaf4", k: "#4a5568", c: "#b31e32", g: "#f2c14e",
   v: "#6b3fa0", V: "#3d2466", O: "#6ee7ff", w: "#8a5a2b", W: "#fff8f5", Z: "#d9d0e3", l: "#5fae4e", L: "#2f7a3a", G: "#7be39a", r: "#fae4d5", B: "#9bc4ff", q: "#5d8fd6",
 };
-const FUR: Record<Role, { f: string; d: string; b: string; e: string }> = {
-  warrior: { f: "#e8913a", d: "#b8631f", b: "#fbe0b8", e: "#2ecc71" },
-  witch: { f: "#3b3050", d: "#241c33", b: "#5c4e78", e: "#ffd23f" },
-  tank: { f: "#7d8ea3", d: "#586679", b: "#c5d0de", e: "#ffd23f" },
-  healer: { f: "#fff8f5", d: "#d9c9c1", b: "#ffffff", e: "#4aa3ff" },
-  druid: { f: "#8ea58b", d: "#62795f", b: "#d3e0cf", e: "#f2c14e" },
+const FUR: Record<Role, Record<string, string>> = {
+  warrior: { f: "#c8752f", d: "#8d4a1f", b: "#f0c690", e: "#e8b83a", o: "#3b1d12", p: "#2a140c" },
+  witch: { f: "#3b3050", d: "#241c33", b: "#5c4e78", e: "#ffd23f", o: "#0e0a18", p: "#0e0a18" },
+  tank: { f: "#7d8ea3", d: "#586679", b: "#c5d0de", e: "#ffd23f", o: "#232b38", p: "#1a2029" },
+  healer: { f: "#fff8f5", d: "#d9c9c1", b: "#ffffff", e: "#4aa3ff", o: "#5a3f38", p: "#1c2a4a" },
+  druid: { f: "#8ea58b", d: "#62795f", b: "#d3e0cf", e: "#f2c14e", o: "#223222", p: "#1a2a1a" },
 };
 export const palette = (role: Role): Record<string, string> => ({ ...BASE, ...FUR[role] });
 
@@ -86,39 +86,56 @@ export const palette = (role: Role): Record<string, string> => ({ ...BASE, ...FU
 const LEG = (p: Pen, x: number, dx: number, c: string) => p.rect(x + dx, 22, x + dx + 1, 25, c);
 
 function drawCat(p: Pen, anim: Anim, i: number, legs: Pen, bulk: number) {
-  // tail (two px thick), swaying
+  // long fluffy tabby tail (three px thick, striped), curling up and swaying
   const tail = [
-    [[4, 17], [3, 16], [2, 14], [2, 12], [3, 11]],
-    [[4, 17], [3, 16], [2, 15], [1, 13], [1, 11]],
+    [[5, 18], [4, 17], [3, 15], [2, 13], [2, 11], [3, 9], [4, 8]],
+    [[5, 18], [4, 17], [3, 15], [2, 13], [1, 11], [1, 9], [2, 8]],
   ][(anim === "walk" ? i >> 1 : i) % 2];
-  for (const [x, y] of tail) {
-    p.px(x, y, "f");
-    p.px(x + 1, y, "f");
-  }
-  p.px(tail[4][0], tail[4][1], "d");
+  tail.forEach(([x, y], k) => {
+    const c = k % 2 && k < 6 ? "d" : "f";
+    p.px(x, y, c);
+    p.px(x + 1, y, c);
+    p.px(x - 1, y, "f");
+  });
+  p.px(tail[6][0], tail[6][1], "d");
+  p.px(tail[6][0] + 1, tail[6][1], "d");
   // far legs (shaded), then body, then near legs
   const ph = anim === "walk" ? i : 1;
   const sw = [-2, 0, 2, 0][ph];
   LEG(legs, 8, -sw, "d");
   LEG(legs, 21 - bulk, sw, "d");
-  p.ell(10, 17, 7 + bulk, 4.2, "f");
+  p.ell(10, 17, 7.5 + bulk, 3.8, "f");
   p.rect(5, 19, 15 + bulk, 20, "b");
+  for (const x of [6, 9, 12]) {
+    p.px(x, 13, "d");
+    p.px(x, 14, "d"); // tabby stripes on the back
+  }
   LEG(legs, 5, sw, "f");
   LEG(legs, 17, -sw, "f");
-  // head
-  p.ell(19, 12, 5, 4.5, "f");
-  p.line(14, 6, 15, 8, "f");
-  p.line(14, 5, 14, 8, "f");
-  p.line(15, 5, 16, 7, "f");
-  p.px(15, 6, "i");
-  p.line(23, 6, 22, 8, "f");
-  p.line(23, 5, 23, 8, "f");
-  p.line(22, 5, 21, 7, "f");
-  p.px(22, 6, "i");
-  p.px(18, 11, "e");
-  p.px(22, 11, "e");
-  p.px(24, 13, "n");
-  p.rect(16, 15, 22, 15, "b");
+  for (const x of [5 + sw, 17 - sw]) legs.px(x, 23, "d");
+  // big round head with fluffy cheeks, ears and a striped forehead
+  p.ell(19, 11.5, 5.7, 5, "f");
+  p.px(13, 14, "f");
+  p.px(25, 14, "f");
+  p.px(12, 15, "f");
+  p.px(26, 15, "f");
+  for (const [x, y] of [[14, 3], [14, 4], [15, 4], [14, 5], [15, 5], [16, 5], [14, 6], [15, 6], [16, 6], [17, 6]]) p.px(x, y, "f");
+  for (const [x, y] of [[24, 3], [24, 4], [23, 4], [24, 5], [23, 5], [22, 5], [24, 6], [23, 6], [22, 6], [21, 6]]) p.px(x, y, "f");
+  for (const [x, y] of [[15, 5], [15, 6], [23, 5], [23, 6]]) p.px(x, y, "i");
+  p.px(19, 7, "d");
+  p.px(19, 8, "d");
+  p.px(17, 8, "d");
+  p.px(21, 8, "d");
+  // large eyes: dark pupil, bright iris, a glint
+  for (const x of [16, 21]) {
+    p.rect(x, 11, x + 1, 13, "e");
+    p.rect(x, 12, x, 13, "p");
+    p.px(x + 1, 11, "h");
+  }
+  p.rect(19, 14, 20, 14, "n");
+  p.px(19, 15, "m");
+  p.px(20, 15, "m");
+  p.rect(16, 16, 22, 16, "b");
 }
 
 // ---- role gear
