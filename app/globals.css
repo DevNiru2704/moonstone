@@ -114,26 +114,45 @@ form textarea:-webkit-autofill {
   transition: background-color 600000s ease-in-out 0s;
 }
 
-/* /meow: the cats' tails */
-@keyframes cat-tail {
-  0%,
+/* /meow: pixel RPG bits */
+@keyframes dmg-float {
+  0% {
+    transform: translate(-50%, 0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
   100% {
-    rotate: -8deg;
+    transform: translate(-50%, -80%);
+    opacity: 0;
   }
+}
+.dmg {
+  animation: dmg-float 0.9s steps(9) forwards;
+}
+@keyframes blink {
   50% {
-    rotate: 14deg;
+    opacity: 0;
   }
 }
-.cat-tail {
-  transform-box: fill-box;
-  transform-origin: 0% 100%;
-  animation: cat-tail 2.4s ease-in-out infinite;
+.blink {
+  animation: blink 1s steps(1) infinite;
+  margin-left: 0.5em;
 }
-.cat-card:hover .cat-tail {
-  animation-duration: 0.45s;
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.dmg-text {
+  animation: pop-in 0.3s steps(3) both;
 }
 @media (prefers-reduced-motion: reduce) {
-  .cat-tail {
+  .dmg,
+  .blink,
+  .dmg-text {
     animation: none;
   }
 }

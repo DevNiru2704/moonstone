@@ -23,3 +23,4 @@ Things to confirm with the client or finish later.
 ## Secret page `/meow` (developer)
 - Not in any design: copy, cats (drawn as SVG in `components/cats.tsx`) and layout are ours, in the brand palette on the dark page. Jokes and the two links (`github.com/DevNiru2704`, `devniru.in`) are constants at the top of `components/meow-page.tsx`; the GitHub handle was taken from the repo remote, please confirm.
 - Hidden: not in the menu or footer, `noindex`. Found by typing "meow" outside form fields or clicking the footer mascot 5 times within 2 s.
+- `/meow` art: the five cats (warrior, witch, tank, healer, druid), the bug slime and the backdrops are original pixel art built from drawing code in `lib/sprites.ts` and `lib/scene.ts` (no copied game art). It is readable, not pro-artist polish; commissioned sprite sheets could replace `catFrame()` later. The pixel font (Silkscreen) is loaded only on this page.
