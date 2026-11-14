@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { PixelCanvas } from "@/components/pixel-canvas";
+import { chip, type Sfx } from "@/lib/chiptune";
 import { RpgWindow, useTyped } from "@/components/rpg-window";
 import { drawCat2D, FRAMES, type Role } from "@/lib/sprites";
 import { castle, ground, hills, moon, rect, sky } from "@/lib/scene";
@@ -31,6 +32,8 @@ const SPAWN: Record<string, (out: P[]) => void> = {
 
 // staggers the demo action of the four cards
 const ROLE_DELAY: Record<string, number> = { witch: 0, tank: 1.3, healer: 2.6, druid: 3.9 };
+
+const ROLE_SFX: Record<string, Sfx> = { witch: "bolt", tank: "bash", healer: "heal", druid: "twinkle" };
 
 const BACKDROP: Record<string, (ctx: CanvasRenderingContext2D, off: number) => void> = {
   witch: (ctx) => moon(ctx, 54, 12, 7),
@@ -86,6 +89,7 @@ export function RpgCard({ role, caption, action }: { role: Exclude<Role, "warrio
         if (!s.fired && s.act >= 0.3) {
           s.fired = true;
           SPAWN[role](s.parts);
+          chip.sfx(ROLE_SFX[role]);
         }
         if (s.act >= 0.9) s.act = -1;
       }

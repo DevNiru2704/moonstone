@@ -115,22 +115,6 @@ form textarea:-webkit-autofill {
 }
 
 /* /meow: pixel RPG bits */
-@keyframes dmg-float {
-  0% {
-    transform: translate(-50%, 0);
-    opacity: 0;
-  }
-  15% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -80%);
-    opacity: 0;
-  }
-}
-.dmg {
-  animation: dmg-float 0.9s steps(9) forwards;
-}
 @keyframes blink {
   50% {
     opacity: 0;
@@ -150,7 +134,6 @@ form textarea:-webkit-autofill {
   animation: pop-in 0.3s steps(3) both;
 }
 @media (prefers-reduced-motion: reduce) {
-  .dmg,
   .blink,
   .dmg-text {
     animation: none;

@@ -9,10 +9,10 @@ export const H = 28;
 export const ROLES: Role[] = ["warrior", "witch", "tank", "healer", "druid"];
 
 type Grid = string[][];
-const blank = (w: number, h: number): Grid => Array.from({ length: h }, () => Array<string>(w).fill("."));
+export const blank = (w: number, h: number): Grid => Array.from({ length: h }, () => Array<string>(w).fill("."));
 
 /** A pen that draws onto a grid with an offset (the whole upper body bobs and leans together). */
-class Pen {
+export class Pen {
   g: Grid;
   ox: number;
   oy: number;
@@ -57,7 +57,7 @@ class Pen {
 }
 
 /** Dark outline around everything that has been drawn. */
-const outline = (g: Grid) => {
+export const outline = (g: Grid) => {
   const h = g.length;
   const w = g[0].length;
   const out = g.map((r) => [...r]);
@@ -83,7 +83,7 @@ const FUR: Record<Role, Record<string, string>> = {
 export const palette = (role: Role): Record<string, string> => ({ ...BASE, ...FUR[role] });
 
 // ---- the shared cat (facing right): tail, far legs, body, near legs, head. dx/dy move the upper body.
-const LEG = (p: Pen, x: number, dx: number, c: string) => p.rect(x + dx, 22, x + dx + 1, 25, c);
+const LEG = (p: Pen, x: number, dx: number, c: string) => p.rect(x + dx, 19, x + dx + 1, 25, c); // starts inside the body, so it stays attached while the body bobs
 
 function drawCat(p: Pen, anim: Anim, i: number, legs: Pen, bulk: number) {
   // long fluffy tabby tail (three px thick, striped), curling up and swaying
@@ -103,16 +103,18 @@ function drawCat(p: Pen, anim: Anim, i: number, legs: Pen, bulk: number) {
   const ph = anim === "walk" ? i : 1;
   const sw = [-2, 0, 2, 0][ph];
   LEG(legs, 8, -sw, "d");
-  LEG(legs, 21 - bulk, sw, "d");
+  LEG(legs, 19, sw, "d");
   p.ell(10, 17, 7.5 + bulk, 3.8, "f");
+  p.rect(13, 15, 21, 20, "f"); // chest joins the body, the head and the front legs
+  p.rect(13, 19, 20, 20, "b");
   p.rect(5, 19, 15 + bulk, 20, "b");
   for (const x of [6, 9, 12]) {
     p.px(x, 13, "d");
     p.px(x, 14, "d"); // tabby stripes on the back
   }
   LEG(legs, 5, sw, "f");
-  LEG(legs, 17, -sw, "f");
-  for (const x of [5 + sw, 17 - sw]) legs.px(x, 23, "d");
+  LEG(legs, 16, -sw, "f");
+  for (const x of [5 + sw, 16 - sw]) legs.px(x, 23, "d");
   // big round head with fluffy cheeks, ears and a striped forehead
   p.ell(19, 11.5, 5.7, 5, "f");
   p.px(13, 14, "f");
