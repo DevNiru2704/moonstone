@@ -31,9 +31,25 @@ const Face = ({ s, name, role, size, dim }: { s: number; name: string; role: str
   <>
     <div
       className="absolute bg-[#c4c4c4]"
-      style={{ left: u(26.5 * s), top: u(26 * s), width: u(374 * s), height: u(469 * s), borderRadius: u(11 * s) }}
+      style={{
+        left: u(26.5 * s),
+        top: u(26 * s),
+        width: u(374 * s),
+        height: u(469 * s),
+        borderRadius: u(11 * s),
+      }}
     />
-    <p data-text className="absolute" style={{ left: u(26 * s), top: u(518 * s), width: u(342.55 * s), fontSize: u(size), opacity: dim ? 0 : 1 }}>
+    <p
+      data-text
+      className="absolute"
+      style={{
+        left: u(26 * s),
+        top: u(518 * s),
+        width: u(342.55 * s),
+        fontSize: u(size),
+        opacity: dim ? 0 : 1,
+      }}
+    >
       <span className="font-medium">{name}</span>
       <br />
       <span style={{ fontWeight: 300 }}>{role}</span>
@@ -47,11 +63,13 @@ const Face = ({ s, name, role, size, dim }: { s: number; name: string; role: str
  */
 export function TeamDeck() {
   const wrap = useRef<HTMLDivElement>(null);
+  const fit = useRef<HTMLDivElement>(null);
   const mode = useSyncExternalStore(subscribe, getMode, () => "still" as Mode);
 
   useEffect(() => {
     if (mode === "still") return;
     const el = wrap.current!;
+    const inner = fit.current!;
     const cards = gsap.utils.toArray<HTMLElement>("[data-card]", el);
     const ghosts = gsap.utils.toArray<HTMLElement>("[data-ghost]", el);
     // the cards are translucent: a card shows its caption only once it is the top one
@@ -66,6 +84,13 @@ export function TeamDeck() {
       // the page below the deck moves down by the pin length (CSS var in design px, so it follows the width)
       const root = document.documentElement;
       root.style.setProperty("--team-extra", String(EXTRA));
+      // on a short window (wide and not tall) the whole deck, title included, is scaled down to fit while it is pinned
+      const shrink = () =>
+        gsap.set(inner, {
+          scale: Math.min(1, (innerHeight * 0.94) / (773 * unit())),
+        });
+      shrink();
+      ScrollTrigger.addEventListener("refreshInit", shrink);
       const ctx = gsap.context(() => {
         const tl = gsap.timeline({
           defaults: { ease: "power2.out" },
@@ -79,12 +104,16 @@ export function TeamDeck() {
             invalidateOnRefresh: true,
           },
         });
-        cards.slice(0, -1).forEach((c, i) => tl.to(c, { ...out(1), duration: 1 }, i).to(texts[i + 1], { opacity: 1, duration: 1 }, i));
+        cards
+          .slice(0, -1)
+          .forEach((c, i) => tl.to(c, { ...out(1), duration: 1 }, i).to(texts[i + 1], { opacity: 1, duration: 1 }, i));
         tl.to(ghosts[0], { opacity: 0, duration: 1 }, 3).to(ghosts[1], { opacity: 0, duration: 1 }, 4);
       }, el);
       ScrollTrigger.refresh();
       return () => {
+        ScrollTrigger.removeEventListener("refreshInit", shrink);
         ctx.revert();
+        gsap.set(inner, { clearProps: "transform" });
         root.style.removeProperty("--team-extra");
         ScrollTrigger.refresh();
       };
@@ -96,7 +125,11 @@ export function TeamDeck() {
     const reach = () => 600 * unit();
     const place = (c: HTMLElement, dx: number) => {
       const p = Math.min(Math.abs(dx) / reach(), 1);
-      gsap.set(c, { x: dx, y: EXIT.y * unit() * p, scale: 1 + (EXIT.scale - 1) * p });
+      gsap.set(c, {
+        x: dx,
+        y: EXIT.y * unit() * p,
+        scale: 1 + (EXIT.scale - 1) * p,
+      });
     };
     const down = (e: PointerEvent) => {
       const c = cards[top];
@@ -117,7 +150,11 @@ export function TeamDeck() {
       drag = null;
       const fast = Math.abs(dx) / (performance.now() - t0) > 0.5 && Math.abs(dx) > 20 * unit();
       if (e.type === "pointerup" && (Math.abs(dx) > CARD.w * 0.25 * unit() || fast)) {
-        gsap.to(c, { ...out(Math.sign(dx)), duration: 0.5, ease: "power2.out" });
+        gsap.to(c, {
+          ...out(Math.sign(dx)),
+          duration: 0.5,
+          ease: "power2.out",
+        });
         top++;
         gsap.to(texts[top], { opacity: 1, duration: 0.5 });
         if (top >= 4) gsap.to(ghosts[top - 4], { opacity: 0, duration: 0.5 });
@@ -142,51 +179,56 @@ export function TeamDeck() {
 
   return (
     <div ref={wrap} className="absolute left-0 w-full text-black" style={{ top: u(1932), height: u(773) }}>
-      <h2 className="absolute w-full text-center text-white" style={{ top: u(0.29), fontSize: u(60), fontWeight: 300 }}>
-        Team
-      </h2>
-
-      {GHOSTS.map((g, i) => (
-        <div
-          key={i}
-          data-ghost
-          aria-hidden
-          className="absolute"
-          style={{
-            left: u(g.left),
-            top: u(g.top),
-            width: u(385.1),
-            height: u(535.16),
-            borderRadius: u(22.6),
-            background: "rgba(217,217,217,0.2)",
-            opacity: 0.18,
-          }}
+      <div ref={fit} className="absolute inset-0">
+        <h2
+          className="absolute w-full text-center text-white"
+          style={{ top: u(0.29), fontSize: u(60), fontWeight: 300 }}
         >
-          <Face s={0.904} name={TEAM[1].name} role={TEAM[1].role} size={19.526} />
-        </div>
-      ))}
+          Team
+        </h2>
 
-      {TEAM.map((m, i) => (
-        <article
-          key={m.name}
-          data-card
-          className="glass-rim absolute select-none"
-          style={{
-            left: u(CARD.left),
-            top: u(CARD.top),
-            width: u(CARD.w),
-            height: u(CARD.h),
-            borderRadius: u(25),
-            background: "rgba(217,217,217,0.2)",
-            backdropFilter: "blur(2px)",
-            WebkitBackdropFilter: "blur(2px)",
-            zIndex: TEAM.length - i,
-            touchAction: mode === "touch" ? "pan-y" : undefined,
-          }}
-        >
-          <Face s={1} name={m.name} role={m.role} size={21.6} dim={i > 0} />
-        </article>
-      ))}
+        {GHOSTS.map((g, i) => (
+          <div
+            key={i}
+            data-ghost
+            aria-hidden
+            className="absolute"
+            style={{
+              left: u(g.left),
+              top: u(g.top),
+              width: u(385.1),
+              height: u(535.16),
+              borderRadius: u(22.6),
+              background: "rgba(217,217,217,0.2)",
+              opacity: 0.18,
+            }}
+          >
+            <Face s={0.904} name={TEAM[1].name} role={TEAM[1].role} size={19.526} />
+          </div>
+        ))}
+
+        {TEAM.map((m, i) => (
+          <article
+            key={m.name}
+            data-card
+            className="glass-rim absolute select-none"
+            style={{
+              left: u(CARD.left),
+              top: u(CARD.top),
+              width: u(CARD.w),
+              height: u(CARD.h),
+              borderRadius: u(25),
+              background: "rgba(217,217,217,0.2)",
+              backdropFilter: "blur(2px)",
+              WebkitBackdropFilter: "blur(2px)",
+              zIndex: TEAM.length - i,
+              touchAction: mode === "touch" ? "pan-y" : undefined,
+            }}
+          >
+            <Face s={1} name={m.name} role={m.role} size={21.6} dim={i > 0} />
+          </article>
+        ))}
+      </div>
     </div>
   );
 }
