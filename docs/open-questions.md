@@ -19,3 +19,7 @@ Things to confirm with the client or finish later.
 - All four project folders use the same placeholder photo, as in Figma.
 - The second paragraph is shown from the start (Figma hides it until hover; the client asked for it to be visible).
 - Figma's "Gentle" / "Slow" / "Quick" easing curves are not readable through the API; ease-in-out approximations are used.
+
+## Secret page `/meow` (developer)
+- Not in any design: copy, cats (drawn as SVG in `components/cats.tsx`) and layout are ours, in the brand palette on the dark page. Jokes and the two links (`github.com/DevNiru2704`, `devniru.in`) are constants at the top of `components/meow-page.tsx`; the GitHub handle was taken from the repo remote, please confirm.
+- Hidden: not in the menu or footer, `noindex`. Found by typing "meow" outside form fields or clicking the footer mascot 5 times within 2 s.

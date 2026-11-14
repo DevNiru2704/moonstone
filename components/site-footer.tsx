@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ROUTES, SOCIAL } from "@/lib/links";
 import { u } from "@/lib/lenis";
 
@@ -34,6 +35,17 @@ const ROWS = 6;
 
 export function SiteFooter() {
   const [wink, setWink] = useState(false);
+  const router = useRouter();
+  // easter egg: five quick clicks on the mascot open the hidden /meow page
+  const taps = useRef<number[]>([]);
+  const tap = () => {
+    const now = Date.now();
+    taps.current = [...taps.current.filter((t) => now - t < 2000), now];
+    if (taps.current.length >= 5) {
+      taps.current = [];
+      router.push("/meow");
+    }
+  };
   const grid = useRef<HTMLDivElement>(null);
   const lit = useRef<Element | null>(null);
 
@@ -123,6 +135,7 @@ export function SiteFooter() {
 
       <div
         className="absolute"
+        onClick={tap}
         onPointerEnter={() => setWink(true)}
         onPointerLeave={() => setWink(false)}
         style={{

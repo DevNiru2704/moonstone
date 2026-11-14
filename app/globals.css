@@ -113,3 +113,27 @@ form textarea:-webkit-autofill {
   caret-color: #fff;
   transition: background-color 600000s ease-in-out 0s;
 }
+
+/* /meow: the cats' tails */
+@keyframes cat-tail {
+  0%,
+  100% {
+    rotate: -8deg;
+  }
+  50% {
+    rotate: 14deg;
+  }
+}
+.cat-tail {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: cat-tail 2.4s ease-in-out infinite;
+}
+.cat-card:hover .cat-tail {
+  animation-duration: 0.45s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cat-tail {
+    animation: none;
+  }
+}
