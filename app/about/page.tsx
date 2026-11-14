@@ -3,16 +3,18 @@ import Image from "next/image";
 import { AboutCaption } from "@/components/about-caption";
 import { AboutCta } from "@/components/about-cta";
 import { AboutIntent } from "@/components/about-intent";
+import { TeamDeck } from "@/components/team-deck";
 import { u } from "@/lib/lenis";
 
 export const metadata: Metadata = { title: "About | Moonstone" };
 
 // Figma "About" (1440 x 3756): everything is placed on the 1440 grid; the footer comes from the root layout.
-const TEAM = [60, 506.5, 953];
+// the team deck pins with a mouse and sets --team-extra (design px of scroll) so everything below moves down by that much
+const EXTRA = "var(--team-extra, 0)";
 
 export default function Page() {
   return (
-    <main className="relative overflow-hidden bg-white text-black" style={{ height: u(3200) }}>
+    <main className="relative overflow-hidden bg-white text-black" style={{ height: `calc(var(--u) * (3200 + ${EXTRA}))` }}>
       {/* animated photo header */}
       <Image
         src="/img/about-header.gif"
@@ -43,7 +45,7 @@ export default function Page() {
         className="absolute inset-x-0"
         style={{
           top: u(2099.13),
-          height: u(1100.9),
+          height: `calc(var(--u) * (1100.9 + ${EXTRA}))`,
           background:
             "linear-gradient(to bottom, #0a0a0a 0%, #151f28 25.9%, #014064 39.3%, #fff 100%)",
         }}
@@ -77,42 +79,11 @@ export default function Page() {
 
       <AboutIntent />
 
-      <h2 className="absolute text-center text-white" style={{ left: 0, width: "100%", top: u(1932.29), fontSize: u(60), fontWeight: 300 }}>
-        Team
-      </h2>
+      <TeamDeck />
 
-      {TEAM.map((x, i) => (
-        <article
-          key={x}
-          className="glass-rim absolute"
-          style={{
-            left: u(x),
-            top: u(2115),
-            width: u(426.71),
-            height: u(431.31),
-            borderRadius: u(25),
-            background: "rgba(217,217,217,0.2)",
-            backdropFilter: "blur(2px)",
-            WebkitBackdropFilter: "blur(2px)",
-          }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/img/team-photo.svg"
-            alt=""
-            className="absolute max-w-none"
-            style={{ left: u(26.31), top: u(26.31), width: u(374.09), height: u(300) }}
-          />
-          <p className="absolute" style={{ left: u(35.15), top: u(351.62), width: u(342.55), fontSize: u(21.6) }}>
-            <span className="font-medium">Full Name</span>
-            <br />
-            <span style={{ fontWeight: 300 }}>Designation</span>
-            <span className="sr-only"> {i + 1}</span>
-          </p>
-        </article>
-      ))}
-
-      <AboutCta />
+      <div className="absolute left-0" style={{ top: `calc(var(--u) * ${EXTRA})` }}>
+        <AboutCta />
+      </div>
     </main>
   );
 }
