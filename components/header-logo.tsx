@@ -8,12 +8,15 @@ import { u, unit } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// pages with a photo hero start on the logo; every other page shows the wordmark from the start
+const HERO_PATHS = ["/", "/about", "/events", "/moonstoned"];
 const LOGO = { w: 98.33, h: 70 };
 const WORD = { w: 230, h: 230 * (235 / 1230) };
 
 /** The header mark: the logo, which flips into the wordmark once the page's hero (`[data-hero]`) has scrolled away. */
 export function HeaderLogo() {
   const path = usePathname();
+  const heroPage = HERO_PATHS.includes(path);
   const logo = useRef<HTMLImageElement>(null);
   const word = useRef<HTMLImageElement>(null);
 
@@ -26,9 +29,8 @@ export function HeaderLogo() {
       gsap.set(b, { opacity: on ? 1 : 0 });
     };
     gsap.set([a, b], { rotationY: 0 });
-    show(false);
-
     const hero = document.querySelector("[data-hero]");
+    show(!hero);
     if (!hero) return;
 
     let tl: gsap.core.Timeline | undefined;
@@ -62,14 +64,14 @@ export function HeaderLogo() {
   return (
     <span className="relative block" style={{ width: u(WORD.w), height: u(LOGO.h), perspective: 600 }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img ref={logo} src="/img/logo.svg" alt="" className="absolute left-0 top-0 block" style={{ width: u(LOGO.w), height: u(LOGO.h) }} />
+      <img ref={logo} src="/img/logo.svg" alt="" className="absolute left-0 top-0 block" style={{ width: u(LOGO.w), height: u(LOGO.h), opacity: heroPage ? 1 : 0 }} />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         ref={word}
         src="/img/moonstoone%20wordmark.svg"
         alt=""
-        className="absolute left-0 top-0 block opacity-0"
-        style={{ width: u(WORD.w), height: u(WORD.h), top: u((LOGO.h - WORD.h) / 2) }}
+        className="absolute left-0 top-0 block"
+        style={{ opacity: heroPage ? 0 : 1, width: u(WORD.w), height: u(WORD.h), top: u((LOGO.h - WORD.h) / 2) }}
       />
     </span>
   );
