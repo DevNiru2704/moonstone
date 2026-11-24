@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
 import Image from "next/image";
 import Link from "next/link";
-import { u } from "@/lib/lenis";
+import { u, unit } from "@/lib/lenis";
 
 type Card = {
   photo: string;
@@ -54,8 +56,16 @@ const BANDS = [
 ] as const;
 
 export function Cards() {
+  const row = useRef<HTMLDivElement>(null);
+  // on a short window the three cards are scaled down (from their top edge) so each one fits the screen height
+  useEffect(() => {
+    const fit = () => gsap.set(row.current, { scale: Math.min(1, (innerHeight - 80) / (789.23 * unit())), transformOrigin: "50% 0" });
+    fit();
+    addEventListener("resize", fit);
+    return () => removeEventListener("resize", fit);
+  }, []);
   return (
-    <div className="flex justify-center" style={{ gap: u(25) }}>
+    <div ref={row} className="flex justify-center" style={{ gap: u(25) }}>
       {CARDS.map((c) => (
         // the wrapper only slides (no opacity), so the glass layers inside still see the sky behind the card
         <div key={c.title} className="studio-card relative shrink-0" style={{ width: u(426.71), height: u(789.23) }}>
