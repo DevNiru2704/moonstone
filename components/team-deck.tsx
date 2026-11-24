@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const STEP = 450; // design px of scroll per card with a mouse
 const EXTRA = STEP * (TEAM.length - 1);
-const EXIT = { x: 1150, y: -55, scale: 1.414 }; // Figma: the leaving card ends 603.7 wide, 55 higher, off the frame
+const EXIT = { x: 1112.4, y: 0, scale: 1, rot: 20 }; // Figma (Bidisha exit frame): the leaving card ends turned 20 degrees clockwise, 1112 right, same size and height, off the frame
 const CARD = { left: 505.5, top: 181, w: 426, h: 592 };
 const GHOSTS = [
   { left: 471, top: 209 },
@@ -95,6 +95,7 @@ export function TeamDeck() {
       x: () => dir * EXIT.x * unit(),
       y: () => EXIT.y * unit(),
       scale: EXIT.scale,
+      rotation: dir * EXIT.rot,
     });
 
     if (mode === "mouse") {
@@ -146,6 +147,7 @@ export function TeamDeck() {
         x: dx,
         y: EXIT.y * unit() * p,
         scale: 1 + (EXIT.scale - 1) * p,
+        rotation: Math.sign(dx) * EXIT.rot * p,
       });
     };
     const down = (e: PointerEvent) => {
@@ -178,7 +180,7 @@ export function TeamDeck() {
         gsap.to(texts[top], { opacity: 1, duration: 0.5 });
         if (top >= 4) gsap.to(ghosts[top - 4], { opacity: 0, duration: 0.5 });
       } else {
-        gsap.to(c, { x: 0, y: 0, scale: 1, duration: 0.3, ease: "power2.out" });
+        gsap.to(c, { x: 0, y: 0, scale: 1, rotation: 0, duration: 0.3, ease: "power2.out" });
       }
     };
     el.addEventListener("pointerdown", down);
