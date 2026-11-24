@@ -35,7 +35,7 @@ export function MoonstonedHeader() {
   }, []);
 
   return (
-    <section className="relative h-svh overflow-hidden bg-white">
+    <section data-hero className="relative h-svh overflow-hidden bg-white">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/img/events/hero.gif" alt="" className="absolute inset-0 size-full max-w-none object-cover" />
       <div className="absolute left-0 top-1/2 -translate-y-1/2" style={{ width: u(1440), height: u(1024) }}>

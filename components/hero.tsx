@@ -102,7 +102,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section className={`relative h-svh overflow-hidden bg-white ${mouse ? "cursor-none" : ""}`}>
+    <section data-hero className={`relative h-svh overflow-hidden bg-white ${mouse ? "cursor-none" : ""}`}>
       <div className="absolute left-0 top-1/2 -translate-y-1/2" style={{ width: u(1440), height: u(1024) }}>
         <Image
           src="/img/wordmark.svg"

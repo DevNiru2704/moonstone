@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { GLASS, GlassFilters } from "@/components/glass-filters";
+import { HeaderLogo } from "@/components/header-logo";
 import { SiteMenu } from "@/components/site-menu";
 import { u } from "@/lib/lenis";
 
@@ -13,13 +14,7 @@ export function SiteHeader() {
         style={{ padding: u(30) }}
       >
         <Link href="/" aria-label="Moonstone home" className="pointer-events-auto">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/img/logo.svg"
-            alt=""
-            className="block"
-            style={{ width: u(98.33), height: u(70) }}
-          />
+          <HeaderLogo />
         </Link>
       </header>
 

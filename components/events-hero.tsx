@@ -25,7 +25,7 @@ export function EventsHero() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-ink text-white" style={{ height: "100svh" }}>
+    <section data-hero className="relative overflow-hidden bg-ink text-white" style={{ height: "100svh" }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/img/events/hero.gif" alt="" className="absolute inset-0 size-full max-w-none object-cover" />
       <h1 className="sr-only">Events & IP</h1>

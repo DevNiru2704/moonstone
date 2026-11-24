@@ -17,6 +17,7 @@ export default function Page() {
     <main className="relative overflow-hidden bg-white text-black" style={{ height: `calc(var(--u) * (3200 + ${EXTRA}))` }}>
       {/* animated photo header */}
       <Image
+        data-hero
         src="/img/about-header.gif"
         alt=""
         width={1440}
