@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ChromeBehavior } from "@/components/chrome-behavior";
 import { GLASS, GlassFilters } from "@/components/glass-filters";
 import { HeaderLogo } from "@/components/header-logo";
 import { SiteMenu } from "@/components/site-menu";
@@ -9,7 +10,9 @@ export function SiteHeader() {
   return (
     <>
       <GlassFilters />
+      <ChromeBehavior />
       <header
+        data-nav
         className="fixed inset-x-0 top-0 z-50 flex items-start justify-between pointer-events-none mix-blend-difference"
         style={{ padding: u(30) }}
       >
@@ -22,6 +25,7 @@ export function SiteHeader() {
 
       <Link
         href="/contact"
+        data-pill
         className={`${GLASS} transition-colors duration-300 ease-linear hover:bg-black/10`}
         style={{
           left: u(50),

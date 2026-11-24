@@ -37,3 +37,7 @@ Things to confirm with the client or finish later.
 - Photos are cropped to the card ratio (374:469) and saved as 748x938 webp in `public/img/team/`. The framing is my choice (e.g. Bidisha is cropped from a landscape shot); send other crops if the client prefers. Originals are in the git-ignored `source-photos/teams/`.
 - Figma spells the CEO "Bidishah" (bios and card); the old code had "Bidisha". I followed Figma.
 - White bio text on the lighter blue at the bottom of the gradient is low contrast (as in Figma).
+
+## Navbar auto-hide and the pill
+- The navbar hides on scroll down and returns on scroll up. With a photo hero it starts 150 design px after the logo flips to the wordmark; other pages from the start. Thresholds are my pick.
+- "Let's work together" fades out when the top of a "Let's build something" box reaches it and returns when the footer comes into view or when scrolling back above the box.

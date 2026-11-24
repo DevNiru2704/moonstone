@@ -145,7 +145,7 @@ export function Moon() {
             clipPath: `inset(${u(500)} 0 0 0)`,
           }}
         />
-        <div className="absolute" style={{ left: u(60), top: u(1061.4), width: u(1320), height: u(342) }}>
+        <div data-cta className="absolute" style={{ left: u(60), top: u(1061.4), width: u(1320), height: u(342) }}>
           <Link
             ref={box}
             href="/contact"

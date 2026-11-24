@@ -27,6 +27,7 @@ export function AboutCta({ top = 2796 }: { top?: number }) {
 
   return (
     <div
+      data-cta
       className="absolute"
       style={{ left: u(60), top: u(top), width: u(1320), height: u(342.04) }}
       onPointerEnter={show}

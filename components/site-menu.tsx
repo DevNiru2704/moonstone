@@ -99,6 +99,8 @@ export function SiteMenu() {
   return (
     <div
       ref={box}
+      data-nav
+      data-open={phase !== "closed" ? "" : undefined}
       className={`${GLASS} !block overflow-hidden`}
       style={{
         top: u(30),
