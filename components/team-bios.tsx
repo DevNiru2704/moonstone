@@ -14,7 +14,7 @@ export function TeamBios() {
       {TEAM.map((m, i) => {
         const photoLeft = i % 2 === 0;
         return (
-          <li key={m.name} className="absolute text-white" style={{ left: u(85), top: u(i * STEP), width: u(1269), height: u(ROW_H) }}>
+          <li key={m.name} id={`team-${i}`} className="absolute text-white" style={{ left: u(85), top: u(i * STEP), width: u(1269), height: u(ROW_H) }}>
             <Image
               src={m.photo}
               alt={m.name}

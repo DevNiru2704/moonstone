@@ -4,7 +4,7 @@ import { useEffect, useRef, useSyncExternalStore } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { u, unit } from "@/lib/lenis";
+import { getLenis, u, unit } from "@/lib/lenis";
 import { TEAM } from "@/lib/team";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -69,6 +69,18 @@ const Face = ({ s, name, role, photo, size, dim }: { s: number; name: string; ro
 export function TeamDeck() {
   const wrap = useRef<HTMLDivElement>(null);
   const fit = useRef<HTMLDivElement>(null);
+  const dragged = useRef(false); // a swipe on touch must not count as a click
+
+  // clicking a card scrolls to that person's section in the bios below
+  const goTo = (i: number) => {
+    if (dragged.current) return void (dragged.current = false);
+    const row = document.getElementById(`team-${i}`);
+    if (!row) return;
+    const offset = -120 * unit();
+    const lenis = getLenis();
+    if (lenis) lenis.scrollTo(row, { offset, duration: 1.6 });
+    else scrollTo({ top: row.getBoundingClientRect().top + scrollY + offset, behavior: "auto" });
+  };
   const mode = useSyncExternalStore(subscribe, getMode, () => "still" as Mode);
 
   useEffect(() => {
@@ -140,12 +152,14 @@ export function TeamDeck() {
       const c = cards[top];
       if (top >= cards.length - 1 || !c.contains(e.target as Node)) return;
       gsap.killTweensOf(c);
+      dragged.current = false;
       drag = { id: e.pointerId, x0: e.clientX, t0: performance.now(), dx: 0 };
       c.setPointerCapture(e.pointerId);
     };
     const move = (e: PointerEvent) => {
       if (!drag || e.pointerId !== drag.id) return;
       drag.dx = e.clientX - drag.x0;
+      if (Math.abs(drag.dx) > 8 * unit()) dragged.current = true;
       place(cards[top], drag.dx);
     };
     const up = (e: PointerEvent) => {
@@ -216,7 +230,12 @@ export function TeamDeck() {
           <article
             key={m.name}
             data-card
-            className="glass-rim absolute select-none"
+            role="link"
+            tabIndex={0}
+            aria-label={`${m.name}: read more below`}
+            onClick={() => goTo(i)}
+            onKeyDown={(e) => e.key === "Enter" && goTo(i)}
+            className="glass-rim absolute cursor-pointer select-none"
             style={{
               left: u(CARD.left),
               top: u(CARD.top),
