@@ -13,7 +13,7 @@ const DEAD_ZONE = 8; // px of scroll before the direction counts
 /**
  * Header chrome behaviour (renders nothing):
  * - the navbar ([data-nav]) slides up when scrolling down and back when scrolling up; on pages with a photo hero it only starts
- *   150 design px after the logo has flipped to the wordmark, elsewhere from the start
+ *   150 design px after the logo has flipped to the wordmark (and the flip has finished), elsewhere from the start
  * - the "Let's work together" pill ([data-pill]) fades out while a "Let's build something" box ([data-cta]) is reached, back at the footer or above it
  */
 export function ChromeBehavior() {
@@ -36,10 +36,13 @@ export function ChromeBehavior() {
       else gsap.to(nav, { y: hide ? -130 * unit() : 0, duration: 0.35, ease: "power2.out", overwrite: "auto" });
     };
 
+    // the logo-to-wordmark flip (header-logo.tsx) must have finished showing the wordmark before the navbar may hide
+    const flipped = () => document.querySelector<HTMLElement>("[data-flip]")?.dataset.flip === "word";
+
     let last = scrollY;
     const onScroll = () => {
       const y = scrollY;
-      if (y <= 0 || !enabled) {
+      if (y <= 0 || !enabled || !flipped()) {
         setHidden(false);
         last = y;
         return;

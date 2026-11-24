@@ -17,6 +17,7 @@ const WORD = { w: 230, h: 230 * (235 / 1230) };
 export function HeaderLogo() {
   const path = usePathname();
   const heroPage = HERO_PATHS.includes(path);
+  const root = useRef<HTMLSpanElement>(null);
   const logo = useRef<HTMLImageElement>(null);
   const word = useRef<HTMLImageElement>(null);
 
@@ -24,7 +25,10 @@ export function HeaderLogo() {
     const a = logo.current!;
     const b = word.current!;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // the navbar auto-hide waits for data-flip="word": the wordmark is showing and the flip has finished
+    const mark = (v: string) => (root.current!.dataset.flip = v);
     const show = (on: boolean) => {
+      mark(on ? "word" : "logo");
       gsap.set(a, { opacity: on ? 0 : 1 });
       gsap.set(b, { opacity: on ? 1 : 0 });
     };
@@ -38,8 +42,9 @@ export function HeaderLogo() {
       tl?.kill();
       const [from, to] = on ? [a, b] : [b, a];
       if (!animate || reduce) return void show(on);
+      mark("busy");
       tl = gsap
-        .timeline()
+        .timeline({ onComplete: () => mark(on ? "word" : "logo") })
         .to(from, { rotationY: 90, duration: 0.2, ease: "power1.in" })
         .set(from, { opacity: 0 })
         .set(to, { opacity: 1, rotationY: -90 })
@@ -62,7 +67,7 @@ export function HeaderLogo() {
   }, [path]);
 
   return (
-    <span className="relative block" style={{ width: u(WORD.w), height: u(LOGO.h), perspective: 600 }}>
+    <span ref={root} data-flip={heroPage ? "logo" : "word"} className="relative block" style={{ width: u(WORD.w), height: u(LOGO.h), perspective: 600 }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img ref={logo} src="/img/logo.svg" alt="" className="absolute left-0 top-0 block" style={{ width: u(LOGO.w), height: u(LOGO.h), opacity: heroPage ? 1 : 0 }} />
       {/* eslint-disable-next-line @next/next/no-img-element */}
