@@ -39,5 +39,5 @@ Things to confirm with the client or finish later.
 - White bio text on the lighter blue at the bottom of the gradient is low contrast (as in Figma).
 
 ## Navbar auto-hide and the pill
-- The navbar hides on scroll down and returns on scroll up. With a photo hero it starts 150 design px after the logo flips to the wordmark; other pages from the start. Thresholds are my pick.
+- The navbar hides on scroll down and returns on scroll up. With a photo hero it starts 400 design px after the logo flips to the wordmark; other pages from the start. Thresholds are my pick.
 - "Let's work together" fades out when the top of a "Let's build something" box reaches it and returns when the footer comes into view or when scrolling back above the box.

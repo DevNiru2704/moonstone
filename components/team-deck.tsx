@@ -10,7 +10,8 @@ import { TEAM } from "@/lib/team";
 gsap.registerPlugin(ScrollTrigger);
 
 const STEP = 450; // design px of scroll per card with a mouse
-const EXTRA = STEP * (TEAM.length - 1);
+const REST = 0.6; // scroll left at the end with only the last card on screen, so no leaving card is caught half way
+const EXTRA = STEP * (TEAM.length - 1 + REST);
 const EXIT = { x: 1112.4, y: 0, scale: 1, rot: 20 }; // Figma (Bidisha exit frame): the leaving card ends turned 20 degrees clockwise, 1112 right, same size and height, off the frame
 const CARD = { left: 505.5, top: 181, w: 426, h: 592 };
 const GHOSTS = [
@@ -125,7 +126,7 @@ export function TeamDeck() {
         cards
           .slice(0, -1)
           .forEach((c, i) => tl.to(c, { ...out(1), duration: 1 }, i).to(texts[i + 1], { opacity: 1, duration: 1 }, i));
-        tl.to(ghosts[0], { opacity: 0, duration: 1 }, 3).to(ghosts[1], { opacity: 0, duration: 1 }, 4);
+        tl.to(ghosts[0], { opacity: 0, duration: 1 }, 3).to(ghosts[1], { opacity: 0, duration: 1 }, 4).to({}, { duration: REST }, TEAM.length - 1);
       }, el);
       ScrollTrigger.refresh();
       return () => {

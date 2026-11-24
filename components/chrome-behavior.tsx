@@ -13,7 +13,7 @@ const DEAD_ZONE = 8; // px of scroll before the direction counts
 /**
  * Header chrome behaviour (renders nothing):
  * - the navbar ([data-nav]) slides up when scrolling down and back when scrolling up; on pages with a photo hero it only starts
- *   150 design px after the logo has flipped to the wordmark (and the flip has finished), elsewhere from the start
+ *   400 design px after the logo has flipped to the wordmark (and the flip has finished), elsewhere from the start
  * - the "Let's work together" pill ([data-pill]) fades out while a "Let's build something" box ([data-cta]) is reached, back at the footer or above it
  */
 export function ChromeBehavior() {
@@ -61,7 +61,7 @@ export function ChromeBehavior() {
       triggers.push(
         ScrollTrigger.create({
           trigger: hero,
-          start: () => `bottom top-=${50 * unit()}`, // the logo flips at "top+=100"; this is 150 design px later
+          start: () => `bottom top-=${300 * unit()}`, // the logo flips at "top+=100"; this is 400 design px later
           end: () => ScrollTrigger.maxScroll(window) + 1,
           onToggle: (self) => {
             enabled = self.isActive;
