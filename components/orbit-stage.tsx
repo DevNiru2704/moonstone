@@ -15,14 +15,15 @@ const AWAKE = { left: 554, top: 346, size: 332 };
 const TEX_RATIO = 1024 / 313; // both moon textures
 const STEP = 4; // seconds each change takes (Figma smart animate)
 const HOLD = 2; // units a caption rests before the next step (not in Figma)
-// Dot angle on the 718 ring (CSS degrees). Three steps add up to one full turn, so the loop is seamless.
-const ANGLES = [-177.02, -62.8, 68.7, 182.98];
-const PAN = 100 / 9; // % of the 3-copy texture strip per step (one third of one texture width)
+// Dot angle on the 718 ring (CSS degrees). Four steps add up to one full turn, so the loop is seamless.
+const ANGLES = [-177.02, -87.02, 2.98, 92.98, 182.98];
+const PAN = 100 / 12; // % of the 3-copy texture strip per step (a quarter of one texture width)
 
 const CAPTIONS = [
-  { word: "Intent", rest: " over convention", body: ["We start with the why, finding the meaning", "behind every idea before bringing it to life."], left: 86.82, top: 117.78, width: 345, align: "left" },
-  { word: "Collaboration", rest: " over silos", body: ["We bring music, design, strategy, and talent", "together to create work that moves beyond disciplines."], left: 915.35, top: 843.8, width: 442, align: "right" },
-  { word: "Substance", rest: " over noise", body: ["We value work with purpose, building lasting", "connections between ideas, people, and culture."], left: 86.47, top: 843.8, width: 391, align: "left" },
+  { word: "Cooking Up", rest: " Live Experiences", body: ["We don’t just put artists on a stage.", "We create reasons for them to share one."], left: 86.82, top: 117.78, width: 460, align: "left" },
+  { word: "Marketing", rest: " the Future", body: ["Culture first.", "Strategy always."], left: 915.35, top: 843.8, width: 442, align: "right" },
+  { word: "Keeping", rest: " Everyone in the Loop", body: ["No guessing games.", "Just good communication."], left: 86.47, top: 843.8, width: 460, align: "left" },
+  { word: "Local Frequencies.", rest: " Global Ears.", body: ["A sound of our own.", "A world waiting to hear it."], left: 915.35, top: 117.78, width: 442, align: "right" },
 ] as const;
 
 const RINGS = [
@@ -78,9 +79,9 @@ export function OrbitStage() {
       .fromTo(dot.current, { opacity: 0, rotation: ANGLES[0] - 120 }, { opacity: 1, rotation: ANGLES[0] }, 0)
       .fromTo(caps.current[0], { opacity: 0 }, { opacity: 1, duration: 1, ease: "power1.inOut" }, STEP - 1);
 
-    // 2) then 1 -> 2 -> 3 -> 1 forever; every step turns the moon, moves the dot and swaps the caption
+    // 2) then 1 -> 2 -> 3 -> 4 -> 1 forever; every step turns the moon, moves the dot and swaps the caption
     const steps = gsap.timeline({ defaults: { immediateRender: false } });
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < CAPTIONS.length - 1; i++) {
       const at = i * (HOLD + STEP);
       steps
         .fromTo(strip.current, { xPercent: -PAN * i }, { xPercent: -PAN * (i + 1), duration: STEP, ease: "power2.inOut" }, at)

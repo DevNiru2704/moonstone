@@ -27,3 +27,8 @@ Things to confirm with the client or finish later.
 - `/meow` battle: nine original bug-themed monsters (Merge Conflict, Null Pointer, 404 Bat, Memory Leak, Tech Debt, Infinite Loop and the bosses Spaghetti Hydra, Scope Creep, Friday Deploy) in `lib/enemies.ts`; names and jokes are ours. Every fourth fight is a boss.
 - `/meow` sound: the battle and boss music and all effects are original synthesized chiptune (`lib/chiptune.ts`, Web Audio, no audio files, no licences), only loaded on this page, starting muted behind the SOUND button. Tuned by numbers only (no speakers here): melodies, volume and the mix may need a listen-and-adjust pass.
 - After editing `app/globals.css` restart `next dev`: Turbopack can serve stale global CSS (this once left the damage numbers un-animated, so they never left).
+
+## How we work: four stops and the progress section
+- The 4th moon caption ("Local Frequencies. Global Ears.") sits top-right; it is not in Figma, only the first three positions are.
+- The progress section below the moon (`components/how-progress.tsx`) has no heading, and its type sizes and spacing are not from Figma. Copy is from the client's screenshots.
+- The moon lock is longer (`ORBIT_SCROLL` 3380) to fit the fourth stop.

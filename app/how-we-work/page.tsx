@@ -1,21 +1,25 @@
 import type { Metadata } from "next";
 import { AboutCta } from "@/components/about-cta";
+import { HowProgress } from "@/components/how-progress";
 import { OrbitStage } from "@/components/orbit-stage";
 import { dusk } from "@/lib/dusk";
 import { u } from "@/lib/lenis";
-import { ORBIT_OFF, ORBIT_SCROLL } from "@/lib/orbit";
+import { ORBIT_OFF, ORBIT_SCROLL, PROGRESS_H } from "@/lib/orbit";
 
 export const metadata: Metadata = { title: "How we work | Moonstone" };
 
 // Figma "How We Work" (1440 x 2784): the moon constellation, a closing line, the hover CTA and the dusk glow above the footer.
 export default function Page() {
   return (
-    <main className="relative overflow-clip bg-ink text-white" style={{ height: `calc(${u(2228 - 1209.4 + 1024)} + ${ORBIT_SCROLL}px + ${ORBIT_OFF})` }}>
+    <main className="relative overflow-clip bg-ink text-white" style={{ height: `calc(${u(2228 - 1209.4 + 1024 + PROGRESS_H)} + ${ORBIT_SCROLL}px + ${ORBIT_OFF})` }}>
       <OrbitStage />
+      <div className="absolute inset-x-0" style={{ top: `calc(${ORBIT_SCROLL}px + ${ORBIT_OFF} + ${u(1024)})` }}>
+        <HowProgress />
+      </div>
       <h1 className="sr-only">How we work</h1>
 
       {/* everything below the constellation, pushed down by the lock distance */}
-      <div className="absolute inset-x-0" style={{ top: `calc(${ORBIT_SCROLL}px + ${ORBIT_OFF} - ${u(1209.4 - 1024)})`, height: u(2228) }}>
+      <div className="absolute inset-x-0" style={{ top: `calc(${ORBIT_SCROLL}px + ${ORBIT_OFF} + ${u(PROGRESS_H - (1209.4 - 1024))})`, height: u(2228) }}>
 
       <div aria-hidden className="absolute inset-x-0" style={{ top: u(1209.4), height: u(1018.4), backgroundImage: dusk }} />
 
