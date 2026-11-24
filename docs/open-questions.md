@@ -32,3 +32,8 @@ Things to confirm with the client or finish later.
 - The 4th moon caption ("Local Frequencies. Global Ears.") sits top-right; it is not in Figma, only the first three positions are.
 - The progress section below the moon (`components/how-progress.tsx`) has no heading, and its type sizes and spacing are not from Figma. Copy is from the client's screenshots.
 - The moon lock is longer (`ORBIT_SCROLL` 3380) to fit the fourth stop.
+
+## About: team photos and bios
+- Photos are cropped to the card ratio (374:469) and saved as 748x938 webp in `public/img/team/`. The framing is my choice (e.g. Bidisha is cropped from a landscape shot); send other crops if the client prefers. Originals are in the git-ignored `source-photos/teams/`.
+- Figma spells the CEO "Bidishah" (bios and card); the old code had "Bidisha". I followed Figma.
+- White bio text on the lighter blue at the bottom of the gradient is low contrast (as in Figma).

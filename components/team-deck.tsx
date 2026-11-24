@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useSyncExternalStore } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { u, unit } from "@/lib/lenis";
@@ -27,26 +28,30 @@ const subscribe = (cb: () => void) => {
   return () => qs.forEach((q) => q.removeEventListener("change", cb));
 };
 
-const Face = ({ s, name, role, size, dim }: { s: number; name: string; role: string; size: number; dim?: boolean }) => (
+const Face = ({ s, name, role, photo, size, dim }: { s: number; name: string; role: string; photo?: string; size: number; dim?: boolean }) => (
   <>
-    <div
-      className="absolute bg-[#c4c4c4]"
-      style={{
-        left: u(26.5 * s),
-        top: u(26 * s),
-        width: u(374 * s),
-        height: u(469 * s),
-        borderRadius: u(11 * s),
-      }}
-    />
+    {photo ? (
+      <Image
+        src={photo}
+        alt=""
+        width={748}
+        height={938}
+        className="absolute bg-[#c4c4c4] object-cover"
+        style={{ left: u(26.5 * s), top: u(26 * s), width: u(374 * s), height: u(469 * s), borderRadius: u(11 * s) }}
+      />
+    ) : (
+      // the faded cards behind the stack stay plain (no photo), like Figma
+      <div className="absolute bg-[#c4c4c4]" style={{ left: u(26.5 * s), top: u(26 * s), width: u(374 * s), height: u(469 * s), borderRadius: u(11 * s) }} />
+    )}
     <p
       data-text
       className="absolute"
       style={{
-        left: u(26 * s),
+        left: u(26.5 * s),
         top: u(518 * s),
-        width: u(342.55 * s),
+        width: u(374 * s),
         fontSize: u(size),
+        lineHeight: 1.15,
         opacity: dim ? 0 : 1,
       }}
     >
@@ -225,7 +230,7 @@ export function TeamDeck() {
               touchAction: mode === "touch" ? "pan-y" : undefined,
             }}
           >
-            <Face s={1} name={m.name} role={m.role} size={21.6} dim={i > 0} />
+            <Face s={1} name={m.name} role={m.role} photo={m.photo} size={21.6} dim={i > 0} />
           </article>
         ))}
       </div>

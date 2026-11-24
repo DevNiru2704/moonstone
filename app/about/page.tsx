@@ -3,6 +3,7 @@ import Image from "next/image";
 import { AboutCaption } from "@/components/about-caption";
 import { AboutCta } from "@/components/about-cta";
 import { AboutIntent } from "@/components/about-intent";
+import { TeamBios } from "@/components/team-bios";
 import { TeamDeck } from "@/components/team-deck";
 import { u } from "@/lib/lenis";
 
@@ -14,7 +15,7 @@ const EXTRA = "var(--team-extra, 0)";
 
 export default function Page() {
   return (
-    <main className="relative overflow-hidden bg-white text-black" style={{ height: `calc(var(--u) * (3200 + ${EXTRA}))` }}>
+    <main className="relative overflow-hidden bg-white text-black" style={{ height: `calc(var(--u) * (7668 + ${EXTRA}))` }}>
       {/* animated photo header */}
       <Image
         data-hero
@@ -46,9 +47,9 @@ export default function Page() {
         className="absolute inset-x-0"
         style={{
           top: u(2099.13),
-          height: `calc(var(--u) * (1100.9 + ${EXTRA}))`,
+          height: `calc(var(--u) * (5569 + ${EXTRA}))`,
           background:
-            "linear-gradient(to bottom, #0a0a0a 0%, #151f28 25.9%, #014064 39.3%, #fff 100%)",
+            "linear-gradient(to bottom, #0a0a0a 0%, #151f28 44%, #024064 61.2%, #7597ab 100%)",
         }}
       />
 
@@ -82,8 +83,13 @@ export default function Page() {
 
       <TeamDeck />
 
+      {/* the team in more detail; below the deck, so it moves down with the pin length */}
+      <div className="absolute inset-x-0" style={{ top: `calc(var(--u) * (3125 + ${EXTRA}))` }}>
+        <TeamBios />
+      </div>
+
       <div className="absolute left-0" style={{ top: `calc(var(--u) * ${EXTRA})` }}>
-        <AboutCta />
+        <AboutCta top={7048} />
       </div>
     </main>
   );
