@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Cards } from "@/components/cards";
 import Image from "next/image";
 import Link from "next/link";
-import { CTA_H, CTA_HOVER, ctaEnd } from "@/lib/cta";
+import { CTA_H, CTA_HOVER } from "@/lib/cta";
 import { u, unit } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -93,7 +93,7 @@ export function Moon() {
   }, []);
 
   return (
-    <section ref={root} className="relative overflow-hidden bg-white" style={{ height: u(ctaEnd(1061.4)) }}>
+    <section ref={root} className="relative overflow-hidden bg-white" style={{ height: u(1761) }}>
       <div className="absolute inset-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

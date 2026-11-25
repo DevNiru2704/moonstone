@@ -57,9 +57,14 @@ const BANDS = [
 
 export function Cards() {
   const row = useRef<HTMLDivElement>(null);
-  // on a short window the three cards are scaled down (from their top edge) so each one fits the screen height
+  // on a short window the three cards are scaled down (from their top edge) so each one fits the screen height;
+  // the gap grows as they shrink (25 design px at full size) so they do not crowd each other
   useEffect(() => {
-    const fit = () => gsap.set(row.current, { scale: Math.min(1, (innerHeight - 80) / (789.23 * unit())), transformOrigin: "50% 0" });
+    const fit = () => {
+      const s = Math.min(1, (innerHeight - 80) / (789.23 * unit()));
+      const gap = (25 + 120 * (1 - s)) / s; // design px in the row's own (scaled) coordinates
+      gsap.set(row.current, { scale: s, transformOrigin: "50% 0", columnGap: gap * unit() });
+    };
     fit();
     addEventListener("resize", fit);
     return () => removeEventListener("resize", fit);

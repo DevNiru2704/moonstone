@@ -52,5 +52,5 @@ Things to confirm with the client or finish later.
 - Privacy intro wraps to two lines here and three in Figma (font metrics), so the sections start about 27px higher than the frame.
 
 ## CTA box, footer and the "Let's work together" pill
-- The space between the "Let's build something" box and the footer is 60 design px on every page (Figma Privacy / Terms value), set by `CTA_FOOTER_GAP` in `lib/cta.ts`. Before, About had 278, Home 358, How we work 61.6, Events and Moonstone*d 59. Please confirm 60 is right for About and Home too.
+- The space between the "Let's build something" box and the footer is 60 design px on every page (Figma Privacy / Terms value), set by `CTA_FOOTER_GAP` in `lib/cta.ts`. Home is the exception: Figma's moon section keeps the mountain and ground under the box (1761 design px tall), so the box sits about 358 px above the footer there. Before, About had 278, How we work 61.6, Events and Moonstone*d 59. Please confirm 60 is right for About and Home too.
 - The pill fades out when half of the box (171 design px) is on screen and comes back when the footer's top reaches the middle of the window; both points were read from screenshots, so tune them (`components/chrome-behavior.tsx`) if they feel off.
