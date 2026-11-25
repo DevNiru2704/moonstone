@@ -1,5 +1,5 @@
 export type LegalSection = { id: string; title: string; body: string[] };
-export type LegalDoc = { title: string; intro: string; effective: string; sections: LegalSection[] };
+export type LegalDoc = { title: string; intro: string; introWidth: number; effective: string; sections: LegalSection[] };
 
 const EMAIL = "moonstonemultimedia@gmail.com";
 const PHONE = "+91 98743 25470";
@@ -10,6 +10,7 @@ export const CONTACT = { email: EMAIL, phone: PHONE };
 // Copy from Figma "Privacy Policy" (244:16274) and "Terms of Service" (244:16404). Ids are the section anchors (#cookies).
 export const PRIVACY: LegalDoc = {
   title: "Privacy Policy",
+  introWidth: 983, // Figma text box width in design px
   intro:
     "At Moonstone Multimedia, we respect your privacy and are committed to protecting your personal information. This policy outlines how we collect, use, and manage your information when you visit our website, engage with our services, or participate in our events and activities.",
   effective: "Effective Date: December 06, 2026",
@@ -94,6 +95,7 @@ export const PRIVACY: LegalDoc = {
 
 export const TERMS: LegalDoc = {
   title: "Terms of Service",
+  introWidth: 922,
   intro:
     "Welcome to Moonstone Multimedia. By accessing or using our website and services, you agree to comply with and be bound by the following Terms of Service. Please read these terms carefully before using our website.",
   effective: "Effective Date: December 06, 2026",

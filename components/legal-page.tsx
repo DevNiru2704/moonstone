@@ -24,6 +24,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
   const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState(doc.sections[0].id);
   const n = doc.sections.length;
+  const locked = useRef(false); // while a pill-click scroll runs, the clicked pill stays lit (short sections never reach the read line)
 
   useEffect(() => {
     const triggers = doc.sections.map(({ id }) =>
@@ -32,7 +33,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
         start: `top ${READ_LINE}`,
         end: `bottom ${READ_LINE}`,
         // only entering sets the id, so the last section stays lit while the CTA scrolls past
-        onToggle: (self) => self.isActive && setActive(id),
+        onToggle: (self) => self.isActive && !locked.current && setActive(id),
       }),
     );
     return () => triggers.forEach((t) => t.kill());
@@ -51,6 +52,8 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
     const el = document.getElementById(id);
     if (!el) return;
     setActive(id);
+    locked.current = true;
+    setTimeout(() => (locked.current = false), 1800); // Lenis scroll is 1.4 s
     const offset = -SCROLL_OFFSET * unit();
     const lenis = getLenis();
     if (lenis) lenis.scrollTo(el, { offset, duration: 1.4 });
@@ -74,7 +77,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
         <h1 data-in style={{ fontSize: u(60), lineHeight: u(43), height: u(43) }}>
           {doc.title}
         </h1>
-        <p data-in className="mx-auto" style={{ marginTop: u(51), width: u(990), fontSize: u(16), lineHeight: u(27) }}>
+        <p data-in className="mx-auto" style={{ marginTop: u(51), width: u(doc.introWidth), fontSize: u(16), lineHeight: u(27) }}>
           {doc.intro}
         </p>
         <p data-in style={{ marginTop: u(30), fontSize: u(16), lineHeight: u(27) }}>
@@ -86,8 +89,8 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
         <nav aria-label={`${doc.title} sections`} className="shrink-0 self-start" style={{ width: u(353), position: "sticky", top: u(STICKY_TOP) }}>
           <ul
             className="flex flex-col"
-            // the 20 design px gap squeezes on short windows so the last pill stays on screen
-            style={{ gap: `clamp(4px, calc((100svh - ${u(STICKY_TOP)} - 24px - ${n} * ${u(54)}) / ${n - 1}), ${u(20)})` }}
+            // on short windows pills and gaps shrink (keeping the 54 : 20 design ratio) so the list ends above the fixed "Let's work together" pill
+            style={{ "--slot": `calc((100svh - ${u(STICKY_TOP)} - 130px) / ${n})`, gap: `min(${u(20)}, calc(var(--slot) * 0.28))` } as React.CSSProperties}
           >
             {doc.sections.map(({ id, title }) => (
               <li key={id} data-pill-in>
@@ -101,7 +104,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
                   className={`flex items-center border border-solid border-black transition-colors duration-300 ${
                     active === id ? "bg-black text-white" : "hover:bg-black/10"
                   }`}
-                  style={{ height: u(54), padding: `0 ${u(20)}`, borderRadius: u(10), fontSize: u(20), lineHeight: 1.25 }}
+                  style={{ height: `min(${u(54)}, calc(var(--slot) * 0.72))`, padding: `0 ${u(20)}`, borderRadius: u(10), fontSize: u(20), lineHeight: 1.25 }}
                 >
                   {title}
                 </a>
