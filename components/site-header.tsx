@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { ChromeBehavior } from "@/components/chrome-behavior";
-import { GLASS, GlassFilters } from "@/components/glass-filters";
+import { GlassFilters } from "@/components/glass-filters";
 import { HeaderLogo } from "@/components/header-logo";
 import { SiteMenu } from "@/components/site-menu";
+import { WorkPill } from "@/components/work-pill";
 import { u } from "@/lib/lenis";
 
 /* Fixed chrome from Figma "Frame 15" and "let's-work-together". */
@@ -23,24 +24,7 @@ export function SiteHeader() {
 
       <SiteMenu />
 
-      <Link
-        href="/contact"
-        data-pill
-        className={`${GLASS} transition-colors duration-300 ease-linear hover:bg-black/10`}
-        style={{
-          left: u(50),
-          bottom: u(50),
-          width: u(225),
-          height: u(59),
-          borderRadius: u(30),
-          padding: u(20),
-          fontSize: u(16),
-          backdropFilter: "blur(2px) url(#lens-pill)",
-          WebkitBackdropFilter: "blur(2px) url(#lens-pill)",
-        }}
-      >
-        <span className="whitespace-nowrap">LET’S WORK TOGETHER</span>
-      </Link>
+      <WorkPill />
     </>
   );
 }
