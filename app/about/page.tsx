@@ -5,6 +5,7 @@ import { AboutCta } from "@/components/about-cta";
 import { AboutIntent } from "@/components/about-intent";
 import { TeamBios } from "@/components/team-bios";
 import { TeamDeck } from "@/components/team-deck";
+import { ctaEnd } from "@/lib/cta";
 import { u } from "@/lib/lenis";
 
 export const metadata: Metadata = { title: "About | Moonstone" };
@@ -15,7 +16,7 @@ const EXTRA = "var(--team-extra, 0)";
 
 export default function Page() {
   return (
-    <main className="relative overflow-hidden bg-white text-black" style={{ height: `calc(var(--u) * (7668 + ${EXTRA}))` }}>
+    <main className="relative overflow-hidden bg-white text-black" style={{ height: `calc(var(--u) * (${ctaEnd(7048)} + ${EXTRA}))` }}>
       {/* animated photo header */}
       <Image
         data-hero
