@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import { AboutCta } from "@/components/about-cta";
 import { ContactForm } from "@/components/contact-form";
-import { ctaEnd } from "@/lib/cta";
+import { FaqList } from "@/components/faq-list";
+import { HashScroll } from "@/components/hash-scroll";
 import { duskOnWhite } from "@/lib/dusk";
 import { u } from "@/lib/lenis";
 
 export const metadata: Metadata = { title: "Contact | Moonstone" };
 
-// Figma "Contact" (1440 x 1807): radial dusk behind the page, white below it; the footer comes from the root layout.
+// Figma "Contact" (1440 x 1807): radial dusk behind the page, white below it. The FAQ sits under the form (no CTA box here); the footer comes from the root layout.
 const link = "transition-colors duration-200 hover:text-crimson";
 
 export default function Page() {
   return (
-    <main className="relative overflow-hidden bg-white text-white" style={{ height: u(ctaEnd(849)) }}>
+    <main className="relative overflow-hidden bg-white text-white" style={{ paddingTop: u(800) }}>
+      <HashScroll />
       <div aria-hidden className="absolute inset-x-0 top-0" style={{ height: u(1018.4), backgroundImage: duskOnWhite }} />
 
       <h1 className="absolute" style={{ left: u(91), top: u(202.2), fontSize: u(100), lineHeight: u(108) }}>
@@ -43,7 +44,7 @@ export default function Page() {
       </p>
 
       <ContactForm />
-      <AboutCta top={849} />
+      <FaqList />
     </main>
   );
 }
