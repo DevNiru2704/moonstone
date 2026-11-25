@@ -18,7 +18,7 @@ const Phrase = ({ p }: { p: [string, string?] }) => (
   </>
 );
 
-/** Figma "about-header-text": a white box wipes open over the photo with one phrase (with a small bounce), wipes shut or fades, and the next follows, forever. */
+/** Figma "about-header-text": a white box wipes open over the photo with one phrase, bounces shut, and the next follows, forever. */
 export function AboutCaption() {
   const boxes = useRef<HTMLDivElement[]>([]);
 
@@ -33,16 +33,10 @@ export function AboutCaption() {
     const tl = gsap.timeline({ repeat: -1, delay: 0.5 });
     // 1) "Built on music." wipes in and erases
     tl.add(bounceReveal(one)).add(bounceErase(one), "+=1.6").to({}, { duration: 0.2 });
-    // 2) "Driven by culture." wipes in and fades out; after a 1s gap "Open to possibility." wipes in with the same bounce
-    tl.add(bounceReveal(two))
-      .addLabel("swap", "+=1.6")
-      .to(two, { opacity: 0, duration: 0.5, ease: "power1.inOut" }, "swap")
-      .set(two, { width: 0, opacity: 1 })
-      // nothing on screen for a beat, then the next phrase bounces in
-      .add(bounceReveal(three), "+=1")
-      // 3) the normal erase follows
-      .add(bounceErase(three), "+=1.6")
-      .to({}, { duration: 0.2 });
+    // 2) "Driven by culture." wipes in and erases; after a 1s gap "Open to possibility." wipes in with the same bounce
+    tl.add(bounceReveal(two)).add(bounceErase(two), "+=1.6");
+    // 3) the same for "Open to possibility."
+    tl.add(bounceReveal(three), "+=1").add(bounceErase(three), "+=1.6").to({}, { duration: 0.2 });
     return () => {
       tl.kill();
     };
