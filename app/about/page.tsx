@@ -14,9 +14,12 @@ export const metadata: Metadata = { title: "About | Moonstone" };
 // the team deck pins with a mouse and sets --team-extra (design px of scroll) so everything below moves down by that much
 const EXTRA = "var(--team-extra, 0)";
 
+// the dusk runs as before down to the last bio (y 7000), then fades to white by 7260 so the CTA box sits on white, not on the blue
+const CTA_TOP = 7300;
+
 export default function Page() {
   return (
-    <main className="relative overflow-hidden bg-white text-black" style={{ height: `calc(var(--u) * (${ctaEnd(7048)} + ${EXTRA}))` }}>
+    <main className="relative overflow-hidden bg-white text-black" style={{ height: `calc(var(--u) * (${ctaEnd(CTA_TOP)} + ${EXTRA}))` }}>
       {/* animated photo header */}
       <Image
         data-hero
@@ -48,9 +51,9 @@ export default function Page() {
         className="absolute inset-x-0"
         style={{
           top: u(2099.13),
-          height: `calc(var(--u) * (5569 + ${EXTRA}))`,
-          background:
-            "linear-gradient(to bottom, #0a0a0a 0%, #151f28 44%, #024064 61.2%, #7597ab 100%)",
+          height: `calc(var(--u) * (5602.91 + ${EXTRA}))`,
+          // the first two stops keep Figma's 44% / 61.2% of the pin-stretched box; the last two are in design px from the bios (which move with EXTRA), so the white starts below the last bio
+          background: `linear-gradient(to bottom, #0a0a0a 0%, #151f28 calc(var(--u) * (2450.4 + 0.44 * ${EXTRA})), #024064 calc(var(--u) * (3408.2 + 0.612 * ${EXTRA})), #517c95 calc(var(--u) * (4901 + ${EXTRA})), #fff calc(var(--u) * (5161 + ${EXTRA})), #fff 100%)`,
         }}
       />
 
@@ -90,7 +93,7 @@ export default function Page() {
       </div>
 
       <div className="absolute left-0" style={{ top: `calc(var(--u) * ${EXTRA})` }}>
-        <AboutCta top={7048} />
+        <AboutCta top={CTA_TOP} />
       </div>
     </main>
   );
