@@ -47,7 +47,7 @@ components/   page sections and site chrome (header, menu, footer, preloader, ..
 lib/          shared data and helpers (team, events, IPs, links, orbit constants, validation, chiptune, sprites)
 public/img/   images, SVG logos, mascot, team photos (webp)
 scripts/      generate-phone-rules.mjs
-docs/         design-system screenshots, open questions, the brand portfolio PDF
+docs/         design-system screenshots and open questions
 ```
 
 Things that are not obvious from the file names:
