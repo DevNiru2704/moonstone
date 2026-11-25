@@ -56,8 +56,8 @@ Things that are not obvious from the file names:
 - **1440px design grid.** Figma frames are 1440 wide. Positions and sizes are written in Figma pixels and scaled with `u(n)` (CSS length) and `unit()` (number) from `lib/lenis.ts`, so layouts scale with the viewport width. When Figma says `top: 2099`, write `u(2099)`.
 - **Smooth scroll.** `components/smooth-scroll.tsx` starts Lenis and drives GSAP ScrollTrigger. Scroll to an element with `getLenis().scrollTo(...)`, not `scrollIntoView`.
 - **Site chrome behaviour** (all in `components/`):
-  - `header-logo.tsx`: on pages with a photo hero (an element marked `data-hero`) the logo flips into the wordmark once the hero has passed; other pages show the wordmark from the start.
-  - `chrome-behavior.tsx`: the navbar hides on scroll down and returns on scroll up (starting a little after the flip on hero pages), and the "Let's work together" pill fades out while a "Let's build something" box (`data-cta`) is on screen.
+  - `header-logo.tsx`: on pages with a photo hero (an element marked `data-hero`) the wordmark slides up and pushes the logo out through the top just before the hero ends; other pages show the wordmark from the start.
+  - `chrome-behavior.tsx`: the navbar hides on scroll down and returns on scroll up (starting a little after that slide on hero pages), and the "Let's work together" pill fades out while a "Let's build something" box (`data-cta`) is on screen.
   - Hooks used for this: `data-hero`, `data-nav`, `data-open`, `data-pill`, `data-cta`, `data-flip`.
 - **Client components and constants.** A server component cannot read values exported from a `"use client"` file (they arrive as client references). Put shared constants in `lib/`.
 - **Team data** lives in `lib/team.ts` (name, role, photo, bio); the About deck and bios both read it.

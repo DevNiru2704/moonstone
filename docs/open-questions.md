@@ -39,7 +39,7 @@ Things to confirm with the client or finish later.
 - White bio text on the lighter blue at the bottom of the gradient is low contrast (as in Figma).
 
 ## Navbar auto-hide and the pill
-- The navbar hides on scroll down and returns on scroll up. With a photo hero it starts 400 design px after the logo flips to the wordmark; other pages from the start. Thresholds are my pick.
+- The navbar hides on scroll down and returns on scroll up. With a photo hero it starts 400 design px after the wordmark has slid in; other pages from the start. Thresholds are my pick.
 - "Let's work together" fades out when the top of a "Let's build something" box reaches it and returns when the footer comes into view or when scrolling back above the box.
 
 ## Privacy Policy and Terms of Service
@@ -66,3 +66,6 @@ Things to confirm with the client or finish later.
 - The last answer says "reach out via our contact page", but the FAQ now sits on that page. Keep the wording or change it to "the form above"?
 - The em dashes in the supplied copy were replaced by commas or a full stop with the same meaning (vision, difference and workflow answers).
 - The team answer spells "Bidishah (Bidisha Mohanta)" as supplied; the spelling question above still applies.
+
+## Logo to wordmark
+- On pages with a photo hero the wave logo stays put, then the wordmark slides up from below and pushes it out through the top (0.3s, power2.out; reversed when scrolling back up). It starts when the hero's bottom edge is 40 design px below the logo. The 0.3s, the push distance and the 40 px are our choices, read from a screenshot.
