@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { CTA_H } from "@/lib/cta";
 import { unit } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -14,7 +15,7 @@ const DEAD_ZONE = 8; // px of scroll before the direction counts
  * Header chrome behaviour (renders nothing):
  * - the navbar ([data-nav]) slides up when scrolling down and back when scrolling up; on pages with a photo hero it only starts
  *   400 design px after the logo has flipped to the wordmark (and the flip has finished), elsewhere from the start
- * - the "Let's work together" pill ([data-pill]) fades out while a "Let's build something" box ([data-cta]) is reached, back at the footer or above it
+ * - the "Let's work together" pill ([data-pill]) fades out once half of a "Let's build something" box ([data-cta]) is on screen and returns when the footer is half way up the window, or when scrolling back above the box
  */
 export function ChromeBehavior() {
   const path = usePathname();
@@ -74,9 +75,9 @@ export function ChromeBehavior() {
       triggers.push(
         ScrollTrigger.create({
           trigger: cta,
-          start: () => `top bottom-=${110 * unit()}`, // the box's top edge reaches the top of the pill
+          start: () => `top bottom-=${(CTA_H / 2) * unit()}`, // half of the box is on screen
           endTrigger: footer ?? cta,
-          end: footer ? "top bottom" : "bottom top",
+          end: footer ? "top 50%" : "bottom top", // the footer reaches the middle of the window
           onToggle: (self) => gsap.to(pill, { autoAlpha: self.isActive ? 0 : 1, duration: 0.3, overwrite: "auto" }),
         }),
       );
