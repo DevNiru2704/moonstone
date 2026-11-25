@@ -4,6 +4,7 @@ import { EventsHero } from "@/components/events-hero";
 import { IpSection } from "@/components/ip-section";
 import { UpcomingEvents } from "@/components/upcoming-events";
 import { IPS } from "@/lib/ips";
+import { ctaEnd } from "@/lib/cta";
 import { u } from "@/lib/lenis";
 
 export const metadata: Metadata = { title: "Events & IP | Moonstone" };
@@ -17,7 +18,7 @@ export default function Page() {
       {IPS.map((ip) => (
         <IpSection key={ip.key} ip={ip} />
       ))}
-      <div className="relative" style={{ height: u(460) }}>
+      <div className="relative" style={{ height: u(ctaEnd(59)) }}>
         <AboutCta top={59} />
       </div>
     </main>

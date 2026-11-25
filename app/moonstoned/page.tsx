@@ -3,6 +3,7 @@ import { AboutCta } from "@/components/about-cta";
 import { FolderCarousel } from "@/components/folder-carousel";
 import { MoonstonedHeader } from "@/components/moonstoned-header";
 import { ServicesList } from "@/components/services-list";
+import { ctaEnd } from "@/lib/cta";
 import { u } from "@/lib/lenis";
 
 export const metadata: Metadata = { title: "Moonstone*d | Moonstone" };
@@ -22,7 +23,7 @@ export default function Page() {
       </section>
       <FolderCarousel />
       <ServicesList />
-      <div className="relative" style={{ height: u(460) }}>
+      <div className="relative" style={{ height: u(ctaEnd(59)) }}>
         <AboutCta top={59} />
       </div>
     </main>
