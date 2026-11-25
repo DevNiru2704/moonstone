@@ -8,7 +8,7 @@ Things to confirm with the client or finish later.
 - **About page team:** six cards (names and roles from the Figma frames), grey placeholder photos. With a mouse the section pins and the cards fly off to the right as you scroll (Figma alternates right/left; asked for right only on desktop). On touch the top card follows the finger and leaves in the swipe direction. Pin length (450 design px per card) and easing (`power2.out`, Figma only says ease-out 0.5 s) are tuned by eye; the last card stays. Captions of the cards below the top one are hidden because the glass is translucent.
 - **Menu hover colour:** link hover is crimson, but the menu text uses a difference blend, so over white sections the red shows as teal.
 - **How we work, moon constellation:** Figma defines only the 4s transitions (hover/click prototype). It runs automatically here: it wakes when scrolled into view and steps through the three captions every 3s hold + 4s turn, looping. The 3s hold is our choice, and three steps are treated as one full turn of the moon texture so the loop is seamless. Confirm the pacing with the client.
-- **Pages still placeholders:** Services, Privacy Policy, Terms of Service, FAQ.
+- **Pages still placeholders:** Services, FAQ.
 
 ## Olindo event (Upcoming Events + /events/olindo)
 - The three dates disagree: the poster image says 14.10.2026, the Figma copy says "November 14, 2026" (shown on the site), and the District ticket link says nov12-2026. Which is right?
@@ -41,3 +41,12 @@ Things to confirm with the client or finish later.
 ## Navbar auto-hide and the pill
 - The navbar hides on scroll down and returns on scroll up. With a photo hero it starts 400 design px after the logo flips to the wordmark; other pages from the start. Thresholds are my pick.
 - "Let's work together" fades out when the top of a "Let's build something" box reaches it and returns when the footer comes into view or when scrolling back above the box.
+
+## Privacy Policy and Terms of Service
+- The sticky sidebar highlight is not in the Figma prototype (the pill of the section being read is filled black, the rest stay outlined; a section counts as read while it crosses 40% of the window height). Colour and the 40% line are our choice; crimson would also fit the brand.
+- Sidebar pills shrink (keeping the 54 : 20 ratio) on windows shorter than about 1000px so the list ends above the fixed "Let's work together" pill, which is not in these Figma frames. Alternative: hide that pill on these two pages.
+- "Media Usage" is a bullet in the Figma text; shown as a plain heading like the other sections.
+- Effective date "December 06, 2026" is shown as designed; it is a future date. Confirm it.
+- Footer label is "Terms of Services" (Figma footer) while the page title is "Terms of Service".
+- The navbar shows the wordmark from the start (pages without a photo hero); Figma frames draw the wave logo.
+- Privacy intro wraps to two lines here and three in Figma (font metrics), so the sections start about 27px higher than the frame.
