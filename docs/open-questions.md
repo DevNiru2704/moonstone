@@ -8,7 +8,7 @@ Things to confirm with the client or finish later.
 - **About page team:** six cards (names and roles from the Figma frames), grey placeholder photos. With a mouse the section pins and the cards fly off to the right as you scroll (Figma alternates right/left; asked for right only on desktop). On touch the top card follows the finger and leaves in the swipe direction. Pin length (450 design px per card) and easing (`power2.out`, Figma only says ease-out 0.5 s) are tuned by eye; the last card stays. Captions of the cards below the top one are hidden because the glass is translucent.
 - **Menu hover colour:** link hover is crimson, but the menu text uses a difference blend, so over white sections the red shows as teal.
 - **How we work, moon constellation:** Figma defines only the 4s transitions (hover/click prototype). It runs automatically here: it wakes when scrolled into view and steps through the three captions every 3s hold + 4s turn, looping. The 3s hold is our choice, and three steps are treated as one full turn of the moon texture so the loop is seamless. Confirm the pacing with the client.
-- **Pages still placeholders:** Services, FAQ.
+- **Pages still placeholders:** FAQ. (`/services` redirects to the services section on Moonstone*d.)
 
 ## Olindo event (Upcoming Events + /events/olindo)
 - The three dates disagree: the poster image says 14.10.2026, the Figma copy says "November 14, 2026" (shown on the site), and the District ticket link says nov12-2026. Which is right?

@@ -6,7 +6,7 @@ const trim = { textBox: "trim-both cap alphabetic" } as React.CSSProperties;
 // Figma "Wireframe - 5": the heading and eight rows; hovering a row grows it 148 -> 194 and shows its description (smart animate linear 0.3s).
 export function ServicesList() {
   return (
-    <section className="relative bg-white text-black" style={{ height: u(1819) }}>
+    <section id="services" className="relative bg-white text-black" style={{ height: u(1819) }}>
       <h2 className="absolute whitespace-nowrap" style={{ left: u(88.19), top: u(220.2), fontSize: u(60), lineHeight: 1.18, ...trim }}>
         OUR
         <br />

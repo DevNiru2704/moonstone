@@ -8,7 +8,7 @@ export const SOCIAL: Record<string, string> = {
 export const ROUTES: Record<string, string> = {
   ABOUT: "/about",
   "HOW WE WORK": "/how-we-work",
-  SERVICES: "/services",
+  SERVICES: "/moonstoned#services", // the services live on Moonstone*d; /services redirects there too
   CONTACT: "/contact",
   "Privacy Policy": "/privacy-policy",
   "Terms of Service": "/terms-of-service",

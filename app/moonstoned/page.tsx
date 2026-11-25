@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AboutCta } from "@/components/about-cta";
+import { HashScroll } from "@/components/hash-scroll";
 import { FolderCarousel } from "@/components/folder-carousel";
 import { MoonstonedHeader } from "@/components/moonstoned-header";
 import { ServicesList } from "@/components/services-list";
@@ -12,6 +13,7 @@ export const metadata: Metadata = { title: "Moonstone*d | Moonstone" };
 export default function Page() {
   return (
     <main className="bg-white text-black">
+      <HashScroll />
       <MoonstonedHeader />
       <section className="relative" style={{ height: u(371) }}>
         <p className="absolute" style={{ left: u(53.11), top: u(65.67), width: u(340.449), fontSize: u(24) }}>

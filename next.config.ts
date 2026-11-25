@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
   },
   cacheComponents: true,
   partialPrefetching: true,
+  // there is no separate Services page: the services live on Moonstone*d
+  async redirects() {
+    return [{ source: "/services", destination: "/moonstoned#services", permanent: false }];
+  },
   turbopack: {
     rules: {
       "*.css": {

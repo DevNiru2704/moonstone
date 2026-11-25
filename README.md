@@ -36,7 +36,8 @@ npm run dev                  # http://localhost:3000
 | `/moonstoned` | Built | Moonstone\*d header, project folder carousel, services list and CTA. |
 | `/contact` | Built | Form posting to Web3Forms. |
 | `/privacy-policy`, `/terms-of-service` | Built | One shared `components/legal-page.tsx` reads the copy from `lib/legal.ts`; sticky sidebar highlights the section being read. |
-| `/services`, `/faq` | Placeholder | "Coming soon" (`components/placeholder-page.tsx`). |
+| `/services` | Redirect | Goes to the services section of `/moonstoned` (`#services`). |
+| `/faq` | Placeholder | "Coming soon" (`components/placeholder-page.tsx`). |
 | `/meow` | Built, hidden | Developer easter egg: a chiptune RPG battle. Not in the menu or footer, `noindex`. Open it by typing "meow" outside a form field or clicking the footer mascot five times quickly. |
 
 ## How the code is organised
