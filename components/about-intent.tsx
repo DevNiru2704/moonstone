@@ -1,7 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { u } from "@/lib/lenis";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { u, unit } from "@/lib/lenis";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const LOCK = 1000; // design px of scroll while the block is pinned
+const BOX = { top: 1400, height: 280 }; // the pinned box (design px): the titles and the text under them
+const CLEAR = "rgba(255,255,255,0)"; // transparent that tweens to white without going grey
 
 const ITEMS = [
   {
@@ -20,40 +28,93 @@ const ITEMS = [
   },
 ] as const;
 
-/** Figma "ideal" / "intent": outlined titles; clicking one fills it and shows its text, leaving it closes again. */
+const query = "(prefers-reduced-motion: reduce)";
+const subscribe = (cb: () => void) => {
+  const m = matchMedia(query);
+  m.addEventListener("change", cb);
+  return () => m.removeEventListener("change", cb);
+};
+
+/**
+ * Figma "ideal" / "intent": outlined titles that fill, with their text, one after the other while the block is pinned
+ * (scroll-locked, scrubbed). With reduced motion there is no pin: clicking a title fills it and shows its text instead.
+ */
 export function AboutIntent() {
+  const box = useRef<HTMLDivElement>(null);
+  const reduce = useSyncExternalStore(subscribe, () => matchMedia(query).matches, () => false);
   const [open, setOpen] = useState<string | null>(null);
 
   useEffect(() => {
+    if (reduce) return;
+    // the page below moves down by the pin length (CSS var in design px, as the team deck does)
+    const root = document.documentElement;
+    root.style.setProperty("--intent-extra", String(LOCK));
+    const ctx = gsap.context(() => {
+      const [t1, t2] = gsap.utils.toArray<HTMLElement>("[data-title]");
+      const [p1, p2] = gsap.utils.toArray<HTMLElement>("[data-text]");
+      gsap
+        .timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: box.current,
+            start: "center center",
+            end: () => `+=${LOCK * unit()}`,
+            pin: true,
+            pinSpacing: false,
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        })
+        // a beat of nothing, The Ideal and its text come in, hold, hand over to The Intent, hold
+        .to({}, { duration: 0.3 })
+        .to(t1, { color: "#fff", duration: 0.5 }, 0.3)
+        .to(p1, { opacity: 1, duration: 0.5 }, 0.3)
+        .to(t1, { color: CLEAR, duration: 0.5 }, 1.8)
+        .to(p1, { opacity: 0, duration: 0.5 }, 1.8)
+        .to(t2, { color: "#fff", duration: 0.5 }, 2.1)
+        .to(p2, { opacity: 1, duration: 0.5 }, 2.1)
+        .to({}, { duration: 0.6 }, 2.6);
+    }, box);
+    ScrollTrigger.refresh();
+    return () => {
+      ctx.revert();
+      root.style.removeProperty("--intent-extra");
+      ScrollTrigger.refresh();
+    };
+  }, [reduce]);
+
+  useEffect(() => {
+    if (!reduce) return;
     // a tap elsewhere closes it on touch screens, where there is no pointer leave
-    const away = (e: PointerEvent) => !(e.target as Element).closest("[data-intent]") && setOpen(null);
+    const away = (e: PointerEvent) => !(e.target as Element).closest("[data-title]") && setOpen(null);
     addEventListener("pointerdown", away);
     return () => removeEventListener("pointerdown", away);
-  }, []);
+  }, [reduce]);
 
   return (
-    <>
+    <div ref={box} className="absolute left-0 w-full" style={{ top: u(BOX.top), height: u(BOX.height) }}>
       {ITEMS.map((it) => {
-        const on = open === it.key;
+        const on = reduce && open === it.key;
         return (
           <button
             key={it.key}
             type="button"
-            data-intent
-            aria-expanded={on}
-            onClick={() => setOpen(on ? null : it.key)}
-            onPointerLeave={(e) => e.pointerType !== "touch" && setOpen((o) => (o === it.key ? null : o))}
-            className="absolute cursor-pointer whitespace-nowrap text-center"
+            data-title
+            aria-expanded={reduce ? on : undefined}
+            disabled={!reduce}
+            onClick={reduce ? () => setOpen(on ? null : it.key) : undefined}
+            onPointerLeave={reduce ? (e) => e.pointerType !== "touch" && setOpen((o) => (o === it.key ? null : o)) : undefined}
+            className={`absolute whitespace-nowrap text-center ${reduce ? "cursor-pointer" : "cursor-default"}`}
             style={{
               left: u(it.left),
-              top: u(1420.5),
+              top: u(1420.5 - BOX.top),
               width: u(it.width),
               height: u(72),
               fontSize: u(60),
               lineHeight: "normal",
-              color: on ? "#fff" : "transparent",
+              color: on ? "#fff" : CLEAR,
               WebkitTextStroke: "1px #fff",
-              transition: "color 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)",
+              transition: reduce ? "color 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)" : undefined,
             }}
           >
             {it.title}
@@ -63,20 +124,21 @@ export function AboutIntent() {
       {ITEMS.map((it) => (
         <p
           key={it.key}
+          data-text
           aria-live="polite"
           className="pointer-events-none absolute text-center text-white"
           style={{
             left: u(250),
-            top: u(1579.7),
+            top: u(1579.7 - BOX.top),
             width: u(940),
             fontSize: u(24),
-            opacity: open === it.key ? 1 : 0,
-            transition: "opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)",
+            opacity: reduce && open === it.key ? 1 : 0,
+            transition: reduce ? "opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)" : undefined,
           }}
         >
           {it.text}
         </p>
       ))}
-    </>
+    </div>
   );
 }

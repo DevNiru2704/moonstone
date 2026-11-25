@@ -13,13 +13,15 @@ export const metadata: Metadata = { title: "About | Moonstone" };
 // Figma "About" (1440 x 3756): everything is placed on the 1440 grid; the footer comes from the root layout.
 // the team deck pins with a mouse and sets --team-extra (design px of scroll) so everything below moves down by that much
 const EXTRA = "var(--team-extra, 0)";
+// the Ideal / Intent block pins too (scroll-locked), which moves everything below it down by this much
+const LOCK = "var(--intent-extra, 0)";
 
 // the dusk runs as before down to the last bio (y 7000), then fades to white by 7260 so the CTA box sits on white, not on the blue
 const CTA_TOP = 7300;
 
 export default function Page() {
   return (
-    <main className="relative overflow-hidden bg-white text-black" style={{ height: `calc(var(--u) * (${ctaEnd(CTA_TOP)} + ${EXTRA}))` }}>
+    <main className="relative overflow-hidden bg-white text-black" style={{ height: `calc(var(--u) * (${ctaEnd(CTA_TOP)} + ${EXTRA} + ${LOCK}))` }}>
       {/* animated photo header */}
       <Image
         data-hero
@@ -41,16 +43,16 @@ export default function Page() {
         className="absolute inset-x-0"
         style={{
           top: u(518.16),
-          height: u(1581.97),
-          background:
-            "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 30%, #014064 72.62%, #151f28 82.02%, #0a0a0a 100%)",
+          height: `calc(var(--u) * (1581.97 + ${LOCK}))`,
+          // Figma's colours down to the titles (y 902 in this box); the lock distance is spent going from there to the deep blue, then the dark end follows as before
+          background: `linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff calc(var(--u) * 474.6), #5e869d calc(var(--u) * 902), #014064 calc(var(--u) * (1148.9 + ${LOCK})), #151f28 calc(var(--u) * (1297.5 + ${LOCK})), #0a0a0a 100%)`,
         }}
       />
       <div
         aria-hidden
         className="absolute inset-x-0"
         style={{
-          top: u(2099.13),
+          top: `calc(var(--u) * (2099.13 + ${LOCK}))`,
           height: `calc(var(--u) * (5602.91 + ${EXTRA}))`,
           // the first two stops keep Figma's 44% / 61.2% of the pin-stretched box; the last two are in design px from the bios (which move with EXTRA), so the white starts below the last bio
           background: `linear-gradient(to bottom, #0a0a0a 0%, #151f28 calc(var(--u) * (2450.4 + 0.44 * ${EXTRA})), #024064 calc(var(--u) * (3408.2 + 0.612 * ${EXTRA})), #517c95 calc(var(--u) * (4901 + ${EXTRA})), #fff calc(var(--u) * (5161 + ${EXTRA})), #fff 100%)`,
@@ -88,11 +90,11 @@ export default function Page() {
       <TeamDeck />
 
       {/* the team in more detail; below the deck, so it moves down with the pin length */}
-      <div className="absolute inset-x-0" style={{ top: `calc(var(--u) * (3125 + ${EXTRA}))` }}>
+      <div className="absolute inset-x-0" style={{ top: `calc(var(--u) * (3125 + ${EXTRA} + ${LOCK}))` }}>
         <TeamBios />
       </div>
 
-      <div className="absolute left-0" style={{ top: `calc(var(--u) * ${EXTRA})` }}>
+      <div className="absolute left-0" style={{ top: `calc(var(--u) * (${EXTRA} + ${LOCK}))` }}>
         <AboutCta top={CTA_TOP} />
       </div>
     </main>

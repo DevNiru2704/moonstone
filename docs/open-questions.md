@@ -54,3 +54,7 @@ Things to confirm with the client or finish later.
 ## CTA box, footer and the "Let's work together" pill
 - The space between the "Let's build something" box and the footer is 60 design px on every page (Figma Privacy / Terms value), set by `CTA_FOOTER_GAP` in `lib/cta.ts`. Home is the exception: Figma's moon section keeps the mountain and ground under the box (1761 design px tall), so the box sits about 358 px above the footer there. Before, About had 278, How we work 61.6, Events and Moonstone*d 59. Please confirm 60 is right for About and Home too.
 - The pill fades out when half of the box (171 design px) is on screen and comes back when the footer's top reaches the middle of the window; both points were read from screenshots, so tune them (`components/chrome-behavior.tsx`) if they feel off.
+
+## About: The Ideal / The Intent
+- They now react to scroll: the block pins (scroll-locked) for 1000 design px, The Ideal and its text fill in, hand over to The Intent and its text, then the page continues. The 1000 px and the split (about 0.3 / 1.5 / 0.3 / 0.6 of the lock) are our choice; the Figma frames only show the two end states. With reduced motion there is no pin and clicking a title shows its text, as before.
+- The page below moves down by the lock (CSS var `--intent-extra`, like `--team-extra` for the deck). The white-to-dark gradient behind the titles keeps Figma's colours down to the titles, spends the lock going to the deep blue, then the dark follows as before.

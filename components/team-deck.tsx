@@ -200,7 +200,7 @@ export function TeamDeck() {
   }, [mode]);
 
   return (
-    <div ref={wrap} className="absolute left-0 w-full text-black" style={{ top: u(1932), height: u(773) }}>
+    <div ref={wrap} className="absolute left-0 w-full text-black" style={{ top: "calc(var(--u) * (1932 + var(--intent-extra, 0)))", height: u(773) }}>
       <div ref={fit} className="absolute inset-0">
         <h2
           className="absolute w-full text-center text-white"
