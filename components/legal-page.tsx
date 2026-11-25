@@ -102,7 +102,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
                     go(id);
                   }}
                   className={`flex items-center border border-solid border-black transition-colors duration-300 ${
-                    active === id ? "bg-black text-white" : "hover:bg-black/10"
+                    active === id ? "border-crimson bg-crimson text-white" : "hover:bg-black/10"
                   }`}
                   style={{ height: `min(${u(54)}, calc(var(--slot) * 0.72))`, padding: `0 ${u(20)}`, borderRadius: u(10), fontSize: u(20), lineHeight: 1.25 }}
                 >
