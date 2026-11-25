@@ -13,7 +13,7 @@ const HERO_PATHS = ["/", "/about", "/events", "/moonstoned"];
 const LOGO = { w: 98.33, h: 70 };
 const WORD = { w: 230, h: 230 * (235 / 1230) };
 
-/** The header mark: the logo, which flips into the wordmark once the page's hero (`[data-hero]`) has scrolled away. */
+/** The header mark: the logo, which is pushed out through the top by the wordmark sliding up once the page's hero (`[data-hero]`) is about to end. */
 export function HeaderLogo() {
   const path = usePathname();
   const heroPage = HERO_PATHS.includes(path);
@@ -25,14 +25,13 @@ export function HeaderLogo() {
     const a = logo.current!;
     const b = word.current!;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // the navbar auto-hide waits for data-flip="word": the wordmark is showing and the flip has finished
+    // the navbar auto-hide waits for data-flip="word": the wordmark is showing and the slide has finished
     const mark = (v: string) => (root.current!.dataset.flip = v);
     const show = (on: boolean) => {
       mark(on ? "word" : "logo");
-      gsap.set(a, { opacity: on ? 0 : 1 });
-      gsap.set(b, { opacity: on ? 1 : 0 });
+      gsap.set(a, { opacity: on ? 0 : 1, y: 0 });
+      gsap.set(b, { opacity: on ? 1 : 0, y: 0 });
     };
-    gsap.set([a, b], { rotationY: 0 });
     const hero = document.querySelector("[data-hero]");
     show(!hero);
     if (!hero) return;
@@ -43,17 +42,25 @@ export function HeaderLogo() {
       const [from, to] = on ? [a, b] : [b, a];
       if (!animate || reduce) return void show(on);
       mark("busy");
+      // a push: the new image comes up from below while the old one leaves through the top (reversed when going back up)
+      const d = (LOGO.h + 10) * unit();
+      const dir = on ? 1 : -1;
+      gsap.set(to, { opacity: 1, y: dir * d });
       tl = gsap
-        .timeline({ onComplete: () => mark(on ? "word" : "logo") })
-        .to(from, { rotationY: 90, duration: 0.2, ease: "power1.in" })
-        .set(from, { opacity: 0 })
-        .set(to, { opacity: 1, rotationY: -90 })
-        .to(to, { rotationY: 0, duration: 0.25, ease: "power1.out" });
+        .timeline({
+          defaults: { duration: 0.3, ease: "power2.out" },
+          onComplete: () => {
+            gsap.set(from, { opacity: 0, y: 0 });
+            mark(on ? "word" : "logo");
+          },
+        })
+        .to(from, { y: -dir * d }, 0)
+        .to(to, { y: 0 }, 0);
     };
 
     const st = ScrollTrigger.create({
       trigger: hero,
-      start: () => `bottom top+=${100 * unit()}`, // the hero's bottom edge reaches the bottom of the logo
+      start: () => `bottom top+=${140 * unit()}`, // the hero's bottom edge is 40 design px below the logo: the logo stays until just before the hero ends
       end: () => ScrollTrigger.maxScroll(window) + 1, // active from there to the end of the page
       onToggle: (self) => flip(self.isActive, true),
     });
@@ -67,7 +74,7 @@ export function HeaderLogo() {
   }, [path]);
 
   return (
-    <span ref={root} data-flip={heroPage ? "logo" : "word"} className="relative block" style={{ width: u(WORD.w), height: u(LOGO.h), perspective: 600 }}>
+    <span ref={root} data-flip={heroPage ? "logo" : "word"} className="relative block overflow-hidden" style={{ width: u(WORD.w), height: u(LOGO.h) }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img ref={logo} src="/img/logo.svg" alt="" className="absolute left-0 top-0 block" style={{ width: u(LOGO.w), height: u(LOGO.h), opacity: heroPage ? 1 : 0 }} />
       {/* eslint-disable-next-line @next/next/no-img-element */}
