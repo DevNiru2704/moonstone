@@ -8,9 +8,12 @@ const nextConfig: NextConfig = {
   },
   cacheComponents: true,
   partialPrefetching: true,
-  // there is no separate Services page: the services live on Moonstone*d
+  // no separate Services or FAQ pages: the services live on Moonstone*d, the FAQ on Contact
   async redirects() {
-    return [{ source: "/services", destination: "/moonstoned#services", permanent: false }];
+    return [
+      { source: "/services", destination: "/moonstoned#services", permanent: false },
+      { source: "/faq", destination: "/contact#faq", permanent: false },
+    ];
   },
   turbopack: {
     rules: {

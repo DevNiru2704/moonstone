@@ -13,7 +13,7 @@ export const ROUTES: Record<string, string> = {
   "Privacy Policy": "/privacy-policy",
   "Terms of Service": "/terms-of-service",
   "Terms of Services": "/terms-of-service",
-  FAQ: "/faq",
+  FAQ: "/contact#faq", // the FAQ sits on the Contact page; /faq redirects there too
 };
 
 export const PAGES: [string, string][] = ["ABOUT", "HOW WE WORK", "SERVICES", "CONTACT"].map((l) => [l, ROUTES[l]]);
