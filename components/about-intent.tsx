@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { u, unit } from "@/lib/lenis";
@@ -8,7 +8,7 @@ import { u, unit } from "@/lib/lenis";
 gsap.registerPlugin(ScrollTrigger);
 
 const LOCK = 1000; // design px of scroll while the block is pinned
-const BOX = { top: 1400, height: 280 }; // the pinned box (design px): the titles and the text under them
+const BOX = { top: 1070, height: 610 }; // the pinned box (design px): the About copy, the titles and the text under them
 const CLEAR = "rgba(255,255,255,0)"; // transparent that tweens to white without going grey
 
 const ITEMS = [
@@ -39,8 +39,9 @@ const subscribe = (cb: () => void) => {
  * Figma "ideal" / "intent": outlined titles that fill, with their text, one after the other while the block is pinned
  * (scroll-locked, scrubbed). With reduced motion there is no pin: clicking a title fills it and shows its text instead.
  */
-export function AboutIntent() {
+export function AboutIntent({ children }: { children: ReactNode }) {
   const box = useRef<HTMLDivElement>(null);
+  const fit = useRef<HTMLDivElement>(null);
   const reduce = useSyncExternalStore(subscribe, () => matchMedia(query).matches, () => false);
   const [open, setOpen] = useState<string | null>(null);
 
@@ -49,7 +50,13 @@ export function AboutIntent() {
     // the page below moves down by the pin length (CSS var in design px, as the team deck does)
     const root = document.documentElement;
     root.style.setProperty("--intent-extra", String(LOCK));
+    // on a short window the pinned box is scaled down to fit, as the team deck is
+    const inner = fit.current;
+    const shrink = () => gsap.set(inner, { scale: Math.min(1, (innerHeight * 0.94) / (BOX.height * unit())) });
+    shrink();
+    ScrollTrigger.addEventListener("refreshInit", shrink);
     const ctx = gsap.context(() => {
+      const copy = box.current!.querySelector("[data-copy]");
       const [t1, t2] = gsap.utils.toArray<HTMLElement>("[data-title]");
       const [p1, p2] = gsap.utils.toArray<HTMLElement>("[data-text]");
       gsap
@@ -67,6 +74,8 @@ export function AboutIntent() {
         })
         // a beat of nothing, The Ideal and its text come in, hold, hand over to The Intent, hold
         .to({}, { duration: 0.3 })
+        // the blue behind the copy gets darker as the lock goes on: black text turns white part way
+        .to(copy, { color: "#fff", duration: 0.6 }, 0.9)
         .to(t1, { color: "#fff", duration: 0.5 }, 0.3)
         .to(p1, { opacity: 1, duration: 0.5 }, 0.3)
         .to(t1, { color: CLEAR, duration: 0.5 }, 1.8)
@@ -77,7 +86,9 @@ export function AboutIntent() {
     }, box);
     ScrollTrigger.refresh();
     return () => {
+      ScrollTrigger.removeEventListener("refreshInit", shrink);
       ctx.revert();
+      gsap.set(inner, { clearProps: "transform" });
       root.style.removeProperty("--intent-extra");
       ScrollTrigger.refresh();
     };
@@ -93,6 +104,10 @@ export function AboutIntent() {
 
   return (
     <div ref={box} className="absolute left-0 w-full" style={{ top: u(BOX.top), height: u(BOX.height) }}>
+      <div ref={fit} className="absolute inset-0">
+      <div data-copy className="absolute space-y-[1em] text-center" style={{ left: u(162.19), top: 0, width: u(1115.63), fontSize: u(20) }}>
+        {children}
+      </div>
       {ITEMS.map((it) => {
         const on = reduce && open === it.key;
         return (
@@ -139,6 +154,7 @@ export function AboutIntent() {
           {it.text}
         </p>
       ))}
+      </div>
     </div>
   );
 }

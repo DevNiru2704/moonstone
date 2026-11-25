@@ -59,11 +59,8 @@ export default function Page() {
         }}
       />
 
-      {/* longer copy than the Figma paragraph, so it is set a little smaller to stay above the Ideal / Intent titles */}
-      <div
-        className="absolute space-y-[1em] text-center"
-        style={{ left: u(162.19), top: u(1070), width: u(1115.63), fontSize: u(20) }}
-      >
+      {/* longer copy than the Figma paragraph, so it is set a little smaller to stay above the Ideal / Intent titles; it stays on screen with them while they are scroll-locked */}
+      <AboutIntent>
         <p>
           Every new sound deserves a space to grow. Every story deserves a visual language of its own. But for independent
           creativity to truly thrive, it needs more than talent, it needs an ecosystem that nurtures, produces, and sustains
@@ -83,9 +80,7 @@ export default function Page() {
           Today, Moonstone exists at the intersection of sound, cinema, and culture, driven by a simple belief: the magic lies
           in creation, but its true power lies in everything it sets in motion.
         </p>
-      </div>
-
-      <AboutIntent />
+      </AboutIntent>
 
       <TeamDeck />
 
