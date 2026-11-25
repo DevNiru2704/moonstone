@@ -7,8 +7,8 @@ import { u } from "@/lib/lenis";
 const trim = { textBox: "trim-both cap alphabetic" } as React.CSSProperties;
 
 /**
- * The FAQ as the Our Services rows on Moonstone*d (number, big question, black lines, height eased in 0.3s linear), but a row opens
- * on click or Enter and only one is open at a time: the answers are paragraphs, and hover would shift the rows under the pointer.
+ * The FAQ as the Our Services rows on Moonstone*d (number, big question, black lines, height eased in 0.3s linear): a row opens while
+ * the pointer is on it (or it has keyboard focus, which is also what a tap does on touch) and closes when the pointer leaves.
  */
 export function FaqList() {
   const [open, setOpen] = useState<number | null>(null);
@@ -23,12 +23,18 @@ export function FaqList() {
         {FAQ.map(({ q, a }, i) => {
           const on = open === i;
           return (
-            <div key={q} className="border-t border-black">
+            <div
+              key={q}
+              className="border-t border-black"
+              onPointerEnter={(e) => e.pointerType !== "touch" && setOpen(i)}
+              onPointerLeave={(e) => e.pointerType !== "touch" && setOpen((o) => (o === i ? null : o))}
+            >
               <button
                 type="button"
                 aria-expanded={on}
                 aria-controls={`faq-${i}`}
-                onClick={() => setOpen(on ? null : i)}
+                onFocus={() => setOpen(i)}
+                onBlur={() => setOpen((o) => (o === i ? null : o))}
                 className="flex w-full cursor-pointer items-center text-left focus-visible:outline-2 focus-visible:outline-crimson"
                 style={{ minHeight: u(148) }}
               >

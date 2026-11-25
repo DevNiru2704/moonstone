@@ -61,7 +61,7 @@ Things to confirm with the client or finish later.
 - The About copy stays on screen while the titles are locked; it turns from black to white part way through the lock because the blue behind it gets darker (our choice, not in Figma). On a window shorter than the pinned box (about 610 design px) the whole block is scaled down to fit.
 
 ## FAQ (on the Contact page)
-- No Figma frame: the heading ("FREQUENTLY ASKED / QUESTIONS"), 32px questions, 24px light answers and the 160 design px of space above the footer are our choices, built from the Our Services rows. Rows open on click or Enter, one at a time (hover would shift the rows under the pointer).
+- No Figma frame: the heading ("FREQUENTLY ASKED / QUESTIONS"), 32px questions, 24px light answers and the 160 design px of space above the footer are our choices, built from the Our Services rows. Rows open on hover (and on keyboard focus, which is also what a tap does on touch) and close when the pointer leaves, like Our Services. Long answers shift the rows below while one opens; if that feels jumpy, click-to-open is the alternative.
 - The Contact page no longer has the "Let's build something" box (asked for). The soft fade of the dusk into white stays.
 - The last answer says "reach out via our contact page", but the FAQ now sits on that page. Keep the wording or change it to "the form above"?
 - The em dashes in the supplied copy were replaced by commas or a full stop with the same meaning (vision, difference and workflow answers).
