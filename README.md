@@ -34,10 +34,10 @@ npm run dev                  # http://localhost:3000
 | `/how-we-work` | Built | Scroll-driven moon with four stops, then a zig-zag crimson progress section. |
 | `/events`, `/events/olindo` | Built | Events and IP listing; upcoming-event page for Olindo. |
 | `/moonstoned` | Built | Moonstone\*d header, project folder carousel, services list and CTA. |
-| `/contact` | Built | Form posting to Web3Forms. |
+| `/contact` | Built | Form posting to Web3Forms, then the FAQ (`#faq`, accordion, `lib/faq.ts`). No CTA box on this page. |
 | `/privacy-policy`, `/terms-of-service` | Built | One shared `components/legal-page.tsx` reads the copy from `lib/legal.ts`; sticky sidebar highlights the section being read. |
 | `/services` | Redirect | Goes to the services section of `/moonstoned` (`#services`). |
-| `/faq` | Placeholder | "Coming soon" (`components/placeholder-page.tsx`). |
+| `/faq` | Redirect | Goes to the FAQ section of `/contact` (`#faq`). |
 | `/meow` | Built, hidden | Developer easter egg: a chiptune RPG battle. Not in the menu or footer, `noindex`. Open it by typing "meow" outside a form field or clicking the footer mascot five times quickly. |
 
 ## How the code is organised

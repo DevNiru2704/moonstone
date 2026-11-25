@@ -8,7 +8,7 @@ Things to confirm with the client or finish later.
 - **About page team:** six cards (names and roles from the Figma frames), grey placeholder photos. With a mouse the section pins and the cards fly off to the right as you scroll (Figma alternates right/left; asked for right only on desktop). On touch the top card follows the finger and leaves in the swipe direction. Pin length (450 design px per card) and easing (`power2.out`, Figma only says ease-out 0.5 s) are tuned by eye; the last card stays. Captions of the cards below the top one are hidden because the glass is translucent.
 - **Menu hover colour:** link hover is crimson, but the menu text uses a difference blend, so over white sections the red shows as teal.
 - **How we work, moon constellation:** Figma defines only the 4s transitions (hover/click prototype). It runs automatically here: it wakes when scrolled into view and steps through the three captions every 3s hold + 4s turn, looping. The 3s hold is our choice, and three steps are treated as one full turn of the moon texture so the loop is seamless. Confirm the pacing with the client.
-- **Pages still placeholders:** FAQ. (`/services` redirects to the services section on Moonstone*d.)
+- **No placeholder pages left.** `/services` redirects to the services section on Moonstone*d, `/faq` to the FAQ on Contact.
 
 ## Olindo event (Upcoming Events + /events/olindo)
 - The three dates disagree: the poster image says 14.10.2026, the Figma copy says "November 14, 2026" (shown on the site), and the District ticket link says nov12-2026. Which is right?
@@ -59,3 +59,10 @@ Things to confirm with the client or finish later.
 - They now react to scroll: the block (the About copy above them too) pins (scroll-locked) for 1000 design px, The Ideal and its text fill in, hand over to The Intent and its text, then the page continues. The 1000 px and the split (about 0.3 / 1.5 / 0.3 / 0.6 of the lock) are our choice; the Figma frames only show the two end states. With reduced motion there is no pin and clicking a title shows its text, as before.
 - The page below moves down by the lock (CSS var `--intent-extra`, like `--team-extra` for the deck). The white-to-dark gradient behind the titles keeps Figma's colours down to the titles, spends the lock going to the deep blue, then the dark follows as before.
 - The About copy stays on screen while the titles are locked; it turns from black to white part way through the lock because the blue behind it gets darker (our choice, not in Figma). On a window shorter than the pinned box (about 610 design px) the whole block is scaled down to fit.
+
+## FAQ (on the Contact page)
+- No Figma frame: the heading ("FREQUENTLY ASKED / QUESTIONS"), 32px questions, 24px light answers and the 160 design px of space above the footer are our choices, built from the Our Services rows. Rows open on click or Enter, one at a time (hover would shift the rows under the pointer).
+- The Contact page no longer has the "Let's build something" box (asked for). The soft fade of the dusk into white stays.
+- The last answer says "reach out via our contact page", but the FAQ now sits on that page. Keep the wording or change it to "the form above"?
+- The em dashes in the supplied copy were replaced by commas or a full stop with the same meaning (vision, difference and workflow answers).
+- The team answer spells "Bidishah (Bidisha Mohanta)" as supplied; the spelling question above still applies.
