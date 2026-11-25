@@ -34,8 +34,8 @@ export default function Page() {
       </address>
 
       <p className="absolute whitespace-nowrap" style={{ left: u(91), top: u(579.7), fontSize: u(16), lineHeight: u(20) }}>
-        <a href="tel:+917980254641" className={link}>
-          +91 7980254641
+        <a href="tel:+919073822783" className={link}>
+          +91 9073822783
         </a>{" "}
         /{" "}
         <a href="mailto:contact@moonstonemultimedia.com" className={link}>
