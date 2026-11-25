@@ -68,4 +68,4 @@ Things to confirm with the client or finish later.
 - The team answer spells "Bidishah (Bidisha Mohanta)" as supplied; the spelling question above still applies.
 
 ## Logo to wordmark
-- On pages with a photo hero the wave logo stays put, then the wordmark slides up from below and pushes it out through the top (0.3s, power2.out; reversed when scrolling back up). It starts when the hero's bottom edge is 40 design px below the logo. The 0.3s, the push distance and the 40 px are our choices, read from a screenshot.
+- On pages with a photo hero the wave logo is fixed at the top left. When the hero's bottom edge is 40 design px below it, the logo is let go: it stays in the page at that spot and scrolls away with the hero, while the wordmark slides up into the navbar from below (0.3s, power2.out). Scrolling back up reverses it: the wordmark slides out and the logo is fixed in the navbar again. The 0.3s, the push distance and the 40 px are our choices, read from screenshots.
