@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { AboutCta } from "@/components/about-cta";
 import { ctaEnd } from "@/lib/cta";
-import { dusk } from "@/lib/dusk";
+import { duskOnWhite } from "@/lib/dusk";
 import { CONTACT, type LegalDoc } from "@/lib/legal";
 import { getLenis, u, unit } from "@/lib/lenis";
 
@@ -73,7 +73,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
 
   return (
     <main ref={root} className="relative bg-white text-black" style={{ overflowX: "clip" }}>
-      <div aria-hidden className="absolute inset-x-0 top-0" style={{ height: u(1018.4), backgroundImage: dusk }} />
+      <div aria-hidden className="absolute inset-x-0 top-0" style={{ height: u(1018.4), backgroundImage: duskOnWhite }} />
 
       <header className="relative text-center text-white" style={{ paddingTop: u(267) }}>
         <h1 data-in style={{ fontSize: u(60), lineHeight: u(43), height: u(43) }}>
