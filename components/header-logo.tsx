@@ -13,7 +13,11 @@ const HERO_PATHS = ["/", "/about", "/events", "/moonstoned"];
 const LOGO = { w: 98.33, h: 70 };
 const WORD = { w: 230, h: 230 * (235 / 1230) };
 
-/** The header mark: the logo, which is pushed out through the top by the wordmark sliding up once the page's hero (`[data-hero]`) is about to end. */
+/**
+ * The header mark. On a page with a photo hero (`[data-hero]`) it is the wave logo, fixed at the top left. Just before the hero ends
+ * the logo is let go: a copy of it stays in the page at that spot and scrolls away with the hero, while the wordmark slides up into
+ * the navbar from below. Scrolling back up reverses it: the wordmark slides out and the logo is fixed in the navbar again.
+ */
 export function HeaderLogo() {
   const path = usePathname();
   const heroPage = HERO_PATHS.includes(path);
@@ -27,49 +31,71 @@ export function HeaderLogo() {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     // the navbar auto-hide waits for data-flip="word": the wordmark is showing and the slide has finished
     const mark = (v: string) => (root.current!.dataset.flip = v);
+    const hero = document.querySelector("[data-hero]");
+    if (!hero) {
+      mark("word");
+      gsap.set(a, { opacity: 0 });
+      gsap.set(b, { opacity: 1, y: 0 });
+      return;
+    }
+
+    // the logo that stays behind in the page: same size, same blend as the header, placed by the trigger below
+    const stay = document.createElement("img");
+    stay.src = "/img/logo.svg";
+    stay.alt = "";
+    stay.style.cssText = "position:absolute;z-index:50;pointer-events:none;mix-blend-mode:difference;opacity:0";
+    document.body.appendChild(stay);
+    // the header has a 30 design px padding, so the logo is fixed 30 design px from the top left
+    const place = (start: number) => {
+      const k = unit();
+      Object.assign(stay.style, { left: `${30 * k}px`, top: `${start + 30 * k}px`, width: `${LOGO.w * k}px`, height: `${LOGO.h * k}px` });
+    };
+
     const show = (on: boolean) => {
       mark(on ? "word" : "logo");
-      gsap.set(a, { opacity: on ? 0 : 1, y: 0 });
+      gsap.set(a, { opacity: on ? 0 : 1 });
+      gsap.set(stay, { opacity: on ? 1 : 0 });
       gsap.set(b, { opacity: on ? 1 : 0, y: 0 });
     };
-    const hero = document.querySelector("[data-hero]");
-    show(!hero);
-    if (!hero) return;
+    show(false);
 
     let tl: gsap.core.Timeline | undefined;
-    const flip = (on: boolean, animate: boolean) => {
+    const release = (on: boolean) => {
       tl?.kill();
-      const [from, to] = on ? [a, b] : [b, a];
-      if (!animate || reduce) return void show(on);
+      if (reduce) return void show(on);
       mark("busy");
-      // a push: the new image comes up from below while the old one leaves through the top (reversed when going back up)
       const d = (LOGO.h + 10) * unit();
-      const dir = on ? 1 : -1;
-      gsap.set(to, { opacity: 1, y: dir * d });
+      // the logo hands over to / takes back from its copy in the page without moving: same spot on screen
+      gsap.set(a, { opacity: on ? 0 : 1 });
+      gsap.set(stay, { opacity: on ? 1 : 0 });
+      if (on) gsap.set(b, { opacity: 1, y: d });
       tl = gsap
         .timeline({
           defaults: { duration: 0.3, ease: "power2.out" },
           onComplete: () => {
-            gsap.set(from, { opacity: 0, y: 0 });
+            if (!on) gsap.set(b, { opacity: 0, y: 0 });
             mark(on ? "word" : "logo");
           },
         })
-        .to(from, { y: -dir * d }, 0)
-        .to(to, { y: 0 }, 0);
+        .to(b, { y: on ? 0 : d }, 0);
     };
 
     const st = ScrollTrigger.create({
       trigger: hero,
       start: () => `bottom top+=${140 * unit()}`, // the hero's bottom edge is 40 design px below the logo: the logo stays until just before the hero ends
       end: () => ScrollTrigger.maxScroll(window) + 1, // active from there to the end of the page
-      onToggle: (self) => flip(self.isActive, true),
+      onToggle: (self) => release(self.isActive),
+      // where the page keeps the logo: its fixed spot when the trigger starts
+      onRefresh: (self) => place(self.start),
     });
-    // a reload part-way down the page: start on the right face without a flip
+    place(st.start);
+    // a reload part-way down the page: start on the right state without a slide
     if (st.isActive) show(true);
 
     return () => {
       st.kill();
       tl?.kill();
+      stay.remove();
     };
   }, [path]);
 
