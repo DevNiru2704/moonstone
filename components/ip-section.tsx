@@ -5,7 +5,7 @@ import gsap from "gsap";
 import type { Ip } from "@/lib/ips";
 import { u } from "@/lib/lenis";
 
-// Figma IP sections: hovering turns the circle photo into a square (smart animate, 0.64s) and the logo grey -> crimson; leaving reverses.
+// Figma IP sections: hovering turns the circle photo into a square (Figma smart animate is 0.64s; slowed to 1.2s on request) and the logo grey -> crimson; leaving reverses.
 const CIRCLE = 316.127;
 const SQUARE = 650.877;
 const GREY = "#878787";
@@ -19,7 +19,7 @@ export function IpSection({ ip }: { ip: Ip }) {
 
   const to = (p: number) => {
     tween.current?.kill();
-    tween.current = gsap.to(root.current, { "--p": p, duration: 0.639, ease: "power2.inOut" });
+    tween.current = gsap.to(root.current, { "--p": p, duration: 1.2, ease: "power2.inOut" });
   };
 
   const right = ip.photo === "right";
