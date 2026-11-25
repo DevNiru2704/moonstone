@@ -12,7 +12,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const READ_LINE = "40%"; // a section counts as "being read" while it crosses this line of the window
 const SCROLL_OFFSET = 120; // design px kept above a section the sidebar scrolls to
-const STICKY_TOP = 90; // design px
+const STICKY_TOP = 18; // design px: the first pill sits at the top of the window (the navbar may overlap it)
 
 const link = "transition-colors duration-200 hover:text-crimson";
 
