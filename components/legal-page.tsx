@@ -12,7 +12,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const READ_LINE = "40%"; // a section counts as "being read" while it crosses this line of the window
 const SCROLL_OFFSET = 120; // design px kept above a section the sidebar scrolls to
-const STICKY_TOP = 110; // design px
+const STICKY_TOP = 90; // design px
 
 const link = "transition-colors duration-200 hover:text-crimson";
 
@@ -24,6 +24,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
   const root = useRef<HTMLElement>(null);
   const [active, setActive] = useState(doc.sections[0].id);
   const n = doc.sections.length;
+  const activeIdx = doc.sections.findIndex((x) => x.id === active);
   const locked = useRef(false); // while a pill-click scroll runs, the clicked pill stays lit (short sections never reach the read line)
 
   useEffect(() => {
@@ -89,10 +90,10 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
         <nav aria-label={`${doc.title} sections`} className="shrink-0 self-start" style={{ width: u(353), position: "sticky", top: u(STICKY_TOP) }}>
           <ul
             className="flex flex-col"
-            // on short windows pills and gaps shrink (keeping the 54 : 20 design ratio) so the list ends above the fixed "Let's work together" pill
-            style={{ "--slot": `calc((100svh - ${u(STICKY_TOP)} - 130px) / ${n})`, gap: `min(${u(20)}, calc(var(--slot) * 0.28))` } as React.CSSProperties}
+            // 20 design px gap; it squeezes (never the 54px pill height) on short windows so more of the list stays on screen
+            style={{ gap: `clamp(6px, calc((100svh - ${u(STICKY_TOP)} - 24px - ${n} * ${u(54)}) / ${n - 1}), ${u(20)})` }}
           >
-            {doc.sections.map(({ id, title }) => (
+            {doc.sections.map(({ id, title }, i) => (
               <li key={id} data-pill-in>
                 <a
                   href={`#${id}`}
@@ -101,10 +102,12 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
                     e.preventDefault();
                     go(id);
                   }}
-                  className={`flex items-center border border-solid border-black transition-colors duration-300 ${
-                    active === id ? "border-crimson bg-crimson text-white" : "hover:bg-black/10"
+                  // Figma "category-button": Default = black outline, Hover = white fill, Click = crimson fill, no outline, white text.
+                  // Click stays on, so every section already passed keeps it (as in the flow).
+                  className={`flex items-center border border-solid ${
+                    i <= activeIdx ? "border-transparent bg-crimson text-white" : "border-black hover:bg-white"
                   }`}
-                  style={{ height: `min(${u(54)}, calc(var(--slot) * 0.72))`, padding: `0 ${u(20)}`, borderRadius: u(10), fontSize: u(20), lineHeight: 1.25 }}
+                  style={{ height: u(54), padding: `0 ${u(20)}`, borderRadius: u(10), fontSize: u(20), lineHeight: 1.25 }}
                 >
                   {title}
                 </a>

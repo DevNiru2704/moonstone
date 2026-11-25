@@ -43,8 +43,8 @@ Things to confirm with the client or finish later.
 - "Let's work together" fades out when the top of a "Let's build something" box reaches it and returns when the footer comes into view or when scrolling back above the box.
 
 ## Privacy Policy and Terms of Service
-- The sticky sidebar highlight follows scroll (not in the prototype) (the pill of the section being read is filled crimson as in the Figma component, the rest stay outlined; a section counts as read while it crosses 40% of the window height). The crimson fill matches the Figma "category-button" active variant; the 40% line is our choice.
-- Sidebar pills shrink (keeping the 54 : 20 ratio) on windows shorter than about 1000px so the list ends above the fixed "Let's work together" pill, which is not in these Figma frames. Alternative: hide that pill on these two pages.
+- Sidebar pills use the Figma "category-button" states: Default black outline, Hover white fill, Click crimson fill with white text and no outline. Click stays on, so every section already passed stays red (as in the flow); which section counts as passed follows scroll (not in the prototype, our rule: it crosses 40% of the window height).
+- Pills keep the Figma 54px height; only the 20px gap squeezes on short windows. At 900px tall the last pill sits under the fixed "Let's work together" pill, which is not in these Figma frames. Alternative: hide that pill on these two pages.
 - "Media Usage" is a bullet in the Figma text; shown as a plain heading like the other sections.
 - Effective date "December 06, 2026" is shown as designed; it is a future date. Confirm it.
 - Footer label is "Terms of Services" (Figma footer) while the page title is "Terms of Service".
