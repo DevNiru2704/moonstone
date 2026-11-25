@@ -70,14 +70,14 @@ Phone rules live in `lib/phone-rules.json` (valid lengths and number pattern per
 
 ## Brand and content
 
-Source of truth for copy and visuals: the Figma file *Moonstone Website* and the Moonstone\*d portfolio, kept here as [`docs/moonstoned-portfolio.pdf`](docs/moonstoned-portfolio.pdf) (compressed from 8.8 MB to 5.4 MB, one long page). Colours, type scale and proportions are in `docs/design-system/`.
+Source of truth for copy and visuals: the Figma file *Moonstone Website* and the Moonstone\*d portfolio PDF (not stored in the repo; ask the team for the latest copy). Colours, type scale and proportions are in `docs/design-system/`.
 
 What the portfolio describes (context for copy and design decisions):
 
 - **Positioning:** "Built on culture. Streaming the future." Built by "multi-hatters"; Moonstone\*d is the marketing arm of Moonstone Multimedia.
 - **Eight services:** brand strategy and positioning, brand identity development, product styling and visuals, digital presence and e-commerce, social media marketing, performance marketing and ads, audience outreach, event and pop-up management.
 - **Five showcased projects:** Rare by Rani (furniture, founder-led brand), Zeiss Vision Center by Disha (luxury eyewear retail), Moonstone Multimedia's music side (record label, live recordings, the East Hop IP for Bengali hip hop and R&B), Specsmart (affordable eyewear made aspirational) and Knockout Nights (Kolkata's first MMA showcase, with a tiger-scratch identity).
-- **Packages:** ten marketing packages (from Brand Starter to a 360° Retainer) and three stand-alone ones (photography, videography, audio production). Pricing is in the PDF only; it is the client's, so it is not repeated in the site code or here.
+- **Packages:** ten marketing packages (from Brand Starter to a 360° Retainer) and three stand-alone ones (photography, videography, audio production). Pricing is in the portfolio PDF only; it is the client's, so it is not repeated in the site code or here.
 - **Palette:** American Red `#B31E32` (the site's `crimson`), Warming Heart `#D4463B`, Toasted Fluff `#FFF8EB`, on near-black. Display italics for emphasis, a clean sans for body copy.
 - **Mascot:** Multi Moo, a smiley that wears a hat for every mood ("Join the crew. Pick a hat. Pick a mood.").
 
