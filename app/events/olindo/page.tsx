@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { AboutCta } from "@/components/about-cta";
+import { StickyText } from "@/components/sticky-text";
 import { ctaEnd } from "@/lib/cta";
-import { dusk } from "@/lib/dusk";
+import { duskOnWhite } from "@/lib/dusk";
 import { OLINDO } from "@/lib/events";
 import { u } from "@/lib/lenis";
 
@@ -12,7 +13,7 @@ export const metadata: Metadata = { title: "Indieমেট V ft. Olindo | Moonst
 export default function Page() {
   return (
     <main className="relative overflow-hidden bg-white text-black" style={{ height: u(ctaEnd(1167.42)) }}>
-      <div aria-hidden className="absolute inset-x-0 top-0" style={{ height: u(1018.4), backgroundImage: dusk }} />
+      <div aria-hidden className="absolute inset-x-0 top-0" style={{ height: u(1018.4), backgroundImage: duskOnWhite }} />
 
       <Image
         src={OLINDO.poster}
@@ -20,16 +21,18 @@ export default function Page() {
         width={1200}
         height={1500}
         priority
+        data-poster
         className="absolute"
         style={{ left: u(60), top: u(217.44), width: u(679.975), height: u(849.968) }}
       />
 
-      <div className="absolute whitespace-nowrap text-white" style={{ left: u(822.82), top: u(217.44) }}>
+      <div data-stick className="absolute whitespace-nowrap text-white" style={{ left: u(822.82), top: u(217.44) }}>
         <h1 style={{ fontSize: u(60), lineHeight: u(40) }}>{OLINDO.title}</h1>
         <p style={{ fontSize: u(34), lineHeight: u(40) }}>{OLINDO.subtitle}</p>
       </div>
 
       <div
+        data-stick
         className="absolute text-[#4f4f4f] mix-blend-difference"
         style={{ left: u(822.82), top: u(397.44), width: u(432.742), fontSize: u(16) }}
       >
@@ -54,6 +57,7 @@ export default function Page() {
         href={OLINDO.ticketUrl}
         target="_blank"
         rel="noopener noreferrer"
+        data-stick
         className="absolute border border-black transition-colors duration-300 ease-out hover:border-crimson hover:bg-crimson hover:text-white"
         style={{ left: u(822.82), top: u(726.44), padding: u(20), fontSize: u(16) }}
       >
@@ -61,6 +65,8 @@ export default function Page() {
           CLICK HERE FOR TICKETS
         </span>
       </a>
+
+      <StickyText />
 
       <AboutCta top={1167.42} />
     </main>
