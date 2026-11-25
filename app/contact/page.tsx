@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AboutCta } from "@/components/about-cta";
 import { ContactForm } from "@/components/contact-form";
+import { ctaEnd } from "@/lib/cta";
 import { dusk } from "@/lib/dusk";
 import { u } from "@/lib/lenis";
 
@@ -11,7 +12,7 @@ const link = "transition-colors duration-200 hover:text-crimson";
 
 export default function Page() {
   return (
-    <main className="relative overflow-hidden bg-white text-white" style={{ height: u(1251) }}>
+    <main className="relative overflow-hidden bg-white text-white" style={{ height: u(ctaEnd(849)) }}>
       <div aria-hidden className="absolute inset-x-0 top-0" style={{ height: u(1018.4), backgroundImage: dusk }} />
 
       <h1 className="absolute" style={{ left: u(91), top: u(202.2), fontSize: u(100), lineHeight: u(108) }}>

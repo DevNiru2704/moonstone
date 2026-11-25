@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { AboutCta } from "@/components/about-cta";
+import { ctaEnd } from "@/lib/cta";
 import { dusk } from "@/lib/dusk";
 import { CONTACT, type LegalDoc } from "@/lib/legal";
 import { getLenis, u, unit } from "@/lib/lenis";
@@ -143,7 +144,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
         </div>
       </div>
 
-      <div className="relative" style={{ marginTop: u(82), height: u(402.04) }}>
+      <div className="relative" style={{ marginTop: u(82), height: u(ctaEnd(0)) }}>
         <AboutCta top={0} />
       </div>
     </main>

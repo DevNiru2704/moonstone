@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { AboutCta } from "@/components/about-cta";
+import { ctaEnd } from "@/lib/cta";
 import { dusk } from "@/lib/dusk";
 import { OLINDO } from "@/lib/events";
 import { u } from "@/lib/lenis";
@@ -10,7 +11,7 @@ export const metadata: Metadata = { title: "Indieমেট V ft. Olindo | Moonst
 // Figma "Events & IP Detail" (1440 x 2125): the poster, the event text, the ticket button, the CTA, then the footer from the layout.
 export default function Page() {
   return (
-    <main className="relative overflow-hidden bg-white text-black" style={{ height: u(1569.46) }}>
+    <main className="relative overflow-hidden bg-white text-black" style={{ height: u(ctaEnd(1167.42)) }}>
       <div aria-hidden className="absolute inset-x-0 top-0" style={{ height: u(1018.4), backgroundImage: dusk }} />
 
       <Image
