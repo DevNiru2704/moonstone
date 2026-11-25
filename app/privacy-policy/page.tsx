@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { PlaceholderPage } from "@/components/placeholder-page";
+import { LegalPage } from "@/components/legal-page";
+import { PRIVACY } from "@/lib/legal";
 
 export const metadata: Metadata = { title: "Privacy Policy | Moonstone" };
 
 export default function Page() {
-  return <PlaceholderPage title="Privacy Policy" />;
+  return <LegalPage doc={PRIVACY} />;
 }
