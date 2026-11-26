@@ -72,4 +72,4 @@ Things to confirm with the client or finish later.
 
 ## Home moon lock
 - The moon section now locks when its bottom is 10% of the window below the screen's bottom (the hill view; the box then clears the top), and 3200 design px of scroll play the ball rising, the dome growing and the box opening (same tweens as before, now scrubbed). On a 1440x900 window the bottoms of the three cards still peek in at the top of the locked view; on wider-than-tall windows they do not. Lock length and position are our choices.
-- While the moon section is locked, wheel and touch scrolling are capped at 900 design px per second, so the 3200 px lock takes at least about 3.5 s however hard you flick. The scrollbar and keyboard are not capped. The 900 is our pick.
+- While the moon section is locked, wheel and touch scrolling are capped at 1300 design px per second, so the 3200 px lock takes at least about 2.5 s however hard you flick. The scrollbar and keyboard are not capped. The 1300 is our pick (raised from 900 on request).
