@@ -1,5 +1,6 @@
 "use client";
 
+import { LoopVideo } from "@/components/loop-video";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { bounceReveal } from "@/lib/reveal";
@@ -36,8 +37,7 @@ export function MoonstonedHeader() {
 
   return (
     <section data-hero className="relative h-svh overflow-hidden bg-white">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/img/events/hero.gif" alt="" className="absolute inset-0 size-full max-w-none object-cover" />
+      <LoopVideo name="hero" priority className="absolute inset-0 size-full max-w-none object-cover" />
       <div className="absolute left-0 top-1/2 -translate-y-1/2" style={{ width: u(1440), height: u(1024) }}>
         <h1 className="sr-only">Moonstone*d</h1>
         {/* eslint-disable-next-line @next/next/no-img-element */}

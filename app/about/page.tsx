@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import { LoopVideo } from "@/components/loop-video";
 import { JsonLd } from "@/components/json-ld";
 import { page, pageGraph, pageMetadata } from "@/lib/seo";
-import Image from "next/image";
 import { AboutCaption } from "@/components/about-caption";
 import { AboutCta } from "@/components/about-cta";
 import { AboutIntent } from "@/components/about-intent";
@@ -26,14 +26,10 @@ export default function Page() {
     <main className="relative overflow-hidden bg-white text-black" style={{ height: `calc(var(--u) * (${ctaEnd(CTA_TOP)} + ${EXTRA} + ${LOCK}))` }}>
       <JsonLd data={pageGraph(page("/about"), [], "AboutPage")} />
       {/* animated photo header */}
-      <Image
+      <LoopVideo
         data-hero
-        src="/img/about-header.gif"
-        alt=""
-        width={1440}
-        height={1024}
+        name="about-header"
         priority
-        unoptimized
         className="absolute left-0 top-0 max-w-none object-cover"
         style={{ width: u(1440), height: u(1024) }}
       />

@@ -1,5 +1,6 @@
 "use client";
 
+import { LoopVideo } from "@/components/loop-video";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import type { Ip } from "@/lib/ips";
@@ -51,8 +52,7 @@ export function IpSection({ ip }: { ip: Ip }) {
           borderRadius: "calc(50% * (1 - var(--p)))",
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/img/events/ip-photo.gif" alt="" className="absolute inset-0 size-full max-w-none object-cover" />
+        <LoopVideo name="ip-photo" className="absolute inset-0 size-full max-w-none object-cover" />
       </div>
 
       {eta ? (

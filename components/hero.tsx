@@ -1,5 +1,6 @@
 "use client";
 
+import { LoopVideo } from "@/components/loop-video";
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import Image from "next/image";
 import gsap from "gsap";
@@ -106,7 +107,7 @@ export function Hero() {
       <div className="absolute left-0 top-1/2 -translate-y-1/2" style={{ width: u(1440), height: u(1024) }}>
         <Image
           src="/img/wordmark.svg"
-          alt="moonstone"
+          alt="Moonstone"
           width={1201}
           height={126}
           priority
@@ -116,7 +117,7 @@ export function Hero() {
         />
       </div>
 
-      {/* hero.png is an animated PNG: the photo slideshow */}
+      {/* the photo slideshow */}
       <div
         ref={photo}
         className="absolute inset-0"
@@ -127,7 +128,7 @@ export function Hero() {
           WebkitMaskRepeat: "no-repeat",
         }}
       >
-        <Image src="/img/hero.png" alt="" fill priority unoptimized sizes="100vw" className="object-cover" />
+        <LoopVideo name="hero" priority className="absolute inset-0 size-full object-cover" />
       </div>
 
       {/* both captions are the cursor: one point that follows the mouse (fixed), or sits at the screen centre without a mouse; each card is centred on it */}

@@ -1,5 +1,6 @@
 "use client";
 
+import { LoopVideo } from "@/components/loop-video";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { u, unit } from "@/lib/lenis";
@@ -26,8 +27,7 @@ export function EventsHero() {
 
   return (
     <section data-hero className="relative overflow-hidden bg-ink text-white" style={{ height: "100svh" }}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/img/events/hero.gif" alt="" className="absolute inset-0 size-full max-w-none object-cover" />
+      <LoopVideo name="hero" priority className="absolute inset-0 size-full max-w-none object-cover" />
       <h1 className="sr-only">Events & IP</h1>
       <p className="absolute whitespace-nowrap" style={{ left: u(53.57), bottom: u(288.33), fontSize: u(24), lineHeight: u(40) }}>
         Where creative concepts turn into cultural experiences.
