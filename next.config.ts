@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
       { source: "/faq", destination: "/contact#faq", permanent: false },
     ];
   },
+  // the hidden /meow page: noindex in the HTTP header too, on top of its page metadata
+  async headers() {
+    return [{ source: "/meow", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }];
+  },
   turbopack: {
     rules: {
       "*.css": {
