@@ -1,0 +1,13 @@
+# Vercel (Hobby) blocks git deployments whose commit author is not on the Moonstone team, so the Moonstone fork
+# triggers its own deploy hook on every push to main. Only runs in that repo (the secret lives there).
+name: Deploy to Vercel
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  deploy:
+    if: github.repository == 'moonstone-multimedia/moonstone'
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -fsS -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
