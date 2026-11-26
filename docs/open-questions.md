@@ -13,6 +13,10 @@ Things to confirm with the client or finish later.
 ## Olindo event (Upcoming Events + /events/olindo)
 - The three dates disagree: the poster image says 14.10.2026, the Figma copy says "November 14, 2026" (shown on the site), and the District ticket link says nov12-2026. Which is right?
 - The listing page "Events & IP" (Figma 185:171385) is not built; VIEW ALL goes to a placeholder /events page.
+- As of November 26, 2026 the event date (November 14) has passed, but it is still shown as "Upcoming" and its page publishes a scheduled `MusicEvent` to search engines. Update or remove it in `lib/events.ts` (see `docs/seo.md`).
+
+## Contact details
+- The Contact page lists contact@moonstonemultimedia.com and +91 9073822783; the Privacy Policy and Terms list moonstonemultimedia@gmail.com and +91 98743 25470. The search-engine data (Organization JSON-LD) uses the Contact page values. Which should the legal pages show?
 
 ## Moonstone*d page
 - The header text in Figma reads "Builty by multi hatters."; the site shows "Built by multi hatters." (likely typo). Please confirm.

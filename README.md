@@ -24,6 +24,7 @@ npm run dev                  # http://localhost:3000
 | `npm run dev` | Dev server (Turbopack). After editing `app/globals.css`, restart it: it can serve stale global CSS. |
 | `npm run build` / `npm start` | Production build and server. Test animations and layout on a production build. |
 | `npm run lint` | ESLint (includes the React Compiler rules such as `react-hooks/set-state-in-effect`). |
+| `npm run check:seo` | SEO checks against a running build (`npm start` first); see `docs/seo.md`. |
 
 ## Pages
 
@@ -47,6 +48,8 @@ app/          routes (one folder per page) and global CSS / theme tokens
 components/   page sections and site chrome (header, menu, footer, preloader, ...)
 lib/          shared data and helpers (team, events, IPs, links, orbit constants, validation, chiptune, sprites)
 public/img/   images, SVG logos, mascot, team photos (webp)
+public/video/ looping photo slideshows (webm + mp4 + webp poster, via components/loop-video.tsx)
+public/og/    1200x630 social preview images
 scripts/      generate-phone-rules.mjs
 docs/         design-system screenshots and open questions
 ```
@@ -88,4 +91,8 @@ Client questions, guesses and unchecked areas are kept in [`docs/open-questions.
 
 ## Deployment
 
-Any Next.js host works (for example Vercel). Set `NEXT_PUBLIC_WEB3FORMS_KEY` in the host's environment variables before building, since `NEXT_PUBLIC_*` values are read at build time.
+The live site is `https://www.moonstonemultimedia.com` on Vercel (pushes to `main` in the Moonstone fork deploy). Set `NEXT_PUBLIC_WEB3FORMS_KEY` in the host's environment variables before building, since `NEXT_PUBLIC_*` values are read at build time. `NEXT_PUBLIC_SITE_URL` is optional (it defaults to the live origin; set it only for another deployment).
+
+## SEO
+
+Titles, descriptions, canonicals, social cards, JSON-LD, the sitemap and robots.txt are built from `lib/seo.ts` and `lib/events.ts`; `npm run check:seo` checks them against a running build. See [`docs/seo.md`](docs/seo.md) for adding a page or event, the hidden `/meow` protection and Search Console setup.
