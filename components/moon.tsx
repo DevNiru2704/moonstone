@@ -66,7 +66,14 @@ export function Moon() {
     // scroll-locked: the page stops on the hill (section bottom 10% of the window below its bottom, so the box clears the top) and scrolling plays the ball, the dome and the box
     const ballTl = gsap
       .timeline({
-        scrollTrigger: { trigger: el, start: "bottom 110%", end: () => `+=${LOCK * k()}`, pin: true, scrub: true, invalidateOnRefresh: true },
+        scrollTrigger: { trigger: el, start: "bottom 110%",
+          end: () => `+=${LOCK * k()}`,
+          pin: true,
+          scrub: true,
+          invalidateOnRefresh: true,
+          // on Home the "Let's work together" pill is hidden only while this section is locked (this box has no data-cta)
+          onToggle: (self) => gsap.to("[data-pill]", { autoAlpha: self.isActive ? 0 : 1, duration: 0.3, overwrite: "auto" }),
+        },
       })
       .fromTo(moon.current, { y: 0 }, { y: () => -200 * k(), ease: "power2.out", duration: 1.8 })
       .fromTo(
@@ -146,7 +153,7 @@ export function Moon() {
             clipPath: `inset(${u(500)} 0 0 0)`,
           }}
         />
-        <div data-cta className="absolute" style={{ left: u(60), top: u(1061.4), width: u(1320), height: u(CTA_H) }}>
+        <div className="absolute" style={{ left: u(60), top: u(1061.4), width: u(1320), height: u(CTA_H) }}>
           <Link
             ref={box}
             href="/contact"
