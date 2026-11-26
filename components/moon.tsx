@@ -20,8 +20,9 @@ const sky = `radial-gradient(ellipse ${u(3533)} ${u(1359.6)} at 50% ${u(-30.76)}
 const DOME = 860; // final dome radius (design px): must cover the CTA box corners (794 away from the centre)
 const CARD_GAP = 0.1; // seconds between one card starting to swipe up and the next
 const CARD_TIME = 1.6; // seconds one card takes to swipe up
+const LOCK = 3200; // design px of scroll the hill view stays locked while the ball rises, grows and the box opens
 
-/** Plays by itself as it scrolls into view: the cards swipe up one by one; further down the glass ball rises and grows into a white dome, then the CTA reveals. */
+/** The cards swipe up one by one as the section comes in; then the page locks on the hill and scrolling makes the glass ball rise and grow into a white dome, then the CTA reveals. */
 export function Moon() {
   const root = useRef<HTMLElement>(null);
   const moon = useRef<HTMLDivElement>(null);
@@ -62,8 +63,11 @@ export function Moon() {
       cardsTl.fromTo(c, { yPercent: 110 }, { yPercent: 0, ease: "power3.out", duration: CARD_TIME }, i * CARD_GAP),
     );
 
+    // scroll-locked: the page stops on the hill (section bottom 10% of the window below its bottom, so the box clears the top) and scrolling plays the ball, the dome and the box
     const ballTl = gsap
-      .timeline({ paused: true, onComplete: reveal })
+      .timeline({
+        scrollTrigger: { trigger: el, start: "bottom 110%", end: () => `+=${LOCK * k()}`, pin: true, scrub: true, invalidateOnRefresh: true },
+      })
       .fromTo(moon.current, { y: 0 }, { y: () => -200 * k(), ease: "power2.out", duration: 1.8 })
       .fromTo(
         moon.current,
@@ -72,21 +76,18 @@ export function Moon() {
         ">+0.2",
       )
       .fromTo(moon.current, { backgroundColor: "rgba(255,255,255,0.2)", backdropFilter: "blur(2px)" }, { backgroundColor: "rgb(255,255,255)", backdropFilter: "blur(0px)", ease: "none", duration: 2.7 }, "<")
-      .fromTo(hills.current, { opacity: 0 }, { opacity: 1, ease: "none", duration: 0.8 }, "-=0.8");
+      .fromTo(hills.current, { opacity: 0 }, { opacity: 1, ease: "none", duration: 0.8 }, "-=0.8")
+      .add(reveal())
+      .to({}, { duration: 0.3 }); // the finished box stays a moment before the lock ends
 
-    // cards: as soon as the section's top is near the top of the screen; ball: once the sunset fills the screen
+    // cards: as soon as the section's top is near the top of the screen
     const t1 = ScrollTrigger.create({ trigger: el, start: "top 15%", once: true, onEnter: () => cardsTl.play() });
-    const t2 = ScrollTrigger.create({ trigger: el, start: "bottom bottom+=60", once: true, onEnter: () => ballTl.play() });
-    const resize = () => {
-      if (ballTl.progress() === 1) final();
-      else if (ballTl.progress() === 0) ballTl.invalidate();
-    };
-    addEventListener("resize", resize);
+    // the other triggers on the page (pill fade, logo, navbar) must measure with the pin spacer
+    ScrollTrigger.refresh();
     return () => {
-      removeEventListener("resize", resize);
       glass.forEach((g, i) => (g.style.backdropFilter = saved[i])); // React strict mode (dev) runs this effect twice: leave the blur as found
       t1.kill();
-      t2.kill();
+      ballTl.scrollTrigger?.kill();
       cardsTl.kill();
       ballTl.kill();
     };
