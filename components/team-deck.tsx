@@ -230,7 +230,7 @@ export function TeamDeck() {
         ))}
 
         {TEAM.map((m, i) => (
-          <article
+          <div
             key={m.name}
             data-card
             role="link"
@@ -253,7 +253,7 @@ export function TeamDeck() {
             }}
           >
             <Face s={1} name={m.name} role={m.role} photo={m.photo} size={21.6} dim={i > 0} />
-          </article>
+          </div>
         ))}
       </div>
     </div>
