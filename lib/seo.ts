@@ -16,7 +16,7 @@ export const SITE = {
   name: "Moonstone Multimedia",
   legalName: "Moonstone Multimedia LLP",
   description:
-    "Moonstone Multimedia is an independent creative company in Kolkata and Mumbai working across music, culture and marketing: a record label, live experiences, original IPs and Moonstone*d, its creative and marketing wing.",
+    "Independent creative company in Kolkata and Mumbai across music, culture and marketing: a record label, live events, original IPs and Moonstone*d, our marketing arm.",
   email: "contact@moonstonemultimedia.com", // as on the Contact page
   phone: "+91 9073822783",
   cities: ["Kolkata", "Mumbai"],
@@ -56,7 +56,7 @@ export const PAGES = {
     name: "How we work",
     title: "How We Work",
     description:
-      "How Moonstone works: cooking up live experiences, marketing the future, keeping everyone in the loop, and local frequencies for global ears. Our process with artists and brands.",
+      "Cooking up live experiences, marketing the future, keeping everyone in the loop, and local frequencies for global ears: how Moonstone works with artists and brands.",
     image: "/og/how-we-work.jpg",
     imageAlt: "How Moonstone Multimedia works",
   },
@@ -72,7 +72,7 @@ export const PAGES = {
     name: "Moonstone*d",
     title: "Moonstone*d | Branding & Marketing Agency in Kolkata and Mumbai",
     description:
-      "Moonstone*d is the marketing arm of Moonstone Multimedia: brand strategy, identity, product styling and visuals, e-commerce, social media, performance marketing, audience outreach and event pop-ups.",
+      "Moonstone*d, the marketing arm of Moonstone Multimedia: brand strategy, identity, product visuals, e-commerce, social media, ads, audience outreach and pop-ups.",
     image: "/og/moonstoned.jpg",
     imageAlt: "Moonstone*d, the marketing arm of Moonstone Multimedia",
   },
