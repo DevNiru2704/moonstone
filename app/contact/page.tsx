@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
+import { faqLd, page, pageGraph, pageMetadata } from "@/lib/seo";
 import { ContactForm } from "@/components/contact-form";
 import { FaqList } from "@/components/faq-list";
 import { HashScroll } from "@/components/hash-scroll";
 import { duskOnWhite } from "@/lib/dusk";
+import { FAQ } from "@/lib/faq";
 import { u } from "@/lib/lenis";
 
 export const metadata: Metadata = pageMetadata("/contact");
@@ -14,6 +16,7 @@ const link = "transition-colors duration-200 hover:text-crimson";
 export default function Page() {
   return (
     <main className="relative overflow-hidden bg-white text-white" style={{ paddingTop: u(800) }}>
+      <JsonLd data={pageGraph(page("/contact"), [faqLd(FAQ)], "ContactPage")} />
       <HashScroll />
       <div aria-hidden className="absolute inset-x-0 top-0" style={{ height: u(1018.4), backgroundImage: duskOnWhite }} />
 

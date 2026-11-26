@@ -146,3 +146,97 @@ export function metadataFor(p: PageSeo, opts: { imageSize?: [number, number] } =
 }
 
 export const pageMetadata = (path: PagePath) => metadataFor(page(path));
+
+// ---- Structured data (schema.org JSON-LD). Only facts shown on the site: no business address, prices or ratings.
+
+const ORG_ID = `${SITE_URL}/#organization`;
+const SITE_ID = `${SITE_URL}/#website`;
+
+export function siteGraph(social: string[]) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": ORG_ID,
+        name: SITE.name,
+        legalName: SITE.legalName,
+        url: SITE_URL,
+        logo: { "@type": "ImageObject", url: url(SITE.logo), width: 512, height: 512 },
+        description: SITE.description,
+        email: SITE.email,
+        telephone: SITE.phone,
+        areaServed: SITE.cities.map((name) => ({ "@type": "City", name })),
+        sameAs: social,
+        subOrganization: {
+          "@type": "Organization",
+          name: "Moonstone*d",
+          url: url("/moonstoned"),
+          description: "The creative and marketing wing of Moonstone Multimedia.",
+        },
+      },
+      { "@type": "WebSite", "@id": SITE_ID, url: SITE_URL, name: SITE.name, publisher: { "@id": ORG_ID }, inLanguage: "en-IN" },
+    ],
+  };
+}
+
+/** WebPage + BreadcrumbList for one page, plus any extra page-specific entities. */
+export function pageGraph(p: PageSeo, extra: object[] = [], type = "WebPage") {
+  const crumbs = p.path === "/" ? [] : [page("/"), ...(p.path.startsWith("/events/") ? [page("/events")] : []), p];
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": type,
+        "@id": `${url(p.path)}#webpage`,
+        url: url(p.path),
+        name: p.title,
+        description: p.description,
+        isPartOf: { "@id": SITE_ID },
+        about: { "@id": ORG_ID },
+        primaryImageOfPage: url(p.image),
+        inLanguage: "en-IN",
+      },
+      ...(crumbs.length
+        ? [
+            {
+              "@type": "BreadcrumbList",
+              itemListElement: crumbs.map((c, i) => ({ "@type": "ListItem", position: i + 1, name: c.name, item: url(c.path) })),
+            },
+          ]
+        : []),
+      ...extra,
+    ],
+  };
+}
+
+export const serviceLd = (name: string, description: string) => ({
+  "@type": "Service",
+  name,
+  description,
+  serviceType: name,
+  provider: { "@id": ORG_ID },
+  areaServed: SITE.cities.map((c) => ({ "@type": "City", name: c })),
+});
+
+export const faqLd = (items: { q: string; a: string[] }[]) => ({
+  "@type": "FAQPage",
+  mainEntity: items.map(({ q, a }) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a.join(" ") } })),
+});
+
+export const eventLd = (e: Event) => ({
+  "@type": "MusicEvent",
+  name: `${e.title} ${e.subtitle}`,
+  url: url(`/events/${e.slug}`),
+  image: url(e.poster),
+  startDate: e.start,
+  eventStatus: "https://schema.org/EventScheduled",
+  eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+  location: {
+    "@type": "Place",
+    name: e.venueName,
+    address: { "@type": "PostalAddress", streetAddress: e.address, addressLocality: e.city, addressCountry: "IN" },
+  },
+  organizer: { "@id": ORG_ID },
+  offers: { "@type": "Offer", url: e.ticketUrl },
+});

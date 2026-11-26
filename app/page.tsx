@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
+import { SOCIAL } from "@/lib/links";
+import { page, pageGraph, pageMetadata, siteGraph } from "@/lib/seo";
 import { Hero } from "@/components/hero";
 import { Moon } from "@/components/moon";
 import { Preloader } from "@/components/preloader";
@@ -13,6 +15,8 @@ export default function Home() {
     <>
       <Preloader />
       <main>
+        <JsonLd data={siteGraph(Object.values(SOCIAL))} />
+        <JsonLd data={pageGraph(page("/"))} />
         <Hero />
         <UpcomingEvents />
         <Statement />

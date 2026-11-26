@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
+import { page, pageGraph, pageMetadata } from "@/lib/seo";
 import { AboutCta } from "@/components/about-cta";
 import { EventsHero } from "@/components/events-hero";
 import { IpSection } from "@/components/ip-section";
@@ -14,6 +15,7 @@ export const metadata: Metadata = pageMetadata("/events");
 export default function Page() {
   return (
     <main className="bg-white text-black">
+      <JsonLd data={pageGraph(page("/events"))} />
       <EventsHero />
       <UpcomingEvents showAll={false} />
       {IPS.map((ip) => (

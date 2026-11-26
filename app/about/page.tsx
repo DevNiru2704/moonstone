@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
+import { page, pageGraph, pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import { AboutCaption } from "@/components/about-caption";
 import { AboutCta } from "@/components/about-cta";
@@ -23,6 +24,7 @@ const CTA_TOP = 7300;
 export default function Page() {
   return (
     <main className="relative overflow-hidden bg-white text-black" style={{ height: `calc(var(--u) * (${ctaEnd(CTA_TOP)} + ${EXTRA} + ${LOCK}))` }}>
+      <JsonLd data={pageGraph(page("/about"), [], "AboutPage")} />
       {/* animated photo header */}
       <Image
         data-hero

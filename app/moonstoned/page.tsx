@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
+import { page, pageGraph, pageMetadata, serviceLd } from "@/lib/seo";
 import { AboutCta } from "@/components/about-cta";
 import { HashScroll } from "@/components/hash-scroll";
 import { FolderCarousel } from "@/components/folder-carousel";
@@ -7,6 +8,7 @@ import { MoonstonedHeader } from "@/components/moonstoned-header";
 import { ServicesList } from "@/components/services-list";
 import { ctaEnd } from "@/lib/cta";
 import { u } from "@/lib/lenis";
+import { SERVICES } from "@/lib/moonstoned";
 
 export const metadata: Metadata = pageMetadata("/moonstoned");
 
@@ -14,6 +16,7 @@ export const metadata: Metadata = pageMetadata("/moonstoned");
 export default function Page() {
   return (
     <main className="bg-white text-black">
+      <JsonLd data={pageGraph(page("/moonstoned"), SERVICES.map(([name, text]) => serviceLd(name, text)))} />
       <HashScroll />
       <MoonstonedHeader />
       <section className="relative" style={{ height: u(371) }}>

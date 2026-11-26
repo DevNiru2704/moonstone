@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
+import { page, pageGraph, pageMetadata } from "@/lib/seo";
 import { AboutCta } from "@/components/about-cta";
 import { HowProgress } from "@/components/how-progress";
 import { OrbitStage } from "@/components/orbit-stage";
@@ -16,6 +17,7 @@ const END = ctaEnd(1824.43); // page end in design px: the CTA box plus the shar
 export default function Page() {
   return (
     <main className="relative overflow-clip bg-ink text-white" style={{ height: `calc(${u(END - 1209.4 + 1024 + PROGRESS_H)} + ${ORBIT_SCROLL}px + ${ORBIT_OFF})` }}>
+      <JsonLd data={pageGraph(page("/how-we-work"))} />
       <OrbitStage />
       <div className="absolute inset-x-0" style={{ top: `calc(${ORBIT_SCROLL}px + ${ORBIT_OFF} + ${u(1024)})` }}>
         <HowProgress />

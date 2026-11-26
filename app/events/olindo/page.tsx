@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { eventPage, metadataFor } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
+import { eventLd, eventPage, metadataFor, pageGraph } from "@/lib/seo";
 import Image from "next/image";
 import { AboutCta } from "@/components/about-cta";
 import { StickyText } from "@/components/sticky-text";
@@ -14,6 +15,7 @@ export const metadata: Metadata = metadataFor(eventPage(OLINDO), { imageSize: [1
 export default function Page() {
   return (
     <main className="relative overflow-hidden bg-white text-black" style={{ height: u(ctaEnd(1167.42)) }}>
+      <JsonLd data={pageGraph(eventPage(OLINDO), [eventLd(OLINDO)])} />
       <div aria-hidden className="absolute inset-x-0 top-0" style={{ height: u(1018.4), backgroundImage: duskOnWhite }} />
 
       <Image
