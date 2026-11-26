@@ -84,6 +84,7 @@ export function HeaderLogo() {
       trigger: hero,
       start: () => `bottom top+=${140 * unit()}`, // the hero's bottom edge is 40 design px below the logo: the logo stays until just before the hero ends
       end: () => ScrollTrigger.maxScroll(window) + 1, // active from there to the end of the page
+      refreshPriority: -1, // measured after the page's own pins (the Home moon lock), which make the page longer
       onToggle: (self) => release(self.isActive),
       // where the page keeps the logo: its fixed spot when the trigger starts
       onRefresh: (self) => place(self.start),

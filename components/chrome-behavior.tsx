@@ -64,6 +64,7 @@ export function ChromeBehavior() {
           trigger: hero,
           start: () => `bottom top-=${300 * unit()}`, // the logo flips at "top+=100"; this is 400 design px later
           end: () => ScrollTrigger.maxScroll(window) + 1,
+          refreshPriority: -1, // after the page's own pins
           onToggle: (self) => {
             enabled = self.isActive;
             if (!enabled) setHidden(false);
@@ -75,6 +76,7 @@ export function ChromeBehavior() {
       triggers.push(
         ScrollTrigger.create({
           trigger: cta,
+          refreshPriority: -1, // measured after the page's own pins (created later than this trigger)
           start: () => `top bottom-=${(CTA_H / 2) * unit()}`, // half of the box is on screen
           endTrigger: footer ?? cta,
           end: footer ? "top 50%" : "bottom top", // the footer reaches the middle of the window
