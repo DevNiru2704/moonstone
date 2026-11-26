@@ -65,16 +65,7 @@ export function Moon() {
 
     // scroll-locked: the page stops on the hill (section bottom 10% of the window below its bottom, so the box clears the top) and scrolling plays the ball, the dome and the box
     const ballTl = gsap
-      .timeline({
-        scrollTrigger: { trigger: el, start: "bottom 110%",
-          end: () => `+=${LOCK * k()}`,
-          pin: true,
-          scrub: true,
-          invalidateOnRefresh: true,
-          // on Home the "Let's work together" pill is hidden only while this section is locked (this box has no data-cta)
-          onToggle: (self) => gsap.to("[data-pill]", { autoAlpha: self.isActive ? 0 : 1, duration: 0.3, overwrite: "auto" }),
-        },
-      })
+      .timeline({ paused: true })
       .fromTo(moon.current, { y: 0 }, { y: () => -200 * k(), ease: "power2.out", duration: 1.8 })
       .fromTo(
         moon.current,
@@ -87,6 +78,23 @@ export function Moon() {
       .add(reveal())
       .to({}, { duration: 0.3 }); // the finished box stays a moment before the lock ends
 
+    // scroll drives the timeline until it has fully played once; after that it stays finished (scrolling back up does not undo it)
+    let done = false;
+    const lock = ScrollTrigger.create({
+      trigger: el,
+      start: "bottom 110%",
+      end: () => `+=${LOCK * k()}`,
+      pin: true,
+      onUpdate: (self) => {
+        if (done) return;
+        ballTl.progress(self.progress);
+        if (self.progress === 1) done = true;
+      },
+      onRefresh: (self) => void ballTl.invalidate().progress(done ? 1 : self.progress), // sizes are in design px: re-measure on resize
+      // on Home the "Let's work together" pill is hidden only while this section is locked (this box has no data-cta)
+      onToggle: (self) => gsap.to("[data-pill]", { autoAlpha: self.isActive ? 0 : 1, duration: 0.3, overwrite: "auto" }),
+    });
+
     // cards: as soon as the section's top is near the top of the screen
     const t1 = ScrollTrigger.create({ trigger: el, start: "top 15%", once: true, onEnter: () => cardsTl.play() });
     // the other triggers on the page (pill fade, logo, navbar) must measure with the pin spacer
@@ -94,7 +102,7 @@ export function Moon() {
     return () => {
       glass.forEach((g, i) => (g.style.backdropFilter = saved[i])); // React strict mode (dev) runs this effect twice: leave the blur as found
       t1.kill();
-      ballTl.scrollTrigger?.kill();
+      lock.kill();
       cardsTl.kill();
       ballTl.kill();
     };
