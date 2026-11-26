@@ -17,6 +17,7 @@ export default function Home() {
       <main>
         <JsonLd data={siteGraph(Object.values(SOCIAL))} />
         <JsonLd data={pageGraph(page("/"))} />
+        <h1 className="sr-only">Moonstone Multimedia: an independent creative company in Kolkata and Mumbai</h1>
         <Hero />
         <UpcomingEvents />
         <Statement />
