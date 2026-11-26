@@ -7,7 +7,7 @@ import { Cards } from "@/components/cards";
 import Image from "next/image";
 import Link from "next/link";
 import { CTA_H, CTA_HOVER } from "@/lib/cta";
-import { u, unit } from "@/lib/lenis";
+import { getLenis, u, unit } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,6 +20,7 @@ const sky = `radial-gradient(ellipse ${u(3533)} ${u(1359.6)} at 50% ${u(-30.76)}
 const DOME = 860; // final dome radius (design px): must cover the CTA box corners (794 away from the centre)
 const CARD_GAP = 0.1; // seconds between one card starting to swipe up and the next
 const CARD_TIME = 1.6; // seconds one card takes to swipe up
+const MAX_SPEED = 900; // design px per second: the fastest wheel / touch scrolling goes while the section is locked
 const LOCK = 3200; // design px of scroll the hill view stays locked while the ball rises, grows and the box opens
 
 /** The cards swipe up one by one as the section comes in; then the page locks on the hill and scrolling makes the glass ball rise and grow into a white dome, then the CTA reveals. */
@@ -63,6 +64,21 @@ export function Moon() {
       cardsTl.fromTo(c, { yPercent: 110 }, { yPercent: 0, ease: "power3.out", duration: CARD_TIME }, i * CARD_GAP),
     );
 
+    // while locked, wheel and touch scrolling are capped so a fast flick cannot rush the animation
+    // shortcut: the scrollbar and keyboard are not capped (they do not go through Lenis' virtual scroll)
+    let last = 0;
+    const cap = (d: { deltaY: number }) => {
+      const now = performance.now();
+      const max = MAX_SPEED * unit() * Math.min((now - last) / 1000, 0.1);
+      last = now;
+      d.deltaY = Math.max(-max, Math.min(max, d.deltaY));
+      return true;
+    };
+    const capSpeed = (on: boolean) => {
+      const lenis = getLenis();
+      if (lenis) lenis.options.virtualScroll = on ? cap : undefined;
+    };
+
     // scroll-locked: the page stops on the hill (section bottom 10% of the window below its bottom, so the box clears the top) and scrolling plays the ball, the dome and the box
     const ballTl = gsap
       .timeline({
@@ -72,7 +88,10 @@ export function Moon() {
           scrub: true,
           invalidateOnRefresh: true,
           // on Home the "Let's work together" pill is hidden only while this section is locked (this box has no data-cta)
-          onToggle: (self) => gsap.to("[data-pill]", { autoAlpha: self.isActive ? 0 : 1, duration: 0.3, overwrite: "auto" }),
+          onToggle: (self) => {
+            gsap.to("[data-pill]", { autoAlpha: self.isActive ? 0 : 1, duration: 0.3, overwrite: "auto" });
+            capSpeed(self.isActive);
+          },
         },
       })
       .fromTo(moon.current, { y: 0 }, { y: () => -200 * k(), ease: "power2.out", duration: 1.8 })
@@ -94,6 +113,7 @@ export function Moon() {
     return () => {
       glass.forEach((g, i) => (g.style.backdropFilter = saved[i])); // React strict mode (dev) runs this effect twice: leave the blur as found
       t1.kill();
+      capSpeed(false);
       ballTl.scrollTrigger?.kill();
       cardsTl.kill();
       ballTl.kill();
