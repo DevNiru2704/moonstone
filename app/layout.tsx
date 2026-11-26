@@ -4,6 +4,7 @@ import { MeowEgg } from "@/components/meow-egg";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { SmoothScroll } from "@/components/smooth-scroll";
+import { SITE, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 const inter = Inter({
@@ -11,10 +12,14 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+// Root defaults only: no canonical or Open Graph here, so routes without their own SEO (the hidden /meow) inherit none.
 export const metadata: Metadata = {
-  title: "Moonstone",
-  description:
-    "An independent creative company shaping music, culture and ideas into work that moves people.",
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE.name, template: `%s | ${SITE.name}` },
+  description: SITE.description,
+  applicationName: SITE.name,
+  publisher: SITE.legalName,
+  formatDetection: { telephone: false, email: false, address: false },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

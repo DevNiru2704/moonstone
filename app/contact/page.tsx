@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { ContactForm } from "@/components/contact-form";
 import { FaqList } from "@/components/faq-list";
 import { HashScroll } from "@/components/hash-scroll";
 import { duskOnWhite } from "@/lib/dusk";
 import { u } from "@/lib/lenis";
 
-export const metadata: Metadata = { title: "Contact | Moonstone" };
+export const metadata: Metadata = pageMetadata("/contact");
 
 // Figma "Contact" (1440 x 1807): radial dusk behind the page, white below it. The FAQ sits under the form (no CTA box here); the footer comes from the root layout.
 const link = "transition-colors duration-200 hover:text-crimson";

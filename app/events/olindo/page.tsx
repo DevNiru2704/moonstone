@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { eventPage, metadataFor } from "@/lib/seo";
 import Image from "next/image";
 import { AboutCta } from "@/components/about-cta";
 import { StickyText } from "@/components/sticky-text";
@@ -7,7 +8,7 @@ import { duskOnWhite } from "@/lib/dusk";
 import { OLINDO } from "@/lib/events";
 import { u } from "@/lib/lenis";
 
-export const metadata: Metadata = { title: "Indieমেট V ft. Olindo | Moonstone" };
+export const metadata: Metadata = metadataFor(eventPage(OLINDO), { imageSize: [1200, 1500] });
 
 // Figma "Events & IP Detail" (1440 x 2125): the poster, the event text, the ticket button, the CTA, then the footer from the layout.
 export default function Page() {

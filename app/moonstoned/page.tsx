@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { AboutCta } from "@/components/about-cta";
 import { HashScroll } from "@/components/hash-scroll";
 import { FolderCarousel } from "@/components/folder-carousel";
@@ -7,7 +8,7 @@ import { ServicesList } from "@/components/services-list";
 import { ctaEnd } from "@/lib/cta";
 import { u } from "@/lib/lenis";
 
-export const metadata: Metadata = { title: "Moonstone*d | Moonstone" };
+export const metadata: Metadata = pageMetadata("/moonstoned");
 
 // Figma "Moonstoned" (1440 x 4721): header, intro, projects, services, CTA, then the footer from the layout.
 export default function Page() {

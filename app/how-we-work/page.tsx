@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { AboutCta } from "@/components/about-cta";
 import { HowProgress } from "@/components/how-progress";
 import { OrbitStage } from "@/components/orbit-stage";
@@ -7,7 +8,7 @@ import { dusk } from "@/lib/dusk";
 import { u } from "@/lib/lenis";
 import { ORBIT_OFF, ORBIT_SCROLL, PROGRESS_H } from "@/lib/orbit";
 
-export const metadata: Metadata = { title: "How we work | Moonstone" };
+export const metadata: Metadata = pageMetadata("/how-we-work");
 
 const END = ctaEnd(1824.43); // page end in design px: the CTA box plus the shared footer gap
 

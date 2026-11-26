@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import { AboutCaption } from "@/components/about-caption";
 import { AboutCta } from "@/components/about-cta";
@@ -8,7 +9,7 @@ import { TeamDeck } from "@/components/team-deck";
 import { ctaEnd } from "@/lib/cta";
 import { u } from "@/lib/lenis";
 
-export const metadata: Metadata = { title: "About | Moonstone" };
+export const metadata: Metadata = pageMetadata("/about");
 
 // Figma "About" (1440 x 3756): everything is placed on the 1440 grid; the footer comes from the root layout.
 // the team deck pins with a mouse and sets --team-extra (design px of scroll) so everything below moves down by that much
