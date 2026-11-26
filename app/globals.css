@@ -40,6 +40,20 @@
   --u: calc(100vw / 1440);
 }
 
+/* About: the pinned blocks add scroll (design px) and push the page below them down. The values are set here, from the first
+   paint, so nothing jumps when the scripts start (layout shift); the components set the same values (keep in step):
+   about-intent.tsx LOCK, team-deck.tsx EXTRA (mouse only). Reduced motion pins nothing. */
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    --intent-extra: 1000;
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  :root {
+    --team-extra: 2520;
+  }
+}
+
 html {
   background: #fff;
 }
