@@ -22,8 +22,8 @@ const PAN = 100 / 12; // % of the 3-copy texture strip per step (a quarter of on
 const CAPTIONS = [
   { word: "Cooking Up", rest: " Live Experiences", body: ["We don’t just put artists on a stage.", "We create reasons for them to share one."], left: 86.82, top: 117.78, width: 460, align: "left" },
   { word: "Marketing", rest: " the Future", body: ["Culture first.", "Strategy always."], left: 915.35, top: 117.78, width: 442, align: "right" },
-  { word: "Keeping", rest: " Everyone in the Loop", body: ["No guessing games.", "Just good communication."], left: 915.35, top: 843.8, width: 442, align: "right" },
-  { word: "Local Frequencies.", rest: " Global Ears.", body: ["A sound of our own.", "A world waiting to hear it."], left: 86.47, top: 843.8, width: 460, align: "left" },
+  { word: "Keeping", rest: " Everyone in the Loop", body: ["No guessing games.", "Just good communication."], left: 915.35, top: 720, width: 442, align: "right" },
+  { word: "Local Frequencies.", rest: " Global Ears.", body: ["A sound of our own.", "A world waiting to hear it."], left: 86.47, top: 720, width: 460, align: "left" },
 ] as const;
 
 const RINGS = [
