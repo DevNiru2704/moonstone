@@ -22,7 +22,7 @@ export const IPS: Ip[] = [
     logoAlt: "Little Bit Indie",
     textTop: 516.64,
     paragraphs: [
-      "Little Bit Indie is a monthly live music series that takes place at Little Bit Sober, featuring curated musical themes, original artists, genre experimentation, and intimate audience experiences.",
+      "Little Bit Indie is a monthly live music series featuring curated musical themes, original artists, genre experimentation, and intimate audience experiences.",
     ],
   },
   {
