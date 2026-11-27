@@ -21,7 +21,7 @@ const DOME = 860; // final dome radius (design px): must cover the CTA box corne
 const CARD_GAP = 0.1; // seconds between one card starting to swipe up and the next
 const CARD_TIME = 1.6; // seconds one card takes to swipe up
 const MAX_SPEED = 1300; // design px per second: the fastest wheel / touch scrolling goes while the section is locked
-const LOCK = 3200; // design px of scroll the hill view stays locked while the ball rises, grows and the box opens
+const LOCK = 900; // design px of scroll the hill view stays locked while the ball rises, grows and the box opens
 
 /** The cards swipe up one by one as the section comes in; then the page locks on the hill and scrolling makes the glass ball rise and grow into a white dome, then the CTA reveals. */
 export function Moon() {
